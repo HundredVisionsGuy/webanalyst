@@ -6,32 +6,18 @@ import certifi
 import io
 import json
 
+import validator
+response = validator.validate_html('./project/sample.html')
+
+# Check validator
+input("Press enter to check response")
+for i in response:
+    print(i)
+
 f = open("./project/sample.html", "r")
 file = f.read()
 file = file.replace('\n','')
 file = file.replace('  ', '')
-
-crl = pycurl.Curl()
-crl.setopt(crl.URL, 'https://validator.w3.org/nu/?out=json')
-crl.setopt(pycurl.HTTPHEADER, ['Content-Type: text/html; charset=utf-8'])
-crl.setopt(crl.CAINFO, certifi.where())
-crl.setopt(crl.HTTPPOST, [
-    ('fileupload', (
-        # Upload the contents of the file
-        crl.FORM_FILE, './project/sample.html',
-    )),
-])
-contents = io.BytesIO()
-crl.setopt(pycurl.WRITEFUNCTION, contents.write)
-
-crl.perform()
-response = contents.getvalue()
-crl.close()
-response = response.decode('utf-8')
-response = json.loads(response)
-
-for i in response['messages']:
-    print(i)
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):

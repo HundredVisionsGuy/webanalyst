@@ -6,31 +6,18 @@ import certifi
 import io
 import json
 
-f = open("./project/sample.html", "r")
-file = f.read()
-file = file.replace('\n','')
-file = file.replace('  ', '')
-
-crl = pycurl.Curl()
-crl.setopt(crl.URL, 'https://validator.w3.org/nu/?out=json')
-crl.setopt(pycurl.HTTPHEADER, ['Content-Type: text/html; charset=utf-8'])
-crl.setopt(crl.CAINFO, certifi.where())
-crl.setopt(crl.HTTPPOST, [
-    ('fileupload', (
-        # Upload the contents of the file
-        crl.FORM_FILE, './project/sample.html',
-    )),
-])
-contents = io.BytesIO()
-crl.setopt(pycurl.WRITEFUNCTION, contents.write)
-
-crl.perform()
-response = contents.getvalue()
-crl.close()
-response = response.decode('utf-8')
-response = json.loads(response)
-
+def validate_html(filepath):
+  w3cURL = 'https://validator.w3.org/nu/?out=json'
+  errors = []
+  payload = open(filepath)
+  with open(filepath,'rb') as payload:
+    headers = {'content-type': 'text/html; charset=utf-8', 'Accept-Charset': 'UTF-8'}
+    r = requests.post(w3cURL, data=payload, headers=headers)
+    errors = r.json()['messages']
+  return errors
 
 if __name__ == "__main__":
-  for i in response['messages']:
-    print(i)
+  report = validate_html('./project/sample.html')
+  print("report is a {}.".format(type(report)))
+  for item in report:
+    print(item)
