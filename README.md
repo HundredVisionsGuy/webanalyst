@@ -13,6 +13,26 @@ We are still selecting license and folder structure.
 ### Git branching / release model
 For this project, we'll be using the git branching model from [A successful Git branching model](https://nvie.com/posts/a-successful-git-branching-model/) by Vincent Driessen
 
+## TODO
+* Create a report format to report back findings from a project
+* Identify what errors the HTML validator does NOT catch
+* Identify how to catch those errors through AdvancedHTMLParser
+
+## Structure
+This project will be structured by levels and concepts.
+There will be a test file for each concept and level:
+* a test for errors in HTML and CSS (using the validator)
+* one test file for HTML for each level of "proficiency"
+* One test file for each level of tables (one for simple table)
+* a test for lists at two levels
+* a test for links 
+* a test for images
+* a set of tests for multiple files
+  * is there an index file name or not?
+  * are the HTML files linking to at least one CSS file?
+  * etc.
+* and so on...
+
 ## Skills Assessed / Unit Tests
 *Syntax*
 Some of the things I will be testing for is:
