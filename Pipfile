@@ -11,6 +11,9 @@ requests = "*"
 "html.parser" = "*"
 pycurl = "*"
 certifi = "*"
+zeep = "*"
+cssutils = "*"
+mechanicalsoup = "*"
 
 [requires]
 python_version = "3.7"
