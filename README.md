@@ -83,6 +83,19 @@ and [CSS guidelines](https://developer.mozilla.org/en-US/docs/MDN/Contribute/Gui
 ## Student Tasks
 Students will be given a pre-test, a series of tasks to complete that will progress through the skills.
 
+## Analyzer Tasks
+1. create a list of all HTML & CSS files from project folder
+2. Check each HTML file for validity
+3. Check each HTML file for other tests
+4. Check each HTML file for CSS code
+  - if HTML has CSS
+    * note the file name
+    * run the code through the CSS validator
+      + if it has errors, save error report
+    * mark the file and whether it had errors or not
+5. Check each CSS file for validity
+6. Compile and send report
+
 ***TODO***
 ### Pre-assessment
 The goal of the pre-assessment is for students to attempt to demonstrate as many of the skills from the post-test as possible
