@@ -38,12 +38,12 @@ def test_css_validator_link():
 
 def test_is_css_valid_for_no_errors():
   expected = True
-  results = CSSinator.is_css_valid("p { color: #336699; }")
+  results = CSSinator.is_css_valid(valid_css_code)
   assert expected == results
 
 def test_is_css_valid_for_errors():
   expected = False
-  results = CSSinator.is_css_valid("fre { p: #3354; {")
+  results = CSSinator.is_css_valid(invalid_css_code)
   assert expected == results
 
 def test_get_num_errors_three(errors_list):
