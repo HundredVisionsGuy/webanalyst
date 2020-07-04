@@ -7,65 +7,63 @@ from pathlib import Path
 import bs4
 import re
 
-# Instantiate a stateful browser
-browser = mechanicalsoup.StatefulBrowser()
+## TODO: 
+##  1. Move testing code
+##  2. convert code to list of selectors
+#   3. convert code to list of declarations
+# add CSS checks (other than simply validation)
+def missing_end_semicolon(css_code):
+  # remove all whitespace and line breaks
+  # if there is no semicolon preceding closing curly bracket, 
+  # return True
+  return True
 
-def is_css_valid(code):
-  """Checks to make sure CSS code is valid"""
-  validate_css(code)
-  return bool(browser.get_current_page().select('#congrats'))
+def has_repeat_selector(css_code):
+  return False
 
-def validate_css(css_code):
-  browser.open("https://jigsaw.w3.org/css-validator")
-  # Fill-in the search form
-  browser.select_form('#validate-by-input form')
-  browser["text"] = css_code
-  browser.submit_selected()
-  results = browser.get_current_page().select('#results_container')
-  return results
-  
-def get_css_errors_list(val_results):
-  soup = bs4.BeautifulSoup(str(val_results), 'lxml')
-  errors = soup.find_all('td')
-  num_errors = len(errors)
-  error_list = []
-  for i in range(num_errors):
-    if (i - 2) % 3 == 0:
-      msg = errors[i].text 
-      msg = clean_error_msg(msg)
-      error_list.append(msg)
-  return error_list
+def split_css(css_code):
+  """returns list of selectors & declarations (no { or })"""
+  # remove newlines
+  css_code = css_code.replace('\n','')
+  pattern = r'\{(.*?)\}' 
+  return re.split(pattern, css_code)
 
-def get_num_errors(errors_list):
-  return len(errors_list)
+def get_selectors(css_list):
+  selectors = []
+  for i in range(0, len(css_list), 2):
+    selectors.append(css_list[i].strip())
+  selectors.remove('')
+  return selectors
 
-def clean_error_msg(msg):
-  """ removes new lines, added spaces, and strips spaces """
-  msg = msg.replace('\n','')
-  msg = re.sub(r'[ ]{2,}', ' ', msg)
-  msg = msg.replace(" :", ":")
-  return msg.strip()
+def get_declarations(css_list):
+  declarations = []
+  for i in range(1, len(css_list), 2):
+    declarations.append(css_list[i].strip())
+  if '' in declarations:
+    declarations.remove('')
+  return declarations
 
 if __name__ == "__main__":
-  resp = browser.open("https://jigsaw.w3.org/css-validator")
-  print(resp)
-  valid_css = "p { color: #336699; }"
-  invalid_css = "p { display: phred; } em { stoiky-lob"
+  print("hello, I'm CSSinator.")
+  # resp = browser.open("https://jigsaw.w3.org/css-validator")
+  # print(resp)
+  # valid_css = "p { color: #336699; }"
+  # invalid_css = "p { display: phred; } em { stoiky-lob"
 
-  # validate valid CSS
-  results = validate_css(valid_css)
-  print(results)
-  is_valid = is_css_valid(valid_css)
-  print("Are results valid? {}".format(is_valid))
+  # # validate valid CSS
+  # results = validate_css(valid_css)
+  # print(results)
+  # is_valid = is_css_valid(valid_css)
+  # print("Are results valid? {}".format(is_valid))
 
-  # validate invalid CSS
-  results = validate_css(invalid_css)
-  print(results)
-  print("Results are of a {} type.".format(type(results)))
-  is_valid = is_css_valid(invalid_css)
-  print("Are results valid? {}".format(is_valid))
+  # # validate invalid CSS
+  # results = validate_css(invalid_css)
+  # print(results)
+  # print("Results are of a {} type.".format(type(results)))
+  # is_valid = is_css_valid(invalid_css)
+  # print("Are results valid? {}".format(is_valid))
 
-  result_list = get_css_errors_list(results)
-  for i in result_list:
-    print(i)
+  # result_list = get_css_errors_list(results)
+  # for i in result_list:
+  #   print(i)
   

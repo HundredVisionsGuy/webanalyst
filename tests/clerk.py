@@ -9,7 +9,6 @@ working_dir = Path.cwd()
 def get_path_list(path):
   path_list = path.split('/')
   return path_list
-
 def get_full_path_string(path):
   """path must be a relative path starting with working directory """
   full_path = working_dir
@@ -17,31 +16,26 @@ def get_full_path_string(path):
   for i in p_list:
     full_path = full_path / i
   return full_path
-
 def file_to_string(path):
   my_file = get_full_path_string(path) 
   file = my_file.read_text()
   return file 
-
 def get_file_type(path):
   my_file = get_full_path_string(path)
   suffix = my_file.suffix
   return suffix[1:]
-
 def get_css_from_style_tag(path):
   full_code = file_to_string(path)
   parser = h_parser.AdvancedHTMLParser()
   parser.parseStr(full_code)
   css_advancedTag = parser.getElementsByTagName('style')
   return css_advancedTag[0].innerText
-
 def get_all_project_files(dir):
   files = []
   files += get_all_files_of_type(dir, 'html')
   files += get_all_files_of_type(dir, 'css')
   files += get_all_files_of_type(dir, 'js')
   return files
-
 def get_all_files_of_type(dir, filetype):
   pattern = "*." + filetype + "*"
   output = []
