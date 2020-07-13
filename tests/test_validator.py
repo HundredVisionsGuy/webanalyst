@@ -15,7 +15,6 @@ invalid_css_code = """ body {
    align: left;
  }"""
 html_file_with_errors = "tests/test_files/sample_with_errors.html"
-# Fixtures
 
 
 @pytest.mark.parametrize('filename', html_files)
@@ -48,8 +47,6 @@ def css_errors_list(invalid_css_results):
 def valid_css_results():
     results = val.validate_css(valid_css_code)
     return results
-
-# Test HTML validation
 
 
 def test_get_num_markup_errors(invalid_markup):

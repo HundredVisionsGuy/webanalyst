@@ -6,7 +6,7 @@ css_file_path = 'tests/test_files/test.css'
 html_file_path = 'tests/test_files/sample_no_errors.html'
 html_with_css = "tests/test_files/html_with_css.html"
 sample_txt_path = 'tests/test_files/sample.txt'
-working_dir_txt_path = 'sample.txt'
+working_dir_txt_path = 'README.md'
 project_test_css_path = 'project/test.css'
 
 
@@ -34,7 +34,8 @@ def test_file_to_string_with_sample():
 
 def test_file_to_string_in_working_directory():
     sample_text = clerk.file_to_string(working_dir_txt_path)
-    expected = "Sample text from working directory"
+    sample_text = sample_text[:13]
+    expected = "# Web Analyst"
     assert sample_text == expected
 
 

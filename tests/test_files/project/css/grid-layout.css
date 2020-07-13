@@ -1,0 +1,103 @@
+/* layout.css */
+
+/* layouts with grid */
+.container {
+  display: grid;
+  margin: 0 .5rem;
+}
+.container div {
+  background-color: #ffffff;
+  border: .1rem solid #000;
+  border-radius: .5rem;
+  padding: .5rem 1rem;
+}
+header {
+  width: 100%;
+  text-align: center;
+}
+article.page {
+  padding: .5rem .5%;
+}
+.sidebar {
+  background-color: #336699;
+  color: #fff;
+  padding: .5rem 1%;
+}
+.sidebar h2 {
+  color: #E1DABC;
+}
+footer.main {
+  width: 100%;
+}
+/* 700px screens and wider */
+@media only screen and (min-width: 700px) {
+  /* Apply our first grid setup 2-column content */
+  /* header {
+    grid-area: header;
+  }
+  article.page {
+    grid-area: main;
+  }
+  .sidebar {
+    grid-area: sidebar;
+  }
+  footer.footer {
+    grid-area: footer;
+  } */
+  .top-left {
+    grid-area: top-left;
+  }
+  .top-right {
+    grid-area: top-right;
+  }
+  .middle-left {
+    grid-area: middle-left;
+  }
+  .middle-right {
+    grid-area: middle-right;
+  }
+  .bottom-left {
+    grid-area: bottom-left;
+  }
+  .bottom-right {
+    grid-area: bottom-right;
+  }
+  .bottom-1 {
+    grid-area: bottom-1;
+  }
+  .bottom-2 {
+    grid-area: bottom-2;
+  }
+  .bottom-3 {
+    grid-area: bottom-3;
+  }
+  .bottom-4 {
+    grid-area: bottom-4;
+  }
+  .container {
+    min-height: 500px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas:
+      "top-left top-left top-right"
+      "top-left top-left middle-right"
+      "bottom-left bottom-right bottom-right";
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
+    align-content: stretch;
+  }
+  .container.layout2 {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+      "top-left top-left top-right top-right"
+      "top-left top-left top-right top-right"
+      "bottom-1 bottom-2 bottom-3 bottom-4";
+  }
+  .container.layout3 {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas:
+      "top-left top-left top-right"
+      "middle-left middle-right middle-right"
+      "bottom-left middle-right middle-right"
+  }
+}

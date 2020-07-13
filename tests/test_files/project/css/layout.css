@@ -1,0 +1,148 @@
+/* layout.css */
+body {
+  margin: 0;
+  padding: 0;
+}
+/* layouts with grid */
+.container { 
+  display: grid;
+}
+header,
+section,
+article,
+.sidebar,
+footer.main {
+    padding: 1rem .5rem;
+    box-sizing: border-box;
+    margin: 0;
+}
+header {
+  grid-area: header;
+}
+header h1 {
+  font-size: 1.5rem;
+}
+article.page,
+aside.sidebar {
+  max-width: 42rem;
+  margin: 0 auto;
+}
+article.page {
+  transition: all ease-out .5s;
+  grid-area: main;
+}
+article.page.down {
+    margin-top: 4rem;
+}
+.sidebar {
+  grid-area: sidebar;
+ }
+footer.main { 
+  grid-area: footer;
+ }
+.container {
+  grid-template-columns: auto;
+  grid-template-rows: auto ;
+  grid-template-areas: 
+    "header"
+    "main"
+    "sidebar"
+    "footer";
+}
+#image-gallery .container {
+  grid-template-areas: 
+    "header header"
+    "main main"
+    "footer footer";
+}
+/* image gallery styles */
+#image-gallery article.page {
+  max-width: 98%;
+}
+.image-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 100%;
+  background-color: rgb(228, 202, 174);
+  border: .3rem solid slategray;
+  border-radius: .5rem;
+  position: relative;
+}
+.image-gallery figure {
+  margin: 0;
+  width: 250px;
+  transition: all .1s ease-out;
+  margin-bottom: 1rem;
+  border-radius: 1rem;
+  padding: 1rem;
+  border: .1rem solid gray;
+}
+.image-gallery figure:hover {
+  box-shadow: 0 0 2rem #336699;
+}
+.image-gallery figure img {
+  border-radius: 1rem 1rem 0 0;
+}
+.image-gallery .display-box {
+  position: absolute;
+  transition: all .4s ease-out;
+  z-index: 10;
+  opacity: 1;
+  border: .3rem solid #333333;
+  padding: 1rem;
+  background-color: beige;
+}
+.image-gallery .display-box.hidden {
+  z-index: -10;
+  opacity: 0;
+}
+.image-gallery .display-box.hidden img {
+  width: 100%;
+}
+.image-gallery .display-box {
+  z-index: 10;
+  opacity: 1;
+  top: 0;
+  left: 0;
+}
+figcaption {
+  font-size: small;
+}
+
+/* 520px screens and wider */
+@media only screen and (min-width: 520px) {
+  header h1 {
+    font-size: 1.8rem;
+  }
+}
+/* 590px screens and wider */
+@media only screen and (min-width: 590px) {
+  header h1 {
+    font-size: 2rem;
+  }
+}
+/* 911px screens and wider */
+@media only screen and (min-width: 911px) {
+  header h1 {
+    font-size: 2.2rem;
+  }
+  article.page,
+  aside.sidebar {
+      margin-top: 2rem;
+  }
+  .container {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto ;
+    grid-template-areas: 
+      "header header"
+      "main sidebar"
+      "footer footer";
+  }
+}
+
+
+
+
+
+

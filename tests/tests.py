@@ -7,7 +7,7 @@ import io
 import json
 
 import validator
-response = validator.validate_html('./project/sample.html')
+response = validator.get_markup_validity('./project/sample.html')
 
 # Check validator
 input("Press enter to check response")
@@ -16,13 +16,15 @@ for i in response:
 
 f = open("./project/sample.html", "r")
 file = f.read()
-file = file.replace('\n','')
+file = file.replace('\n', '')
 file = file.replace('  ', '')
+type(file)
+
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
-        #self.feed(data)
+        # self.feed(data)
         self.starttags = []
         self.endtags = []
 
@@ -42,6 +44,7 @@ class MyHTMLParser(HTMLParser):
 
     def return_endtags(self):
         return self.endtags
+
 
 parser = MyHTMLParser()
 

@@ -1,0 +1,23 @@
+/* general.css
+    general typography
+    and colors
+*/
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: rgb(206, 208, 198);
+  color: rgb(10, 2, 0);
+  font-size: 120%;
+  margin: 0;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Righteous', sans-serif;
+  color: rgb(54, 79, 117);
+  margin: 0;
+  padding: 1rem .5rem;
+}
+p {
+  padding: 1rem .5rem;
+  margin: 0;
+  line-height: 1.5;
+}

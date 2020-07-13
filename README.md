@@ -162,6 +162,8 @@ Students should also be applying solid design skills such as use of negative spa
 #### HTML
 At this level, students should be comfortable creating full-blown websites that employ multiple pages that all link to the same style-sheet/s and use a consistent nav-bar. 
 
+Students should be able to demonstrate the markup belonging to forms as well as form validation.
+
 They should be able to showcase their skills through a portfolio of work or a web project (like a company site or travel brochure or web app). 
 
 #### CSS
