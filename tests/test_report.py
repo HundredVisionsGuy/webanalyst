@@ -6,34 +6,34 @@ import pytest
 import report
 import clerk
 
-about_me_directory = "tests/test_files/projects/about_me/"
-about_me_readme_path = about_me_directory + "README.md"
-
-
-@pytest.fixture
-def readme():
-    readme_text = clerk.file_to_string(about_me_readme_path)
-    return readme_text
+about_me_readme_path = "tests/test_files/projects/about_me/README.md"
 
 
 @pytest.fixture
 def my_report():
-    my_report = report.Report()
+    my_report = report.Report(about_me_readme_path)
     return my_report
 
 
-def test_report_for_report_object():
+def test_report_for_report_object(my_report):
     assert my_report
 
 
-def test_get_readme_text_for_about_me(readme):
-    results = readme[:24]
+def test_get_readme_text_for_about_me(my_report):
+    results = my_report.get_readme_text()[:24]
     expected = "# Project Name: About Me"
     assert results == expected
 
 
-def test_report_for_readme_text_first_line(my_report):
-    my_report.set_readme_text(about_me_readme_path)
-    results = my_report.get_readme_text()[:14]
-    expected = "# Project Name"
+def test_report_for_report_title_from_about_me(my_report):
+    my_report.set_title()
+    results = my_report.get_title()
+    expected = "About Me"
+    assert results == expected
+
+
+def test_report_for_get_description_for_about_me(my_report):
+    my_report.set_description()
+    results = my_report.get_description()
+    expected = """Students are asked to create a single web page designed to give information about the student using Headings (h1 & h2), paragraphs, links, and bold and italics."""
     assert results == expected
