@@ -18,7 +18,7 @@ This project does not meet the requirements for attaining the next level in CSS.
     * Average Words Per Sentence: 14 - 20
     * Average Sentences per paragraph: 1 - 5
 ### HTML
-* Allowable Errors - this project does not allow for HTML errors from the validator
+* Allowable Errors: 0 - this project does not allow for HTML errors from the validator
    
 * Required Elements 
     * All required HTML 5 Elements: [`DOCTYPE`, `HTML`, `HEAD`, `TITLE`, `BODY`]

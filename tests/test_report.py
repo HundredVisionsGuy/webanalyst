@@ -37,3 +37,16 @@ def test_report_for_get_description_for_about_me(my_report):
     results = my_report.get_description()
     expected = """Students are asked to create a single web page designed to give information about the student using Headings (h1 & h2), paragraphs, links, and bold and italics."""
     assert results == expected
+
+
+def test_report_for_get_html_level(my_report):
+    results = my_report.get_html_level()
+    expected = "101"
+    assert results == expected
+
+
+def test_report_details_for_persistent_html_level(my_report):
+    my_report.get_html_level()
+    results = my_report.report_details["html_level"]
+    expected = "101"
+    assert results == expected
