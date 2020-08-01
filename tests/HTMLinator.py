@@ -13,6 +13,13 @@ def get_num_elements(el, path):
     return len(elements)
 
 
+def get_elements(el, path):
+    with open(path) as fp:
+        soup = BeautifulSoup(fp, 'html.parser')
+        elements = soup.find_all(el)
+    return elements
+
+
 if __name__ == "__main__":
     print("Hello")
     html_file_with_errors = "tests/test_files/sample_no_errors.html"
@@ -21,3 +28,6 @@ if __name__ == "__main__":
         ps = get_num_elements('p', html_file_with_errors)
         print("There are {} {} elements in '{}'".format(
             ps, 'p', html_file_with_errors))
+        p_list = get_elements('p', html_file_with_errors)
+        for p in p_list:
+            print(p.contents[0])
