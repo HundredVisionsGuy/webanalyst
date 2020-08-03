@@ -5,6 +5,7 @@
 import pytest
 import report
 import clerk
+from bs4 import BeautifulSoup
 
 about_me_dir_path = "tests/test_files/projects/about_me/"
 
@@ -26,6 +27,7 @@ def report_readme_list():
 def my_general_report(report_readme_list):
     general_report = report.GeneralReport(
         report_readme_list, about_me_dir_path)
+    general_report.generate_report()
     return general_report
 
 
@@ -39,6 +41,13 @@ def my_html_report(report_readme_list):
 def my_css_report(report_readme_list):
     css_report = report.CSSReport(report_readme_list, about_me_dir_path)
     return css_report
+
+
+@pytest.fixture
+def paragraph_tag():
+    p = "<p>I was born a young child in Phoenix, Arizona. I was the last of five children, but I had a good childhood.</p>"
+    p_tag = BeautifulSoup(p, 'html.parser')
+    return p_tag
 
 
 def test_report_for_report_object(my_report):
@@ -74,4 +83,28 @@ def test_html_report_for_get_html_level(my_html_report):
 def test_report_for_about_me_wordcount(my_general_report):
     results = my_general_report.get_word_count()
     expected = 61
+    assert results == expected
+
+
+def test_general_report_get_num_words(my_general_report, paragraph_tag):
+    results = my_general_report.get_num_words(paragraph_tag)
+    expected = 22
+    assert results == expected
+
+
+def test_html_report_for_num_of_files(my_html_report):
+    results = my_html_report.get_num_html_files()
+    expected = 1
+    assert results == expected
+
+
+def test_css_report_for_num_of_files(my_css_report):
+    results = my_css_report.get_num_css_files()
+    expected = 0
+    assert results == expected
+
+
+def test_css_report_for_num_style_tags_1(my_css_report):
+    results = my_css_report.get_num_style_tags()
+    expected = 1
     assert results == expected

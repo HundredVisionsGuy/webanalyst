@@ -1,6 +1,7 @@
 import clerk
 import re
 import HTMLinator as html
+from bs4 import BeautifulSoup
 
 
 class Report:
@@ -8,9 +9,9 @@ class Report:
         self.__readme_path = dir_path + "README.md"
         self.__readme_text = clerk.file_to_string(self.__readme_path)
         self.__readme_list = re.split("[\n]", self.__readme_text)
-        self.__general_report = None
-        self.__html_report = None
-        self.__css_report = None
+        self.general_report = None
+        self.html_report = None
+        self.css_report = None
         self.__dir_path = dir_path
 
     def get_readme_text(self):
@@ -24,15 +25,15 @@ class Report:
         self.get_readme_text()
 
         # instantiate all reports
-        self.__general_report = GeneralReport(self.__readme_list,
-                                              self.__dir_path)
-        self.__html_report = HTMLReport(self.__readme_list,
-                                        self.__dir_path)
-        self.__css_report = CSSReport(self.__readme_list,
+        self.general_report = GeneralReport(self.__readme_list,
+                                            self.__dir_path)
+        self.html_report = HTMLReport(self.__readme_list,
                                       self.__dir_path)
+        self.css_report = CSSReport(self.__readme_list,
+                                    self.__dir_path)
 
         # run each report
-        self.__general_report.generate_report()
+        self.general_report.generate_report()
 
 
 class GeneralReport:
@@ -40,6 +41,8 @@ class GeneralReport:
         self.__dir_path = dir_path
         self.title = ""
         self.description = ""
+        self.sentences = []
+        self.word_count = 0
         self.__readme_list = readme_list
         self.report_details = {
             "writing_goals": {
@@ -57,7 +60,7 @@ class GeneralReport:
     def generate_report(self):
         self.set_title()
         self.set_description()
-        self.get_word_count()
+        self.set_word_count()
 
     def get_report_details(self):
         return self.report_details
@@ -86,11 +89,26 @@ class GeneralReport:
     def get_description(self):
         return self.description
 
-    def get_word_count(self):
+    def set_word_count(self):
         html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
-        paragraphs = []
         for file in html_files:
-            paragraphs.append(html.get_elements("p", file))
+            element_list = html.get_elements("p", file)
+            for p in element_list:
+                self.word_count += self.get_num_words(p)
+
+    def get_word_count(self):
+        return self.word_count
+
+    def get_num_words(self, element):
+        # Get words from element
+        words = html.get_element_content(element)
+
+        # Get a word count
+        word_list = words.split()
+        return len(word_list)
+
+    def get_num_sentences(self):
+        pass
 
 
 class HTMLReport:
@@ -114,6 +132,10 @@ class HTMLReport:
         self.report_details["html_level"] = row_list[1].strip()
         return self.report_details["html_level"]
 
+    def get_num_html_files(self):
+        html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
+        return len(html_files)
+
 
 class CSSReport:
     def __init__(self, readme_list, dir_path):
@@ -127,6 +149,19 @@ class CSSReport:
             "meets_requirements": False
         }
 
+    def get_num_css_files(self):
+        css_files = clerk.get_all_files_of_type(self.__dir_path, 'css')
+        return len(css_files)
+
+    def get_num_style_tags(self):
+        # get HTML files
+        html_files = clerk.get_all_files_of_type(self.__dir_path, 'html')
+        count = 0
+        for file in html_files:
+            style_tags = html.get_elements("style", file)
+            count += len(style_tags)
+        return count
+
 
 if __name__ == "__main__":
     about_me_readme_path = "tests/test_files/projects/about_me/"
@@ -134,3 +169,5 @@ if __name__ == "__main__":
     about_report = Report(about_me_readme_path)
     about_report.generate_report()
     about_report.get_readme_text()
+    wordcount = about_report.general_report.get_num_words()
+    print(wordcount)
