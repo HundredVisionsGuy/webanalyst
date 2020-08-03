@@ -20,7 +20,14 @@ def get_elements(el, path):
     return elements
 
 
+def get_element_content(el):
+    return el.get_text()
+
+
 if __name__ == "__main__":
+    p = "<p>I was born a young child in Phoenix, Arizona. I was the last of five children, but I had a good childhood.</p>"
+    p_tag = BeautifulSoup(p, 'html.parser')
+    print(str(p_tag))
     print("Hello")
     html_file_with_errors = "tests/test_files/sample_no_errors.html"
     with open(html_file_with_errors) as fp:
