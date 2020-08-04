@@ -134,6 +134,12 @@ def test_about_me_html_report_for_num_of_files(about_me_html_report):
     assert results == expected
 
 
+def test_large_project_html_report_for_num_of_files(my_large_project_html_report):
+    results = my_large_project_html_report.get_num_html_files()
+    expected = 2
+    assert results == expected
+
+
 def test_about_me_css_report_for_num_of_files(about_me_css_report):
     results = about_me_css_report.get_num_css_files()
     expected = 0
