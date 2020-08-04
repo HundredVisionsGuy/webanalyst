@@ -2,7 +2,7 @@ import pytest
 import clerk
 
 # TODO - separate tests based on command-line flag
-css_file_path = 'tests/test_files/projects/test_project/test.css'
+css_file_path = 'tests/test_files/projects/large_project/test.css'
 html_file_path = 'tests/test_files/sample_no_errors.html'
 html_with_css = "tests/test_files/html_with_css.html"
 sample_txt_path = 'tests/test_files/sample.txt'
@@ -45,22 +45,22 @@ def test_file_to_string_in_project_directory():
     assert sample_text == expected
 
 
-def test_get_all_project_files_from_test_project():
-    expected = ['tests\\test_files\\projects\\test_project\\gallery.html',
-                'tests\\test_files\\projects\\test_project\\index.html',
-                'tests\\test_files\\projects\\test_project\\css\\general.css',
-                'tests\\test_files\\projects\\test_project\\css\\grid-layout.css',
-                'tests\\test_files\\projects\\test_project\\css\\layout.css',
-                'tests\\test_files\\projects\\test_project\\css\\navigation.css',
-                'tests\\test_files\\projects\\test_project\\js\\scripts.js']
+def test_get_all_project_files_from_large_project():
+    expected = ['tests\\test_files\\projects\\large_project\\gallery.html',
+                'tests\\test_files\\projects\\large_project\\index.html',
+                'tests\\test_files\\projects\\large_project\\css\\general.css',
+                'tests\\test_files\\projects\\large_project\\css\\grid-layout.css',
+                'tests\\test_files\\projects\\large_project\\css\\layout.css',
+                'tests\\test_files\\projects\\large_project\\css\\navigation.css',
+                'tests\\test_files\\projects\\large_project\\js\\scripts.js']
     results = clerk.get_all_project_files(
-        'tests/test_files/projects/test_project')
+        'tests/test_files/projects/large_project')
     assert expected == results
 
 
-def test_get_all_html_project_files_from_test_project():
-    expected = ['tests\\test_files\\projects\\test_project\\gallery.html',
-                'tests\\test_files\\projects\\test_project\\index.html']
+def test_get_all_html_project_files_from_large_project():
+    expected = ['tests\\test_files\\projects\\large_project\\gallery.html',
+                'tests\\test_files\\projects\\large_project\\index.html']
     results = clerk.get_all_files_of_type(
-        'tests/test_files/projects/test_project', 'html')
+        'tests/test_files/projects/large_project', 'html')
     assert expected == results
