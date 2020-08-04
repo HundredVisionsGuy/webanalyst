@@ -18,7 +18,7 @@ def about_me_report():
 
 
 @pytest.fixture
-def my_large_project_report():
+def large_project_report():
     my_test_project = report.Report(large_project_path)
     return my_test_project
 
@@ -46,7 +46,7 @@ def about_me_general_report(about_me_readme_list):
 
 
 @pytest.fixture
-def my_large_project_general_report(large_project_readme_list):
+def large_project_general_report(large_project_readme_list):
     large_project_report = report.GeneralReport(
         large_project_readme_list, large_project_path)
     large_project_report.generate_report()
@@ -60,7 +60,7 @@ def about_me_html_report(about_me_readme_list):
 
 
 @pytest.fixture
-def my_large_project_html_report(large_project_readme_list):
+def large_project_html_report(large_project_readme_list):
     html_report = report.HTMLReport(
         large_project_readme_list, large_project_path)
     return html_report
@@ -73,7 +73,7 @@ def about_me_css_report(about_me_readme_list):
 
 
 @pytest.fixture
-def my_large_project_css_report(large_project_readme_list):
+def large_project_css_report(large_project_readme_list):
     css_report = report.CSSReport(
         large_project_readme_list, large_project_path)
     return css_report
@@ -134,8 +134,8 @@ def test_about_me_html_report_for_num_of_files(about_me_html_report):
     assert results == expected
 
 
-def test_large_project_html_report_for_num_of_files(my_large_project_html_report):
-    results = my_large_project_html_report.get_num_html_files()
+def test_large_project_html_report_for_num_of_files(large_project_html_report):
+    results = large_project_html_report.get_num_html_files()
     expected = 2
     assert results == expected
 
