@@ -41,7 +41,8 @@ class GeneralReport:
         self.__dir_path = dir_path
         self.title = ""
         self.description = ""
-        self.sentences = []
+        self.paragraphs = None
+        self.sentences = 0
         self.word_count = 0
         self.__readme_list = readme_list
         self.report_details = {
@@ -60,6 +61,7 @@ class GeneralReport:
     def generate_report(self):
         self.set_title()
         self.set_description()
+        self.set_paragraphs()
         self.set_word_count()
 
     def get_report_details(self):
@@ -89,12 +91,17 @@ class GeneralReport:
     def get_description(self):
         return self.description
 
-    def set_word_count(self):
+    def set_paragraphs(self):
         html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
         for file in html_files:
-            element_list = html.get_elements("p", file)
-            for p in element_list:
-                self.word_count += self.get_num_words(p)
+            if not self.paragraphs:
+                self.paragraphs = html.get_elements("p", file)
+            else:
+                self.paragraphs.append(html.get_elements("p", file))
+
+    def set_word_count(self):
+        for p in self.paragraphs:
+            self.word_count += self.get_num_words(p)
 
     def get_word_count(self):
         return self.word_count
@@ -169,5 +176,5 @@ if __name__ == "__main__":
     about_report = Report(about_me_readme_path)
     about_report.generate_report()
     about_report.get_readme_text()
-    wordcount = about_report.general_report.get_num_words()
+    # wordcount = about_report.general_report.get_num_words()
     print(wordcount)
