@@ -8,6 +8,7 @@ import clerk
 from bs4 import BeautifulSoup
 
 about_me_dir_path = "tests/test_files/projects/about_me/"
+large_project_path = "tests/test_files/projects/large_project/"
 
 
 @pytest.fixture
@@ -17,8 +18,21 @@ def my_report():
 
 
 @pytest.fixture
+def my_large_project_report():
+    my_test_project = report.Report(large_project_path)
+    return my_test_project
+
+
+@pytest.fixture
 def report_readme_list():
     my_report = report.Report(about_me_dir_path)
+    my_list = my_report.get_readme_list()
+    return my_list
+
+
+@pytest.fixture
+def large_project_readme_list():
+    my_report = report.Report(large_project_path)
     my_list = my_report.get_readme_list()
     return my_list
 
@@ -32,14 +46,36 @@ def my_general_report(report_readme_list):
 
 
 @pytest.fixture
+def my_large_project_general_report(large_project_readme_list):
+    large_project_report = report.GeneralReport(
+        large_project_readme_list, large_project_path)
+    large_project_report.generate_report()
+    return large_project_report
+
+
+@pytest.fixture
 def my_html_report(report_readme_list):
     html_report = report.HTMLReport(report_readme_list, about_me_dir_path)
     return html_report
 
 
 @pytest.fixture
+def my_large_project_html_report(large_project_readme_list):
+    html_report = report.HTMLReport(
+        large_project_readme_list, large_project_path)
+    return html_report
+
+
+@pytest.fixture
 def my_css_report(report_readme_list):
     css_report = report.CSSReport(report_readme_list, about_me_dir_path)
+    return css_report
+
+
+@pytest.fixture
+def my_large_project_css_report(large_project_readme_list):
+    css_report = report.CSSReport(
+        large_project_readme_list, large_project_path)
     return css_report
 
 
