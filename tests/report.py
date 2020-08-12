@@ -2,6 +2,10 @@ import clerk
 import re
 import HTMLinator as html
 from bs4 import BeautifulSoup
+import logging
+
+logging.basicConfig(format='%(asctime)s - %(message)s',
+                    datefmt='%d-%b-%y %H:%M:%S')
 
 
 class Report:
@@ -95,9 +99,19 @@ class GeneralReport:
         html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
         for file in html_files:
             if not self.paragraphs:
-                self.paragraphs = html.get_elements("p", file)
+                self.paragraphs = list(html.get_elements("p", file))
             else:
-                self.paragraphs.append(html.get_elements("p", file))
+                try:
+                    # get list of any p elements
+                    paragraphs = html.get_elements("p", file)
+                    # then loop through and append each
+                    for p in enumerate(paragraphs):
+                        self.paragraphs.append(p[1])
+                except:
+                    print("We have a problem")
+
+    def get_paragraphs(self):
+        return self.paragraphs
 
     def set_word_count(self):
         for p in self.paragraphs:
@@ -172,9 +186,9 @@ class CSSReport:
 
 if __name__ == "__main__":
     about_me_readme_path = "tests/test_files/projects/about_me/"
-
-    about_report = Report(about_me_readme_path)
-    about_report.generate_report()
-    about_report.get_readme_text()
+    large_project_readme_path = "tests/test_files/projects/large_project/"
+    large_project = Report(large_project_readme_path)
+    large_project.generate_report()
+    large_project.get_readme_text()
     # wordcount = about_report.general_report.get_num_words()
-    print(wordcount)
+    # print(wordcount)
