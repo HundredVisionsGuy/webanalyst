@@ -128,6 +128,13 @@ def test_about_me_general_report_for_get_num_words(about_me_general_report, para
     assert results == expected
 
 
+def test_about_me_general_report_for_set_sentences(about_me_general_report, paragraph_tag):
+    expected = 5
+    about_me_general_report.get_sentences()
+    results = len(about_me_general_report.sentences)
+    assert results == expected
+
+
 def test_about_me_html_report_for_num_of_files(about_me_html_report):
     results = about_me_html_report.get_num_html_files()
     expected = 1

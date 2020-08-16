@@ -45,8 +45,8 @@ class GeneralReport:
         self.__dir_path = dir_path
         self.title = ""
         self.description = ""
-        self.paragraphs = None
-        self.sentences = 0
+        self.paragraphs = []
+        self.sentences = []
         self.word_count = 0
         self.__readme_list = readme_list
         self.report_details = {
@@ -66,7 +66,9 @@ class GeneralReport:
         self.set_title()
         self.set_description()
         self.set_paragraphs()
+        self.get_sentences()
         self.set_word_count()
+        self.analyze_results()
 
     def get_report_details(self):
         return self.report_details
@@ -128,8 +130,25 @@ class GeneralReport:
         word_list = words.split()
         return len(word_list)
 
-    def get_num_sentences(self):
-        pass
+    def get_sentences(self):
+        sentence_list = self.paragraphs
+        paragraphs = ""
+        for i in enumerate(sentence_list):
+            p = str(i[1])[3:-4]
+            p = p.strip()
+            paragraphs += p
+        sentences = paragraphs.split('.')
+        sentences.remove('')
+        self.sentences = sentences
+
+    def analyze_results(self):
+        # calculate WPS and SPP
+        SPP = len(self.sentences) / len(self.paragraphs)
+        self.report_details["writing_goal_results"]["actual_SPP"] = SPP
+
+        # Is SPP within range?
+        minSPP, maxSPP = self.report_details["writing_goals"]["average_SPP"]
+        self.report_details["writing_goal_results"]["meets_SPP"] = SPP > minSPP and SPP < maxSPP
 
 
 class HTMLReport:
@@ -190,5 +209,9 @@ if __name__ == "__main__":
     large_project = Report(large_project_readme_path)
     large_project.generate_report()
     large_project.get_readme_text()
-    # wordcount = about_report.general_report.get_num_words()
-    # print(wordcount)
+
+    # Create about_me report
+    about_me_report = Report(about_me_readme_path)
+    about_me_report.generate_report()
+    num_sentences = about_me_report.general_report.set_num_sentences()
+    print(num_sentences)
