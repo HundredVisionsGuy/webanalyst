@@ -64,3 +64,17 @@ def test_get_all_html_project_files_from_large_project():
     results = clerk.get_all_files_of_type(
         'tests/test_files/projects/large_project', 'html')
     assert expected == results
+
+
+def test_split_into_sentences():
+    paragraph = "Hello, you! How are you? i am fine Mr. selenium.\nsee ya later."
+    results = len(clerk.split_into_sentences(paragraph))
+    expected = 4
+    assert results == expected
+
+
+def test_remove_inline_tags():
+    paragraph = '<p>Site designed by <a href="mailto:guy@hundredvisions.com">Hundred visions Guy</a> &copy; 2019.</p>'
+    results = clerk.remove_tags(paragraph)
+    expected = 'Site designed by Hundred visions Guy &copy; 2019.'
+    assert results == expected

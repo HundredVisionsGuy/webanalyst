@@ -138,6 +138,13 @@ def test_about_me_general_report_for_get_sentences(about_me_general_report):
     assert results == expected
 
 
+def test_general_report_for_analyze_results(about_me_general_report, large_project_general_report):
+    # analyze about_me report
+    about_me_general_report.analyze_results()
+    # 3 paragraphs and 5 sentences
+    expected_SPP = 1.6666666666666667
+    assert about_me_general_report.report_details["writing_goal_results"]["actual_SPP"] == expected_SPP
+
 # HTMLReport Tests
 
 

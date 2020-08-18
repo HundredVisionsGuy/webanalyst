@@ -134,7 +134,7 @@ class GeneralReport:
         sentence_list = self.paragraphs
         paragraphs = ""
         for i in enumerate(sentence_list):
-            p = str(i[1])[3:-4]
+            p = clerk.remove_tags(str(i[1]))
             p = p.strip()
             paragraphs += p
         self.sentences = clerk.split_into_sentences(paragraphs)
@@ -217,7 +217,7 @@ if __name__ == "__main__":
     num_sentences = about_me_report.general_report.get_num_sentences()
     print(num_sentences)
 
-    # test tokenizer
+    # test clerk
     paragraph = "Hello, you! How are you? i am fine Mr. selenium.\nsee ya later."
     list_of_ps = clerk.split_into_sentences(paragraph)
     for i in list_of_ps:
