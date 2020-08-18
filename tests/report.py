@@ -66,7 +66,7 @@ class GeneralReport:
         self.set_title()
         self.set_description()
         self.set_paragraphs()
-        self.get_sentences()
+        self.set_sentences()
         self.set_word_count()
         self.analyze_results()
 
@@ -130,16 +130,17 @@ class GeneralReport:
         word_list = words.split()
         return len(word_list)
 
-    def get_sentences(self):
+    def set_sentences(self):
         sentence_list = self.paragraphs
         paragraphs = ""
         for i in enumerate(sentence_list):
             p = str(i[1])[3:-4]
             p = p.strip()
             paragraphs += p
-        sentences = paragraphs.split('.')
-        sentences.remove('')
-        self.sentences = sentences
+        self.sentences = clerk.split_into_sentences(paragraphs)
+
+    def get_num_sentences(self):
+        return len(self.sentences)
 
     def analyze_results(self):
         # calculate WPS and SPP
@@ -213,5 +214,11 @@ if __name__ == "__main__":
     # Create about_me report
     about_me_report = Report(about_me_readme_path)
     about_me_report.generate_report()
-    num_sentences = about_me_report.general_report.set_num_sentences()
+    num_sentences = about_me_report.general_report.get_num_sentences()
     print(num_sentences)
+
+    # test tokenizer
+    paragraph = "Hello, you! How are you? i am fine Mr. selenium.\nsee ya later."
+    list_of_ps = clerk.split_into_sentences(paragraph)
+    for i in list_of_ps:
+        print(i)

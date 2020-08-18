@@ -95,6 +95,16 @@ def test_get_readme_text_for_about_me(about_me_report):
     expected = "# Project Name: About Me"
     assert results == expected
 
+# GeneralReport Tests
+
+
+def test_large_project_general_report_for_set_paragraphs(large_project_general_report):
+    # test for number of paragraphs
+    paragraphs = large_project_general_report.get_paragraphs()
+    num_paragraphs = len(paragraphs)
+    expected = 4
+    assert num_paragraphs == expected
+
 
 def test_about_me_general_report_for_title(about_me_general_report):
     about_me_general_report.set_title()
@@ -110,12 +120,6 @@ def test_about_me_report_for_get_description(about_me_general_report):
     assert results == expected
 
 
-def test_about_me_html_report_for_get_html_level(about_me_html_report):
-    results = about_me_html_report.get_html_level()
-    expected = "101"
-    assert results == expected
-
-
 def test_about_me_report_for_wordcount(about_me_general_report):
     results = about_me_general_report.get_word_count()
     expected = 61
@@ -128,10 +132,18 @@ def test_about_me_general_report_for_get_num_words(about_me_general_report, para
     assert results == expected
 
 
-def test_about_me_general_report_for_set_sentences(about_me_general_report, paragraph_tag):
+def test_about_me_general_report_for_get_sentences(about_me_general_report):
     expected = 5
-    about_me_general_report.get_sentences()
     results = len(about_me_general_report.sentences)
+    assert results == expected
+
+
+# HTMLReport Tests
+
+
+def test_about_me_html_report_for_get_html_level(about_me_html_report):
+    results = about_me_html_report.get_html_level()
+    expected = "101"
     assert results == expected
 
 
@@ -147,13 +159,7 @@ def test_large_project_html_report_for_num_of_files(large_project_html_report):
     assert results == expected
 
 
-def test_large_project_general_report_for_set_paragraphs(large_project_general_report):
-    # test for number of paragraphs
-    paragraphs = large_project_general_report.get_paragraphs()
-    num_paragraphs = len(paragraphs)
-    expected = 4
-    assert num_paragraphs == expected
-
+# CSSReport tests
 
 def test_about_me_css_report_for_num_of_files(about_me_css_report):
     results = about_me_css_report.get_num_css_files()
