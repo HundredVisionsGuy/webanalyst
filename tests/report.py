@@ -176,7 +176,10 @@ class GeneralReport:
         self.report_details["num_files_results"]["Meets HTML"] = num_html_files >= min_required
 
     def meets_num_css_files(self):
-        pass
+        num_css_files = len(
+            clerk.get_all_files_of_type(self.__dir_path, "css"))
+        min_required = self.report_details["min_number_files"]["CSS"]
+        self.report_details["num_files_results"]["Meets CSS"] = num_css_files >= min_required
 
     def analyze_results(self):
         # Does it meet min file requirements?
