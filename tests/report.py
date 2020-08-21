@@ -50,9 +50,17 @@ class GeneralReport:
         self.word_count = 0
         self.__readme_list = readme_list
         self.report_details = {
+            "min_number_files": {
+                "HTML": None,
+                "CSS": None
+            },
+            "num_files_results": {
+                "Meets HTML": False,
+                "Meets CSS": False
+            },
             "writing_goals": {
                 "average_SPP": [1, 5],
-                "average_WPS": [14, 20],
+                "average_WPS": [10, 20],
             },
             "writing_goal_results": {
                 "actual_SPP": 0,
@@ -68,6 +76,7 @@ class GeneralReport:
         self.set_paragraphs()
         self.set_sentences()
         self.set_word_count()
+        self.set_min_number_files()
         self.analyze_results()
 
     def get_report_details(self):
@@ -96,6 +105,22 @@ class GeneralReport:
 
     def get_description(self):
         return self.description
+
+    def set_min_number_files(self):
+        min_html_files = 0
+        min_css_files = 0
+        for row in self.__readme_list:
+            if "* [HTML]" in row:
+                num = re.search(r'[0-9]+', row)
+                if num:
+                    min_html_files = num.group(0)
+            if "* [CSS]" in row:
+                num = re.search(r'[0-9]+', row)
+                if num:
+                    min_css_files = num.group(0)
+
+        self.report_details["min_number_files"]["HTML"] = int(min_html_files)
+        self.report_details["min_number_files"]["CSS"] = int(min_css_files)
 
     def set_paragraphs(self):
         html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
@@ -142,7 +167,22 @@ class GeneralReport:
     def get_num_sentences(self):
         return len(self.sentences)
 
+    def meets_num_html_files(self):
+        # compare actual number of files to min
+        # number of files.
+        num_html_files = len(
+            clerk.get_all_files_of_type(self.__dir_path, "html"))
+        min_required = self.report_details["min_number_files"]["HTML"]
+        self.report_details["num_files_results"]["Meets HTML"] = num_html_files >= min_required
+
+    def meets_num_css_files(self):
+        pass
+
     def analyze_results(self):
+        # Does it meet min file requirements?
+        self.meets_num_html_files()
+        self.meets_num_css_files()
+
         # calculate WPS and SPP
         SPP = len(self.sentences) / len(self.paragraphs)
         self.report_details["writing_goal_results"]["actual_SPP"] = SPP
@@ -151,18 +191,52 @@ class GeneralReport:
         minSPP, maxSPP = self.report_details["writing_goals"]["average_SPP"]
         self.report_details["writing_goal_results"]["meets_SPP"] = SPP > minSPP and SPP < maxSPP
 
+        # calculate words per sentence WPS
+        WPS = self.word_count / self.get_num_sentences()
+        self.report_details["writing_goal_results"]["actual_WPS"] = WPS
+
+        # Is WPS within range?
+        min_wps, max_wps = self.report_details["writing_goals"]["average_WPS"]
+        self.report_details["writing_goal_results"]["meets_WPS"] = WPS > min_wps and WPS < max_wps
+
 
 class HTMLReport:
     def __init__(self, readme_list, dir_path):
         self.__dir_path = dir_path
         self.html_level = "0"
         self.__readme_list = readme_list
+        self.html_requirements_list = []
         self.report_details = {
             "html_level": "",
+            "can_attain_level": False,
             "html_level_attained": "",
             "min_num_required_files": 0,
+            "required_elements": {
+                "DOCTYPE": 1,
+                "HTML": 1,
+                "HEAD": 1,
+                "TITLE": 1,
+                "BODY": 1, },
             "meets_requirements": False
         }
+
+    def get_html_requirements_list(self):
+        h_req_list = []
+        # create a flag to switch On when in the HTML section and off
+        # when that section is over (### CSS)
+        correct_section = False
+        for row in enumerate(self.__readme_list):
+            # 1st row in the section should be ### HTML
+            if row[1] == "### HTML":
+                # it's the beginning of the correct section
+                correct_section = True
+            if row[1] == "### CSS":
+                break
+            if correct_section:
+                h_req_list.append(row[1])
+
+        self.html_requirements_list = h_req_list
+        return self.html_requirements_list
 
     def get_html_level(self):
         # extract HTML level from readme_list
@@ -176,6 +250,18 @@ class HTMLReport:
     def get_num_html_files(self):
         html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
         return len(html_files)
+
+    def can_attain_level(self):
+        # Determine whether or not this project is enough
+        # to qualify to meet the level
+        description = ""
+        for i in range(len(self.__readme_list)):
+            row = self.__readme_list[i]
+            if "### HTML Level" in row:
+                # set description to next row (after the header)
+                description = self.__readme_list[i+1]
+                break
+        return "does meet" in description
 
 
 class CSSReport:
@@ -222,3 +308,8 @@ if __name__ == "__main__":
     list_of_ps = clerk.split_into_sentences(paragraph)
     for i in list_of_ps:
         print(i)
+
+    can_attain = about_me_report.html_report.can_attain_level()
+    print(f"It is {can_attain} that this project can attain the level.")
+
+    html_list = about_me_report.html_report.get_html_requirements_list()

@@ -15,8 +15,9 @@ This project does not meet the requirements for attaining the next level in CSS.
     * [HTML] At least 1 HTML doc/s
     * [CSS] No files are necessary, but there should be a style tag
 * Writing Goals: students are expected to aim for the following:
-    * Average Words Per Sentence: 14 - 20
+    * Average Words Per Sentence: 10 - 20
     * Average Sentences per paragraph: 1 - 5
+    
 ### HTML
 * Allowable Errors: 0 - this project does not allow for HTML errors from the validator
    
