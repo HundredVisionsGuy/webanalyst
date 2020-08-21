@@ -19,8 +19,8 @@ html_file_with_errors = "tests/test_files/sample_with_errors.html"
 
 @pytest.mark.parametrize('filename', html_files)
 def test_no_html_validator_errors(filename):
-    path = './project/' + filename
-    no_errors = val.get_markup_validity(path)
+    #path = './project/' + filename
+    no_errors = val.get_markup_validity(filename)
     num_errors = len(no_errors)
     assert num_errors == 0
 

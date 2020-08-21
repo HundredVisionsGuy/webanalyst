@@ -77,11 +77,13 @@ def get_num_markup_warnings(markup_errors):
     return count
 
 
-def get_html_file_names():
+def get_html_file_names(dir_path=r'.' + os.sep + 'project'):
     names = []
-    for filename in os.listdir('./project'):
-        if filename.endswith(".html"):
-            names.append(filename)
+    for subdir, dirs, files in os.walk(dir_path):
+        for filename in files:
+            filepath = subdir + os.sep + filename
+            if filepath.endswith(".html"):
+                names.append(filepath)
     return names
 
 
