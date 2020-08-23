@@ -4,13 +4,24 @@
 
 from bs4 import BeautifulSoup
 import validator as val
+import os
 
 
-def get_num_elements(el, path):
+def get_num_elements_in_file(el, path):
     with open(path) as fp:
         soup = BeautifulSoup(fp, 'html.parser')
         elements = soup.find_all(el)
     return len(elements)
+
+
+def get_num_elements_in_folder(el, dir_path):
+    elements = 0
+    for subdir, dirs, files in os.walk(dir_path):
+        for filename in files:
+            filepath = subdir + os.sep + filename
+            if filepath.endswith(".html"):
+                elements += get_num_elements_in_file(el, filepath)
+    return elements
 
 
 def get_elements(el, path):
@@ -28,6 +39,8 @@ if __name__ == "__main__":
     p = "<p>I was born a young child in Phoenix, Arizona. I was the last of five children, but I had a good childhood.</p>"
     p_tag = BeautifulSoup(p, 'html.parser')
     print(str(p_tag))
+    html_about_me_folder = "tests/test_files/projects/about_me/"
+    get_num_elements_in_folder("p", html_about_me_folder)
     print("Hello")
     html_file_with_errors = "tests/test_files/sample_no_errors.html"
     with open(html_file_with_errors) as fp:
