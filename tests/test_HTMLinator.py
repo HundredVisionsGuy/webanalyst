@@ -73,7 +73,13 @@ def test_get_element_content_for_p(p_tag):
     assert results == expected
 
 
-def test_get_get_num_elements_in_file_for_1_doctype():
+def test_get_num_elements_in_file_for_1_doctype():
     results = HT.get_num_elements_in_file('DOCTYPE', html_file_with_errors)
     expected = 1
+    assert results == expected
+
+
+def test_get_num_elements_in_file_for_2_doctypes():
+    results = HT.get_num_elements_in_file('DOCTYPE', file_two_doctypes)
+    expected = 2
     assert results == expected
