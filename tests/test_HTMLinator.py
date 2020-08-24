@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 browser = val.browser
 html_file_with_errors = "tests/test_files/sample_with_errors.html"
 html_about_me_folder = "tests/test_files/projects/about_me/"
+file_two_doctypes = "tests/test_files/sample_two_doctypes.html"
 
 
 @pytest.fixture
@@ -69,4 +70,10 @@ def test_get_elements_for_p_in_index(p_tags):
 def test_get_element_content_for_p(p_tag):
     results = HT.get_element_content(p_tag)
     expected = "I was born a young child in Phoenix, Arizona. I was the last of five children, but I had a good childhood."
+    assert results == expected
+
+
+def test_get_get_num_elements_in_file_for_1_doctype():
+    results = HT.get_num_elements_in_file('DOCTYPE', html_file_with_errors)
+    expected = 1
     assert results == expected

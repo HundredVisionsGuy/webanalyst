@@ -9,6 +9,14 @@ import os
 
 def get_num_elements_in_file(el, path):
     with open(path) as fp:
+        if el.lower() == 'doctype':
+            # bs4 won't find doctype
+            contents = fp.read()
+            contents = contents.lower()
+            substring = '<!'+el.lower()
+            count = contents.count(substring)
+            # return # of doctypes
+            return count
         soup = BeautifulSoup(fp, 'html.parser')
         elements = soup.find_all(el)
     return len(elements)
@@ -40,7 +48,9 @@ if __name__ == "__main__":
     p_tag = BeautifulSoup(p, 'html.parser')
     print(str(p_tag))
     html_about_me_folder = "tests/test_files/projects/about_me/"
-    get_num_elements_in_folder("p", html_about_me_folder)
+    html_file_with_errors = "tests/test_files/sample_with_errors.html"
+
+    num = get_num_elements_in_file("doctype", html_file_with_errors)
     print("Hello")
     html_file_with_errors = "tests/test_files/sample_no_errors.html"
     with open(html_file_with_errors) as fp:
