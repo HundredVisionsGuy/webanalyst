@@ -209,19 +209,103 @@ class HTMLReport:
         self.html_level = "0"
         self.__readme_list = readme_list
         self.html_requirements_list = []
+        self.html_files = []
         self.report_details = {
             "html_level": "",
             "can_attain_level": False,
-            "html_level_attained": "",
+            "html_level_attained": None,
             "min_num_required_files": 0,
             "required_elements": {
-                "DOCTYPE": 1,
-                "HTML": 1,
-                "HEAD": 1,
-                "TITLE": 1,
-                "BODY": 1, },
+                "HTML5_essential_elements": {
+                    "DOCTYPE": 1,
+                    "HTML": 1,
+                    "HEAD": 1,
+                    "TITLE": 1,
+                    "BODY": 1
+                },
+            },
+            "required_elements_found": {
+                "HTML5_essential_elements_found": {},
+            },
+            "meets_required_elements": {
+                "meets_HTML5_essential_elements": False,
+                "meets_other_essential_elements": False},
             "meets_requirements": False
         }
+
+    def generate_report(self):
+        self.get_html_files_list()
+        self.get_html_requirements_list()
+        self.get_html_level()
+        self.ammend_required_elements()
+        self.set_html5_required_elements_found()
+
+    def get_html_files_list(self):
+        self.html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
+        return self.html_files
+
+    def get_required_elements(self):
+        # get a list of all required elements: the keys
+        required_elements = []
+        for element in enumerate(self.report_details["required_elements"].keys()):
+            if element[1] == "HTML5_essential_elements":
+                for nested_el in enumerate(self.report_details["required_elements"]["HTML5_essential_elements"].keys()):
+                    required_elements.append(nested_el[1])
+            else:
+                required_elements.append(element[1])
+        # remove the first nested list
+        required_elements = required_elements[1:]
+        # add the required html5 elements
+        required_elements += self.report_details["required_elements"]["HTML5_essential_elements"].keys()
+        return required_elements
+
+    def set_required_elements_found(self):
+        required_elements = self.get_required_elements()
+        # iterate through each element and get the total number
+        for el in enumerate(required_elements):
+            num = html.get_num_elements_in_folder(el[1], self.__dir_path)
+            # add the element and its number to required_elements_found
+            self.report_details["required_elements_found"][el] = num
+
+    def set_html5_required_elements_found(self):
+        # Get HTML5_essential_elements
+        html5_elements = self.report_details["required_elements"]["HTML5_essential_elements"].copy(
+        )
+        # get # of html files in folder - this is our multiplier
+        num_files = len(self.html_files)
+        for el in enumerate(html5_elements):
+            key = el[1].lower()
+            # val is how many were found
+            val = html.get_num_elements_in_folder(key, self.__dir_path)
+            self.report_details["required_elements_found"]["HTML5_essential_elements_found"][key.upper(
+            )] = val
+
+    def meets_html5_essential_requirements(self):
+        # Get HTML5_essential_elements
+        html5_elements = self.report_details["required_elements"]["HTML5_essential_elements"].copy(
+        )
+        # get # of html files in folder - this is our multiplier
+        num_files = len(self.get_html_files_list())
+        for el in enumerate(html5_elements):
+            key = el[1]
+            val = html.get_num_elements_in_folder(key, self.__dir_path)
+            # if each element has exactly the number of required elements, it passes
+            if val != num_files:
+                return False
+        # all must pass or no pass
+        # any failures and return False
+        # otherwise, return True
+        return True
+
+    def meets_required_elements(self):
+        # set HTML5 essential elements
+
+        # check all other tags to see if they meet
+        pass
+
+    def check_element_for_required_number(self, file_path, element, min_num):
+        num_elements = html.get_num_elements_in_file(element, file_path)
+        return num_elements >= min_num
 
     def get_html_requirements_list(self):
         h_req_list = []
@@ -246,6 +330,7 @@ class HTMLReport:
         for i in self.__readme_list:
             if "### HTML Level" in i:
                 self.report_details["html_level"] = i
+                break
         row_list = re.split("=", self.report_details["html_level"])
         self.report_details["html_level"] = row_list[1].strip()
         return self.report_details["html_level"]
@@ -265,6 +350,21 @@ class HTMLReport:
                 description = self.__readme_list[i+1]
                 break
         return "does meet" in description
+
+    def ammend_required_elements(self):
+        # extract all elements and their minimum #
+        # using a regex to capture the pattern: `EL` : ##
+        ptrn = r"((`(.*)`\s*):(\s*\d*))"
+        for i in self.html_requirements_list:
+            if "`DOCTYPE`" in i:
+                # skip the row with required HTML 5 elements
+                continue
+            match = re.search(ptrn, i)
+            if match:
+                key, val = match.group(2, 4)
+                key = key.strip()[1:-1]
+                # add key and value to required elements
+                self.report_details["required_elements"][key] = int(val)
 
 
 class CSSReport:
@@ -296,23 +396,32 @@ class CSSReport:
 if __name__ == "__main__":
     about_me_readme_path = "tests/test_files/projects/about_me/"
     large_project_readme_path = "tests/test_files/projects/large_project/"
-    large_project = Report(large_project_readme_path)
-    large_project.generate_report()
-    large_project.get_readme_text()
+    # large_project = Report(large_project_readme_path)
+    # large_project.generate_report()
+    # large_project.get_readme_text()
 
     # Create about_me report
     about_me_report = Report(about_me_readme_path)
     about_me_report.generate_report()
-    num_sentences = about_me_report.general_report.get_num_sentences()
-    print(num_sentences)
+    about_me_report.html_report.generate_report()
+    about_me_report.html_report.meets_html5_essential_requirements()
+    print(about_me_report)
+    # # about_me_report.html_report.generate_report()
+    # num_sentences = about_me_report.general_report.get_num_sentences()
+    # about_me_report.html_report.get_html_requirements_list()
+    # about_me_report.html_report.ammend_required_elements()
+    # print(num_sentences)
+    # # get required elements
+    # about_me_report.html_report.set_required_elements_found()
+    # about_me_report.html_report.generate_report()
+    # about_me_report.html_report.meets_html5_essential_requirements()
+    # # test clerk
+    # paragraph = "Hello, you! How are you? i am fine Mr. selenium.\nsee ya later."
+    # list_of_ps = clerk.split_into_sentences(paragraph)
+    # for i in list_of_ps:
+    #     print(i)
 
-    # test clerk
-    paragraph = "Hello, you! How are you? i am fine Mr. selenium.\nsee ya later."
-    list_of_ps = clerk.split_into_sentences(paragraph)
-    for i in list_of_ps:
-        print(i)
+    # can_attain = about_me_report.html_report.can_attain_level()
+    # print(f"It is {can_attain} that this project can attain the level.")
 
-    can_attain = about_me_report.html_report.can_attain_level()
-    print(f"It is {can_attain} that this project can attain the level.")
-
-    html_list = about_me_report.html_report.get_html_requirements_list()
+    # html_list = about_me_report.html_report.get_html_requirements_list()

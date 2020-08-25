@@ -8,6 +8,7 @@ import clerk
 from bs4 import BeautifulSoup
 
 about_me_path = "tests/test_files/projects/about_me/"
+about_me_file_path = about_me_path + "index.html"
 large_project_path = "tests/test_files/projects/large_project/"
 
 
@@ -56,6 +57,7 @@ def large_project_general_report(large_project_readme_list):
 @pytest.fixture
 def about_me_html_report(about_me_readme_list):
     html_report = report.HTMLReport(about_me_readme_list, about_me_path)
+    html_report.generate_report()
     return html_report
 
 
@@ -84,6 +86,11 @@ def paragraph_tag():
     p = "<p>I was born a young child in Phoenix, Arizona. I was the last of five children, but I had a good childhood.</p>"
     p_tag = BeautifulSoup(p, 'html.parser')
     return p_tag
+
+
+@pytest.fixture
+def about_me_required_elements():
+    return ['HTML', 'HEAD', 'TITLE', 'BODY', 'H1', 'H2', 'P', 'A', 'STRONG', 'EM', 'DOCTYPE', 'HTML', 'HEAD', 'TITLE', 'BODY']
 
 
 def test_about_me_report_for_report_object(about_me_report):
@@ -210,6 +217,32 @@ def test_about_me_html_report_for_get_html_requirements_list(about_me_html_repor
     result_list = about_me_html_report.get_html_requirements_list()
     results = "### HTML" in result_list[0] and "`EM`: 3 - 5" in result_list[-1]
     expected = True
+    assert results == expected
+
+
+def test_html_report_for_ammend_required_elements(about_me_html_report):
+    about_me_html_report.ammend_required_elements()
+    assert (
+        "P", 4) in about_me_html_report.report_details["required_elements"].items()
+
+
+def test_html_report_for_meeting_html5_essential_elements(about_me_html_report):
+    results = about_me_html_report.meets_html5_essential_requirements()
+    expected = True
+    assert results == expected
+
+
+def test_html_report_for_check_element_for_required_number(about_me_html_report):
+    # There should be at least 3 paragraphs in about me
+    results = about_me_html_report.check_element_for_required_number(
+        about_me_file_path, "p", 3)
+    expected = True
+    assert results == expected
+
+
+def test_html_report_for_get_required_elements(about_me_html_report, about_me_required_elements):
+    results = about_me_html_report.get_required_elements()
+    expected = about_me_required_elements
     assert results == expected
 
 

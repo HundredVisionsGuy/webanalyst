@@ -9,11 +9,15 @@ import os
 
 def get_num_elements_in_file(el, path):
     with open(path) as fp:
-        if el.lower() == 'doctype':
+        if el.lower() in ['doctype', 'html', 'head', 'title', 'body']:
             # bs4 won't find doctype
             contents = fp.read()
             contents = contents.lower()
-            substring = '<!'+el.lower()
+            substring = el.lower()
+            if el.lower() == 'doctype':
+                substring = '<!' + substring
+            else:
+                substring = '<' + substring
             count = contents.count(substring)
             # return # of doctypes
             return count
