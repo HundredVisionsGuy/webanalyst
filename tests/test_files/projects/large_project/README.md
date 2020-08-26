@@ -28,6 +28,10 @@ This project [does/does not] meet the requirements for attaining the next level 
         + `H1`: 1 per page only
         + `H2`: 2 or more
         + `P` : 4 or more
+    * Other Tags:
+        + `A` : 3 or more
+        + `STRONG`: 3 - 5
+        + `EM`: 3 - 5
 ### CSS
 * Standard Requirements:
     * No CSS errors

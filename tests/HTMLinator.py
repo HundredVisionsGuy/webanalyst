@@ -22,7 +22,7 @@ def get_num_elements_in_file(el, path):
             # return # of doctypes
             return count
         soup = BeautifulSoup(fp, 'html.parser')
-        elements = soup.find_all(el)
+        elements = soup.find_all(el.lower())
     return len(elements)
 
 

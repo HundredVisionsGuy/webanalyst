@@ -16,11 +16,12 @@ def index_doc():
     <h1>About Me</h1>
     <h2>Background</h2>
     <p>I was born a young child in Phoenix, Arizona. I was the last of five children, but I had a good childhood.</p>
-    <p>My favorite memories were of bicycling, exploring the ditch near my house, and making movies with our 8mm camera.
+    <p>My favorite memories were of <strong>bicycling</strong>, <em>exploring the ditch</em> near my house, and
+        <em>making movies</em> with our 8mm camera.
     </p>
     <h2>Hobbies</h2>
-    <p>I love to play guitar and code. I have both an electric and acoustic guitar, but I prefer my acoustic.</p>
-    """
+    <p>I love to play <strong>guitar</strong> and code. I have both an electric and acoustic guitar, but I prefer my
+        acoustic.</p>    """
     index_doc = BeautifulSoup(doc, 'html.parser')
     return index_doc
 

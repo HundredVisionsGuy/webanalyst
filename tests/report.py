@@ -239,6 +239,7 @@ class HTMLReport:
         self.get_html_level()
         self.ammend_required_elements()
         self.set_html5_required_elements_found()
+        self.meets_required_elements()
 
     def get_html_files_list(self):
         self.html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
@@ -254,9 +255,9 @@ class HTMLReport:
             else:
                 required_elements.append(element[1])
         # remove the first nested list
-        required_elements = required_elements[1:]
-        # add the required html5 elements
-        required_elements += self.report_details["required_elements"]["HTML5_essential_elements"].keys()
+        # required_elements = required_elements[1:]
+        # # add the required html5 elements
+        # required_elements += self.report_details["required_elements"]["HTML5_essential_elements"].keys()
         return required_elements
 
     def set_required_elements_found(self):
@@ -298,10 +299,20 @@ class HTMLReport:
         return True
 
     def meets_required_elements(self):
-        # set HTML5 essential elements
-
+        # Get all essential_elements
+        html5_elements = self.report_details["required_elements"].copy(
+        )
+        html5_elements.pop('HTML5_essential_elements', None)
+        # remove essential HTML5 elements
+        print(html5_elements)
         # check all other tags to see if they meet
-        pass
+        for i in enumerate(html5_elements.items()):
+            key, min_value = i[1]
+            print("Key = {} Val = {}".format(key, min_value))
+            val = html.get_num_elements_in_folder(key, self.__dir_path)
+            if val < min_value:
+                return False
+        return True
 
     def check_element_for_required_number(self, file_path, element, min_num):
         num_elements = html.get_num_elements_in_file(element, file_path)
@@ -404,6 +415,7 @@ if __name__ == "__main__":
     about_me_report = Report(about_me_readme_path)
     about_me_report.generate_report()
     about_me_report.html_report.generate_report()
+    about_me_report.html_report.get_required_elements()
     about_me_report.html_report.meets_html5_essential_requirements()
     print(about_me_report)
     # # about_me_report.html_report.generate_report()

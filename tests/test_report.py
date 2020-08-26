@@ -90,7 +90,7 @@ def paragraph_tag():
 
 @pytest.fixture
 def about_me_required_elements():
-    return ['HTML', 'HEAD', 'TITLE', 'BODY', 'H1', 'H2', 'P', 'A', 'STRONG', 'EM', 'DOCTYPE', 'HTML', 'HEAD', 'TITLE', 'BODY']
+    return ['DOCTYPE', 'HTML', 'HEAD', 'TITLE', 'BODY', 'H1', 'H2', 'P', 'STRONG', 'EM']
 
 
 def test_about_me_report_for_report_object(about_me_report):
@@ -215,7 +215,7 @@ def test_about_me_html_report_for_can_attain_next_level(about_me_html_report):
 
 def test_about_me_html_report_for_get_html_requirements_list(about_me_html_report):
     result_list = about_me_html_report.get_html_requirements_list()
-    results = "### HTML" in result_list[0] and "`EM`: 3 - 5" in result_list[-1]
+    results = "### HTML" in result_list[0] and "`EM`: 2 or more" in result_list[-1]
     expected = True
     assert results == expected
 
@@ -223,7 +223,7 @@ def test_about_me_html_report_for_get_html_requirements_list(about_me_html_repor
 def test_html_report_for_ammend_required_elements(about_me_html_report):
     about_me_html_report.ammend_required_elements()
     assert (
-        "P", 4) in about_me_html_report.report_details["required_elements"].items()
+        "P", 3) in about_me_html_report.report_details["required_elements"].items()
 
 
 def test_html_report_for_meeting_html5_essential_elements(about_me_html_report):
@@ -243,6 +243,12 @@ def test_html_report_for_check_element_for_required_number(about_me_html_report)
 def test_html_report_for_get_required_elements(about_me_html_report, about_me_required_elements):
     results = about_me_html_report.get_required_elements()
     expected = about_me_required_elements
+    assert results == expected
+
+
+def test_html_report_for_meeting_essential_elements(about_me_html_report):
+    results = about_me_html_report.meets_required_elements()
+    expected = True
     assert results == expected
 
 
