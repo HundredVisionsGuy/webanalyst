@@ -10,13 +10,17 @@ from bs4 import BeautifulSoup
 about_me_path = "tests/test_files/projects/about_me/"
 about_me_file_path = about_me_path + "index.html"
 large_project_path = "tests/test_files/projects/large_project/"
-
+about_me_dnm_path = "tests/test_files/projects/about_me_does_not_meet/"
 
 @pytest.fixture
 def about_me_report():
     my_report = report.Report(about_me_path)
     return my_report
 
+@pytest.fixture
+def about_me_dnm_report():
+    my_report = report.Report(about_me_dnm_path)
+    return my_report
 
 @pytest.fixture
 def large_project_report():
@@ -30,6 +34,11 @@ def about_me_readme_list():
     my_list = my_report.get_readme_list()
     return my_list
 
+@pytest.fixture
+def about_me_dnn_readme_list():
+    my_report = report.Report(about_me_dnm_path)
+    my_list = my_report.get_readme_list()
+    return my_list
 
 @pytest.fixture
 def large_project_readme_list():
@@ -60,6 +69,11 @@ def about_me_html_report(about_me_readme_list):
     html_report.generate_report()
     return html_report
 
+@pytest.fixture
+def about_me_dnn_html_report(about_me_dnn_readme_list):
+    html_report = report.HTMLReport(about_me_dnn_readme_list, about_me_dnm_path)
+    html_report.generate_report()
+    return html_report
 
 @pytest.fixture
 def large_project_html_report(large_project_readme_list):
@@ -92,6 +106,14 @@ def paragraph_tag():
 def about_me_required_elements():
     return ['DOCTYPE', 'HTML', 'HEAD', 'TITLE', 'BODY', 'H1', 'H2', 'P', 'STRONG', 'EM']
 
+def test_report_for_general_report_pre_generate_report():
+    about_report = report.Report(about_me_path)
+    assert not about_report.general_report
+
+def test_report_for_general_report_post_generate_report():
+    about_report = report.Report(about_me_path)
+    about_report.generate_report()
+    assert about_report.general_report
 
 def test_about_me_report_for_report_object(about_me_report):
     assert about_me_report
@@ -186,6 +208,11 @@ def test_general_report_for_analyze_results(about_me_general_report, large_proje
     meets_WPS_results = about_me_general_report.report_details["writing_goal_results"]["meets_WPS"]
     assert expected_meets_WPS == meets_WPS_results
 
+
+def test_general_report_for_get_report_details_min_number_files(about_me_general_report):
+    details = about_me_general_report.get_report_details()
+    assert details['min_number_files']['HTML'] == 1
+
 # HTMLReport Tests
 
 
@@ -250,6 +277,22 @@ def test_html_report_for_meeting_essential_elements(about_me_html_report):
     results = about_me_html_report.meets_required_elements()
     expected = True
     assert results == expected
+
+def test_html_report_for_set_required_elements_about_me_h1(about_me_html_report):
+    about_me_html_report.set_required_elements_found()
+    results = about_me_html_report.report_details["required_elements"]["H1"]
+    assert results == 1
+
+
+def test_html_report_for_set_required_elements_about_me_h2(about_me_html_report):
+    about_me_html_report.set_required_elements_found()
+    results = about_me_html_report.report_details["required_elements"]["H2"]
+    assert results == 2
+
+def test_html_report_meets_htmle5_essential_requirements_for_false(about_me_dnn_html_report):
+    results = about_me_dnn_html_report.meets_html5_essential_requirements()
+    assert results == False
+
 
 
 # CSSReport tests

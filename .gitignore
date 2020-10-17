@@ -136,3 +136,9 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# ignore coverage reports
+htmlcov/
+.coverage
+coverage/
+cov.xml

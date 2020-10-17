@@ -377,7 +377,9 @@ class HTMLReport:
                 # add key and value to required elements
                 self.report_details["required_elements"][key] = int(val)
 
-
+    def get_report_details(self):
+        return self.report_details
+        
 class CSSReport:
     def __init__(self, readme_list, dir_path):
         self.__dir_path = dir_path
@@ -417,7 +419,7 @@ if __name__ == "__main__":
     about_me_report.html_report.generate_report()
     about_me_report.html_report.get_required_elements()
     about_me_report.html_report.meets_html5_essential_requirements()
-    print(about_me_report)
+    print(about_me_report.html_report.get_report_details())
     # # about_me_report.html_report.generate_report()
     # num_sentences = about_me_report.general_report.get_num_sentences()
     # about_me_report.html_report.get_html_requirements_list()
