@@ -78,6 +78,7 @@ class GeneralReport:
         self.set_word_count()
         self.set_min_number_files()
         self.analyze_results()
+        self.publish_results()
 
     def get_report_details(self):
         return self.report_details
@@ -202,6 +203,13 @@ class GeneralReport:
         min_wps, max_wps = self.report_details["writing_goals"]["average_WPS"]
         self.report_details["writing_goal_results"]["meets_WPS"] = WPS > min_wps and WPS < max_wps
 
+    def publish_results(self):
+        # Get report_template
+        # Modify table in section#general
+        # Append the following tds
+            # Min HTML files & Actual HTML files
+            # Min CSS files & Actual CSS files
+        pass
 
 class HTMLReport:
     def __init__(self, readme_list, dir_path):

@@ -8,7 +8,7 @@ browser = val.browser
 html_file_with_errors = "tests/test_files/sample_with_errors.html"
 html_about_me_folder = "tests/test_files/projects/about_me/"
 file_two_doctypes = "tests/test_files/sample_two_doctypes.html"
-
+html_with_css = "tests/test_files/html_with_css.html"
 
 @pytest.fixture
 def index_doc():
@@ -42,6 +42,11 @@ def p_tag():
 def error_report():
     return val.get_markup_validity(html_file_with_errors)
 
+def test_get_html_for_html_with_css_for_style_contents():
+    contents = HT.get_html(html_with_css)
+    results = contents.find("style")
+    expected = "color:red;" in results.contents[0]
+    assert expected
 
 def test_get_number_of_elements_in_file_for_p():
     results = HT.get_num_elements_in_file('p', html_file_with_errors)
