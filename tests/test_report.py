@@ -52,8 +52,11 @@ def about_me_general_report(about_me_readme_list):
     general_report = report.GeneralReport(
         about_me_readme_list, about_me_path)
     general_report.generate_report()
-    return general_report
-
+    yield general_report
+    # teardown time
+    # delete files in report folder
+    if clerk.file_exists(report.report_path):
+        clerk.delete_file(report.report_path) 
 
 @pytest.fixture
 def large_project_general_report(large_project_readme_list):
@@ -212,6 +215,11 @@ def test_general_report_for_analyze_results(about_me_general_report, large_proje
 def test_general_report_for_get_report_details_min_number_files(about_me_general_report):
     details = about_me_general_report.get_report_details()
     assert details['min_number_files']['HTML'] == 1
+
+def test_publish_results_for_report_file_existing(about_me_general_report):
+    about_me_general_report.publish_results()
+    results = clerk.file_exists(report.report_path)
+    assert results
 
 # HTMLReport Tests
 

@@ -8,7 +8,12 @@ html_with_css = "tests/test_files/html_with_css.html"
 sample_txt_path = 'tests/test_files/sample.txt'
 working_dir_txt_path = 'README.md'
 project_readme_path = 'project/README.md'
+report_template_path = 'tests/report_template.html'
 
+def test_clerk_for_file_exists_for_report_template():
+    results = clerk.file_exists(report_template_path)
+    expected = True
+    assert results == expected
 
 def test_get_file_type_for_html():
     filetype = clerk.get_file_type(html_file_path)

@@ -16,6 +16,16 @@ websites = r"[.](com|net|org|io|gov)"
 # tag removal pattern
 TAG_RE = re.compile(r'<[^>]+>')
 
+def file_exists(filename):
+    filename = Path(filename)
+    return filename.exists()
+
+def delete_file(filepath):
+    data_file = Path(filepath)
+    try:
+        data_file.unlink()
+    except IsADirectoryError as e:
+        print(f'Error: {data_file} : {e.strerror}')
 
 def get_path_list(path):
     path_list = path.split('/')

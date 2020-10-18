@@ -6,7 +6,8 @@ import logging
 
 logging.basicConfig(format='%(asctime)s - %(message)s',
                     datefmt='%d-%b-%y %H:%M:%S')
-
+report_template_path = "tests/report_template.html"
+report_path = "report/report.html"
 
 class Report:
     def __init__(self, dir_path):
@@ -205,11 +206,17 @@ class GeneralReport:
 
     def publish_results(self):
         # Get report_template
+        report_template = html.get_html(report_template_path)
+        report_content = report_template
         # Modify table in section#general
         # Append the following tds
             # Min HTML files & Actual HTML files
             # Min CSS files & Actual CSS files
-        pass
+
+        # Save new HTML as report/report.html
+        with open('report/report.html', 'w') as f:
+            f.write(str(report_content.contents[2]))
+        
 
 class HTMLReport:
     def __init__(self, readme_list, dir_path):

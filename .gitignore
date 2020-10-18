@@ -142,3 +142,7 @@ htmlcov/
 .coverage
 coverage/
 cov.xml
+
+# except the README in the report folder
+report/*
+!report/README.md
