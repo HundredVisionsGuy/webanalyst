@@ -216,6 +216,7 @@ def test_general_report_for_get_report_details_min_number_files(about_me_general
     details = about_me_general_report.get_report_details()
     assert details['min_number_files']['HTML'] == 1
 
+
 def test_publish_results_for_report_file_existing(about_me_general_report):
     about_me_general_report.publish_results()
     results = clerk.file_exists(report.report_path)

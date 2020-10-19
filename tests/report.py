@@ -50,6 +50,8 @@ class GeneralReport:
         self.sentences = []
         self.word_count = 0
         self.__readme_list = readme_list
+        self.num_html_files = 0
+        self.num_css_files = 0
         self.report_details = {
             "min_number_files": {
                 "HTML": None,
@@ -172,16 +174,16 @@ class GeneralReport:
     def meets_num_html_files(self):
         # compare actual number of files to min
         # number of files.
-        num_html_files = len(
+        self.num_html_files = len(
             clerk.get_all_files_of_type(self.__dir_path, "html"))
         min_required = self.report_details["min_number_files"]["HTML"]
-        self.report_details["num_files_results"]["Meets HTML"] = num_html_files >= min_required
+        self.report_details["num_files_results"]["Meets HTML"] = self.num_html_files >= min_required
 
     def meets_num_css_files(self):
-        num_css_files = len(
+        self.num_css_files = len(
             clerk.get_all_files_of_type(self.__dir_path, "css"))
         min_required = self.report_details["min_number_files"]["CSS"]
-        self.report_details["num_files_results"]["Meets CSS"] = num_css_files >= min_required
+        self.report_details["num_files_results"]["Meets CSS"] = self.num_css_files >= min_required
 
     def analyze_results(self):
         # Does it meet min file requirements?
@@ -208,11 +210,41 @@ class GeneralReport:
         # Get report_template
         report_template = html.get_html(report_template_path)
         report_content = report_template
-        # Modify table in section#general
-        # Append the following tds
-            # Min HTML files & Actual HTML files
-            # Min CSS files & Actual CSS files
 
+        goals_details = self.report_details["min_number_files"]
+        goals_results = self.report_details["num_files_results"]
+        writing_goals = self.report_details["writing_goals"]
+        writing_results = self.report_details["writing_goal_results"]
+
+        # Modify table in section#general
+        
+        # Append the following tds
+        # Min HTML files & Actual HTML files
+        html_results_string = '<tr id="general-html-files-results"><td>HTML</td><td>'
+        html_results_string += str(goals_details['HTML']) + '</td>'
+        html_results_string += "<td>" + str(self.num_html_files) + "</td>"
+        meets = "Does Not Meet"
+        if goals_results["Meets HTML"]:
+            meets = "Meets"
+        else:
+            meets = "Does Not Meet"
+        html_results_string += "<td>" + meets + "</td>"
+        html_results_tag = BeautifulSoup(html_results_string)
+        report_content.find(id="general-html-files-results").replace_with(html_results_tag)
+        
+        # Min CSS files & Actual CSS files
+        css_results_string = '<tr id="general-css-files-results"><td>CSS</td><td>'
+        css_results_string += str(goals_details['CSS']) + '</td>'
+        css_results_string += "<td>" + str(self.num_css_files) + "</td>"
+        meets = "Does Not Meet"
+        if goals_results["Meets CSS"]:
+            meets = "Meets"
+        else:
+            meets = "Does Not Meet"
+        css_results_string += "<td>" + meets + "</td>"
+        css_results_tag = BeautifulSoup(css_results_string)
+        report_content.find(id="general-css-files-results").replace_with(css_results_tag)
+        
         # Save new HTML as report/report.html
         with open('report/report.html', 'w') as f:
             f.write(str(report_content.contents[2]))
