@@ -25,6 +25,20 @@ class Report:
     def get_readme_list(self):
         return self.__readme_list
 
+    @staticmethod
+    def get_report_results_string(tr_id, type_column, target, results, results_key):
+        results_string = '<tr id="'+ tr_id + '">'
+        results_string += '<td>' + type_column + '</td>'
+        results_string += '<td>' + str(target) + '</td>'
+        results_string += "<td>" + str(results) + "</td>"
+        meets = "Does Not Meet"
+        if results_key:
+            meets = "Meets"
+        else:
+            meets = "Does Not Meet"
+        results_string += "<td>" + meets + "</td></tr>"
+        return results_string
+
     def generate_report(self):
         # pull readme text
         self.get_readme_text()
@@ -209,9 +223,9 @@ class GeneralReport:
         self.report_details["writing_goal_results"]["meets_WPS"] = WPS > min_wps and WPS < max_wps
 
     def publish_results(self):
-        # Get report_template
-        report_template = html.get_html(report_template_path)
-        report_content = report_template
+        # Get report
+        report_content = html.get_html(report_template_path)
+        #report_content = report_template
 
         goals_details = self.report_details["min_number_files"]
         goals_results = self.report_details["num_files_results"]
@@ -222,21 +236,22 @@ class GeneralReport:
         
         # Append the following tds
         # Min HTML files & Actual HTML files
-        html_results_string = self.get_report_results_string("general-html-files-results", "HTML", goals_details['HTML'], self.num_html_files, goals_results['Meets HTML'])
+        #Report.get_report_results_string()
+        html_results_string = Report.get_report_results_string("general-html-files-results", "HTML", goals_details['HTML'], self.num_html_files, goals_results['Meets HTML'])
         html_results_tag = BeautifulSoup(html_results_string,features="lxml")
         report_content.find(id="general-html-files-results").replace_with(html_results_tag)
         
         # Min CSS files & Actual CSS files
-        css_results_string = self.get_report_results_string("general-css-files-results", "CSS",  goals_details['CSS'], self.num_css_files, goals_results['Meets CSS'])
+        css_results_string = Report.get_report_results_string("general-css-files-results", "CSS",  goals_details['CSS'], self.num_css_files, goals_results['Meets CSS'])
         
         css_results_tag = BeautifulSoup(css_results_string, features="lxml")
         report_content.find(id="general-css-files-results").replace_with(css_results_tag)
         
-        spp_results_string = self.get_report_results_string("general-spp-results", "Avg. Sentences / Paragraph", str(writing_goals["average_SPP"]), writing_results["actual_SPP"], writing_results["meets_SPP"])
+        spp_results_string = Report.get_report_results_string("general-spp-results", "Avg. Sentences / Paragraph", str(writing_goals["average_SPP"]), writing_results["actual_SPP"], writing_results["meets_SPP"])
         spp_results_tag = BeautifulSoup(spp_results_string, features="lxml")
         report_content.find(id="general-spp-results").replace_with(spp_results_tag)
 
-        wps_results_string = self.get_report_results_string("general-wps-results", "Avg. Words / Sentence", str(writing_goals["average_WPS"]), writing_results["actual_WPS"], writing_results["meets_WPS"])
+        wps_results_string = Report.get_report_results_string("general-wps-results", "Avg. Words / Sentence", str(writing_goals["average_WPS"]), writing_results["actual_WPS"], writing_results["meets_WPS"])
         wps_results_tag = BeautifulSoup(wps_results_string, features="lxml")
         report_content.find(id="general-wps-results").replace_with(wps_results_tag)
 
@@ -244,18 +259,7 @@ class GeneralReport:
         with open('report/report.html', 'w') as f:
             f.write(str(report_content.contents[2]))
         
-    def get_report_results_string(self, tr_id, type_column, target, results, results_key):
-        results_string = '<tr id="'+ tr_id + '">'
-        results_string += '<td>' + type_column + '</td>'
-        results_string += '<td>' + str(target) + '</td>'
-        results_string += "<td>" + str(results) + "</td>"
-        meets = "Does Not Meet"
-        if results_key:
-            meets = "Meets"
-        else:
-            meets = "Does Not Meet"
-        results_string += "<td>" + meets + "</td></tr>"
-        return results_string
+    
 
 class HTMLReport:
     def __init__(self, readme_list, dir_path):
@@ -437,7 +441,6 @@ class HTMLReport:
                 # add key and value to required elements
                 self.report_details["required_elements"][key] = int(val)
         
-
     def get_report_details(self):
         return self.report_details
         
@@ -450,8 +453,7 @@ class HTMLReport:
     def publish_results(self):
         pass
 
-    def get_report_results_string(self):
-        return ""
+    
 
 class CSSReport:
     def __init__(self, readme_list, dir_path):

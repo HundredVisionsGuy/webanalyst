@@ -227,7 +227,7 @@ def test_general_report_for_get_report_results_string_for_spp(about_me_general_r
                 "Avg. Sentences / Paragraph",
                 "[1, 5]"]
     actual = about_me_general_report.report_details["writing_goal_results"]
-    results = about_me_general_report.get_report_results_string(spp_input[0], spp_input[1], spp_input[2], actual["actual_SPP"], actual["meets_SPP"])
+    results = report.Report.get_report_results_string(spp_input[0], spp_input[1], spp_input[2], actual["actual_SPP"], actual["meets_SPP"])
     expected = '<tr id="general-spp-results"><td>Avg. Sentences / Paragraph</td><td>[1, 5]</td><td>1.6666666666666667</td><td>Meets</td></tr>'
     assert results == expected
 
@@ -236,17 +236,17 @@ def test_general_report_for_get_report_results_string_for_wps(about_me_general_r
                 "Avg. Words / Sentence",
                 "[10, 20]"]
     actual = about_me_general_report.report_details["writing_goal_results"]
-    results = about_me_general_report.get_report_results_string(wps_input[0], wps_input[1], wps_input[2], actual["actual_WPS"], actual["meets_WPS"])
+    results = report.Report.get_report_results_string(wps_input[0], wps_input[1], wps_input[2], actual["actual_WPS"], actual["meets_WPS"])
     expected = '<tr id="general-wps-results"><td>Avg. Words / Sentence</td><td>[10, 20]</td><td>12.2</td><td>Meets</td></tr>'
     assert results == expected
 
-def test_general_report_for_get_report_results_string_for_html(about_me_general_report):
+def test_static_method_get_report_results_string_for_html(about_me_general_report):
     html_id = "general-html-files-results"
     type_column = "HTML"
     num_files = about_me_general_report.num_html_files
     target = about_me_general_report.report_details["min_number_files"]
     actual = about_me_general_report.report_details["num_files_results"]
-    results = about_me_general_report.get_report_results_string(html_id, type_column, target["HTML"], num_files, actual["Meets HTML"])
+    results = report.Report.get_report_results_string(html_id, type_column, target["HTML"], num_files, actual["Meets HTML"])
     expected = '<tr id="general-html-files-results"><td>HTML</td><td>1</td><td>1</td><td>Meets</td></tr>'
     assert results == expected
 
@@ -256,7 +256,7 @@ def test_general_report_for_get_report_results_string_for_css(about_me_general_r
     num_files = about_me_general_report.num_css_files
     target = about_me_general_report.report_details["min_number_files"]
     actual = about_me_general_report.report_details["num_files_results"]
-    results = about_me_general_report.get_report_results_string(html_id, type_column, target["CSS"], num_files, actual["Meets CSS"])
+    results = report.Report.get_report_results_string(html_id, type_column, target["CSS"], num_files, actual["Meets CSS"])
     expected = '<tr id="general-css-files-results"><td>CSS</td><td>0</td><td>0</td><td>Meets</td></tr>'
     assert results == expected
 # HTMLReport Tests
