@@ -259,6 +259,17 @@ def test_general_report_for_get_report_results_string_for_css(about_me_general_r
     results = report.Report.get_report_results_string(html_id, type_column, target["CSS"], num_files, actual["Meets CSS"])
     expected = '<tr id="general-css-files-results"><td>CSS</td><td>0</td><td>0</td><td>Meets</td></tr>'
     assert results == expected
+
+def test_large_project_general_report_for_get_min_number_files_for_2_HTML(large_project_general_report):
+    results = large_project_general_report.get_min_number_files("html")
+    expected = 2
+    assert results == expected
+
+def test_large_project_general_report_for_get_min_number_files_for_2_CSS(large_project_general_report):
+    results = large_project_general_report.get_min_number_files("css")
+    expected = 2
+    assert results == expected
+
 # HTMLReport Tests
 
 

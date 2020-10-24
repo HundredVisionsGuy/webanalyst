@@ -142,6 +142,15 @@ class GeneralReport:
         self.report_details["min_number_files"]["HTML"] = int(min_html_files)
         self.report_details["min_number_files"]["CSS"] = int(min_css_files)
 
+    def get_min_number_files(self, filetype):
+        """ receives filetype and returns minimum # of that file"""
+        if filetype.lower() == "html":
+            return self.report_details["min_number_files"]["HTML"]
+        elif filetype.lower() == "css":
+            return self.report_details["min_number_files"]["CSS"]
+        else:
+            return "NA"
+
     def set_paragraphs(self):
         html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
         for file in html_files:
@@ -259,7 +268,6 @@ class GeneralReport:
         with open('report/report.html', 'w') as f:
             f.write(str(report_content.contents[2]))
         
-    
 
 class HTMLReport:
     def __init__(self, readme_list, dir_path):
@@ -299,6 +307,7 @@ class HTMLReport:
         self.ammend_required_elements()
         self.analyze_results()
         self.publish_results()
+         
 
     def get_html_files_list(self):
         self.html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
@@ -330,7 +339,6 @@ class HTMLReport:
             # add the element and its number to required_elements_found
             self.report_details["required_elements_found"][el] = num
         
-
     def set_html5_required_elements_found(self):
         # Get HTML5_essential_elements
         html5_elements = self.report_details["required_elements"]["HTML5_essential_elements"].copy(
@@ -449,6 +457,7 @@ class HTMLReport:
         self.set_html5_required_elements_found()
         self.set_required_elements_found()
         self.meets_required_elements()
+        
 
     def publish_results(self):
         pass
