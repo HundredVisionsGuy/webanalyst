@@ -269,6 +269,7 @@ class HTMLReport:
             "can_attain_level": False,
             "html_level_attained": None,
             "min_num_required_files": 0,
+            "num_html_files": 0,
             "required_elements": {
                 "HTML5_essential_elements": {
                     "DOCTYPE": 1,
@@ -292,9 +293,6 @@ class HTMLReport:
         self.get_html_requirements_list()
         self.get_html_level()
         self.ammend_required_elements()
-        self.set_html5_required_elements_found()
-        self.set_required_elements_found()
-        self.meets_required_elements()
         self.analyze_results()
         self.publish_results()
 
@@ -311,10 +309,6 @@ class HTMLReport:
                     required_elements.append(nested_el[1])
             else:
                 required_elements.append(element[1])
-        # remove the first nested list
-        # required_elements = required_elements[1:]
-        # # add the required html5 elements
-        # required_elements += self.report_details["required_elements"]["HTML5_essential_elements"].keys()
         return required_elements
 
     def set_required_elements_found(self):
@@ -338,7 +332,6 @@ class HTMLReport:
         html5_elements = self.report_details["required_elements"]["HTML5_essential_elements"].copy(
         )
         # get # of html files in folder - this is our multiplier
-        num_files = len(self.html_files)
         for el in enumerate(html5_elements):
             key = el[1].lower()
             # val is how many were found
@@ -450,6 +443,9 @@ class HTMLReport:
         
     def analyze_results(self):
         self.can_attain_level()
+        self.set_html5_required_elements_found()
+        self.set_required_elements_found()
+        self.meets_required_elements()
 
     def publish_results(self):
         pass
