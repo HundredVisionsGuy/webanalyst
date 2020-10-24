@@ -293,7 +293,10 @@ class HTMLReport:
         self.get_html_level()
         self.ammend_required_elements()
         self.set_html5_required_elements_found()
+        self.set_required_elements_found()
         self.meets_required_elements()
+        self.analyze_results()
+        self.publish_results()
 
     def get_html_files_list(self):
         self.html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
@@ -315,12 +318,20 @@ class HTMLReport:
         return required_elements
 
     def set_required_elements_found(self):
-        required_elements = self.get_required_elements()
+        # get a copy of the required elements
+        required_elements = self.get_required_elements().copy()
+
+        # remove the HTML5_essential_elements 
+        # that was already covered
+        html_essential_elements = ["DOCTYPE", "HTML", "HEAD", "TITLE", "BODY"]
+        for i in html_essential_elements:
+            required_elements.remove(i)
         # iterate through each element and get the total number
         for el in enumerate(required_elements):
             num = html.get_num_elements_in_folder(el[1], self.__dir_path)
             # add the element and its number to required_elements_found
             self.report_details["required_elements_found"][el] = num
+        
 
     def set_html5_required_elements_found(self):
         # Get HTML5_essential_elements
@@ -414,9 +425,11 @@ class HTMLReport:
                 # set description to next row (after the header)
                 description = self.__readme_list[i+1]
                 break
+        self.report_details["can_attain_level"] = "does meet" in description
         return "does meet" in description
 
     def ammend_required_elements(self):
+        """ adds remaining required HTML elements """
         # extract all elements and their minimum #
         # using a regex to capture the pattern: `EL` : ##
         ptrn = r"((`(.*)`\s*):(\s*\d*))"
@@ -430,10 +443,20 @@ class HTMLReport:
                 key = key.strip()[1:-1]
                 # add key and value to required elements
                 self.report_details["required_elements"][key] = int(val)
+        
 
     def get_report_details(self):
         return self.report_details
         
+    def analyze_results(self):
+        self.can_attain_level()
+
+    def publish_results(self):
+        pass
+
+    def get_report_results_string(self):
+        return ""
+
 class CSSReport:
     def __init__(self, readme_list, dir_path):
         self.__dir_path = dir_path

@@ -285,6 +285,17 @@ def test_about_me_html_report_for_can_attain_next_level(about_me_html_report):
     expected = False
     assert results == expected
 
+def test_about_me_html_report_for_analyze_results_can_attain_level_property_change(about_me_html_report):
+    about_me_html_report.analyze_results()
+    results = about_me_html_report.report_details["can_attain_level"]
+    expected = False
+    assert results == expected
+
+def test_large_project_html_report_for_analyze_results_can_attain_level_property_change(large_project_html_report):
+    large_project_html_report.analyze_results()
+    results = large_project_html_report.report_details["can_attain_level"]
+    expected = True 
+    assert results == expected
 
 def test_about_me_html_report_for_get_html_requirements_list(about_me_html_report):
     result_list = about_me_html_report.get_html_requirements_list()

@@ -6,16 +6,16 @@
 ***GOAL***: This is a multi-file and multi-directory project for testing purposes.
 
 ### HTML Level = 301
-This project [does/does not] meet the requirements for attaining the next level in HTML.
+This project does meet the requirements for attaining the next level in HTML.
 
 ### CSS Level = 301
-This project [does/does not] meet the requirements for attaining the next level in CSS.
+This project does meet the requirements for attaining the next level in CSS.
 
 ## Project Requirements
 ### General
 * Number of Files: 
     * [HTML] At least 2 HTML doc/s
-    * [CSS] 
+    * [CSS] At least 2 CSS sheets
 * Project Navigation:
     * This project does require a navbar
 
