@@ -27,16 +27,23 @@ class Report:
 
     @staticmethod
     def get_report_results_string(tr_id, type_column, target, results, results_key):
-        results_string = '<tr id="'+ tr_id + '">'
-        results_string += '<td>' + type_column + '</td>'
-        results_string += '<td>' + str(target) + '</td>'
-        results_string += "<td>" + str(results) + "</td>"
-        meets = "Does Not Meet"
-        if results_key:
-            meets = "Meets"
+        if tr_id:
+            results_string = '<tr id="'+ tr_id + '">'
         else:
+            results_string = '<tr>'
+        results_string += '<td>' + type_column + '</td>'
+        if target != "":
+            results_string += '<td>' + str(target) + '</td>'
+        if results != "":
+            results_string += "<td>" + str(results) + "</td>"
+        if results_key:
             meets = "Does Not Meet"
-        results_string += "<td>" + meets + "</td></tr>"
+            if results_key:
+                meets = "Meets"
+            else:
+                meets = "Does Not Meet"
+            results_string += "<td>" + meets + "</td>"
+        results_string += "</tr>"
         return results_string
 
     def generate_report(self):
@@ -280,7 +287,6 @@ class HTMLReport:
             "html_level": "",
             "can_attain_level": False,
             "html_level_attained": None,
-            "min_num_required_files": 0,
             "num_html_files": 0,
             "required_elements": {
                 "HTML5_essential_elements": {
@@ -414,6 +420,7 @@ class HTMLReport:
                 break
         row_list = re.split("=", self.report_details["html_level"])
         self.report_details["html_level"] = row_list[1].strip()
+        self.html_level = self.report_details["html_level"]
         return self.report_details["html_level"]
 
     def get_num_html_files(self):
@@ -457,11 +464,48 @@ class HTMLReport:
         self.set_html5_required_elements_found()
         self.set_required_elements_found()
         self.meets_required_elements()
-        
 
     def publish_results(self):
-        pass
+        # Get report
+        report_content = html.get_html(report_template_path)
 
+        # HTML Overview Table
+        # get a string version of can_attain_level
+        can_attain = str(self.can_attain_level())
+        html_overview_string = Report.get_report_results_string("html-overview", self.html_level, can_attain, "", "")
+        html_overview_tr = BeautifulSoup(html_overview_string, features="lxml")
+        report_content.find(id="html-overview").replace_with(html_overview_tr)
+
+        # Generate html-elements-results table
+        # prep all goals and results
+        # for HTML elements
+        # and HTML5 required elements
+        html_goals_details = self.report_details["required_elements"].copy()
+        html5_goals_details = html_goals_details.pop("HTML5_essential_elements")
+
+        html_goals_results = self.report_details["required_elements_found"].copy()
+        html5_goals_results = html_goals_results.pop("HTML5_essential_elements_found")
+
+        # Produce results for required HTML5 elements
+        html_elements_results_string = ""
+        # we have to modify an entire tbody (not just a tr)
+        tbody_id = "html-elements-results"
+        for el in html5_goals_details:
+            # get element, goal, actual, and results
+            element = el
+            goal = html5_goals_details[el]
+            actual = html5_goals_results[el]
+            results = "Meets" if actual == goal else "Does Not Meet" 
+            html_elements_results_string += Report.get_report_results_string("", element, goal, actual, results)
+        # add remaining elements
+
+        # create our tbody contents
+        tbody_contents = BeautifulSoup(html_elements_results_string, features="lxml")
+        report_content.find(id=tbody_id).replace_with(tbody_contents)
+
+        # Save new HTML as report/report.html
+        with open('report/report.html', 'w') as f:
+            f.write(str(report_content.contents[2]))
     
 
 class CSSReport:
