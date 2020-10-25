@@ -509,9 +509,14 @@ class HTMLReport:
         validation_report = self.report_details['validator_results'].copy()
         validation_results_string = ""
         tbody_id = 'html-validation'
+        cumulative_errors = 0
         for page in validation_report:
             errors = validation_report[page]
-            validation_results_string += Report.get_report_results_string("", page, errors,"","")
+            error_str = str(errors) + " errors"
+            cumulative_errors += int(errors)
+            cumulative_errors_string = str(cumulative_errors) + " total errors"
+            meets = str(cumulative_errors <= self.report_details["validator_goals"])
+            validation_results_string += Report.get_report_results_string("", page, error_str, cumulative_errors_string, meets)
         # create our tbody contents
         tbody_contents = BeautifulSoup(validation_results_string, features="lxml")
         report_content.find(id=tbody_id).replace_with(tbody_contents)
