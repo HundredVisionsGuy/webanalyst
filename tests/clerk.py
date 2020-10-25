@@ -52,6 +52,8 @@ def get_file_type(path):
     suffix = my_file.suffix
     return suffix[1:]
 
+def get_file_name(path):
+    return Path(path).name
 
 def get_css_from_style_tag(path):
     full_code = file_to_string(path)

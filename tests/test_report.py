@@ -82,7 +82,8 @@ def about_me_dnn_html_report(about_me_dnn_readme_list):
 def large_project_html_report(large_project_readme_list):
     html_report = report.HTMLReport(
         large_project_readme_list, large_project_path)
-    return html_report
+    html_report.generate_report()
+    yield html_report
 
 
 @pytest.fixture
@@ -366,6 +367,26 @@ def test_html_report_for_extract_el_from_dict_key_tuple(about_me_html_report):
     expected = {'H1': 1, 'H2': 2, 'P': 3}
     results = about_me_html_report.extract_el_from_dict_key_tuple(dictionary)
     assert expected == results
+
+def test_html_report_for_get_validator_goals_return_value(about_me_html_report):
+    results = about_me_html_report.get_validator_goals()
+    expected = 0
+    assert results == expected
+
+def test_html_report_for_get_validator_goals_to_set_details(about_me_html_report):
+    results = about_me_html_report.report_details["validator_goals"]
+    expected = 0
+    assert results == expected
+
+def test_large_project_html_report_for_get_validator_goals_return_value(large_project_html_report):
+    results = large_project_html_report.get_validator_goals()
+    expected = 2
+    assert results == expected
+
+def test_large_project_html_report_for_get_validator_goals_to_set_details(large_project_html_report):
+    results = large_project_html_report.report_details["validator_goals"]
+    expected = 2
+    assert results == expected
 
 # CSSReport tests
 

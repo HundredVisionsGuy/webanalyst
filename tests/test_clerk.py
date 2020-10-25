@@ -83,3 +83,13 @@ def test_remove_inline_tags():
     results = clerk.remove_tags(paragraph)
     expected = 'Site designed by Hundred visions Guy &copy; 2019.'
     assert results == expected
+
+def test_get_file_name_for_html_file_path():
+    results = clerk.get_file_name(html_file_path)
+    expected = 'sample_no_errors.html'
+    assert results == expected
+
+def test_get_file_name_for_css_file_path():
+    results = clerk.get_file_name(css_file_path)
+    expected = "test.css"
+

@@ -20,7 +20,7 @@ This project does meet the requirements for attaining the next level in CSS.
     * This project does require a navbar
 
 ### HTML
-* Allowable Errors - this project does allow for HTML errors from the validator
+* Allowable Errors: 2 - this project does allow for HTML errors from the validator
     * Allowed Errors include the following messages:
 * Required Elements 
     * All required HTML 5 Elements: [`DOCTYPE`, `HTML`, `HEAD`, `TITLE`, `BODY`]

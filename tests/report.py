@@ -3,6 +3,7 @@ import re
 import HTMLinator as html
 from bs4 import BeautifulSoup
 import logging
+import validator as val
 
 logging.basicConfig(format='%(asctime)s - %(message)s',
                     datefmt='%d-%b-%y %H:%M:%S')
@@ -287,6 +288,8 @@ class HTMLReport:
             "html_level": "",
             "can_attain_level": False,
             "html_level_attained": None,
+            "validator_goals": 0,
+            "validator_results": {},
             "num_html_files": 0,
             "required_elements": {
                 "HTML5_essential_elements": {
@@ -310,6 +313,7 @@ class HTMLReport:
         self.get_html_files_list()
         self.get_html_requirements_list()
         self.get_html_level()
+        self.get_validator_goals()
         self.ammend_required_elements()
         self.analyze_results()
         self.publish_results()
@@ -329,6 +333,19 @@ class HTMLReport:
             else:
                 required_elements.append(element[1])
         return required_elements
+
+    def get_validator_goals(self):
+        """ gets number of validator errors allowed """
+        readme_list = self.html_requirements_list[:]
+        # Looking for Allowable Errors
+        for line in readme_list:
+            if "* Allowable Errors" in line:
+                allowable_errors = re.search("[0-9]", line).group()
+                self.report_details["validator_goals"] = int(allowable_errors)
+                return int(allowable_errors)
+            else:
+                continue
+        return 0
 
     def set_required_elements_found(self):
         # get a copy of the required elements
@@ -459,8 +476,20 @@ class HTMLReport:
     def get_report_details(self):
         return self.report_details
         
+    def validate_html(self):
+        # create a dictionary with doc titles for keys
+        # and num of errors for value
+        # Do we need a validator report as well?
+
+        # get titles and run them through validator
+        for file_path in self.html_files:
+            errors = len(val.get_markup_validity(file_path))
+            page_name = clerk.get_file_name(file_path)
+            self.report_details['validator_results'][page_name]=str(errors)
+        
     def analyze_results(self):
         self.can_attain_level()
+        self.validate_html()
         self.set_html5_required_elements_found()
         self.set_required_elements_found()
         self.meets_required_elements()
@@ -475,6 +504,17 @@ class HTMLReport:
         html_overview_string = Report.get_report_results_string("html-overview", self.html_level, can_attain, "", "")
         html_overview_tr = BeautifulSoup(html_overview_string, features="lxml")
         report_content.find(id="html-overview").replace_with(html_overview_tr)
+
+        # Validation Report
+        validation_report = self.report_details['validator_results'].copy()
+        validation_results_string = ""
+        tbody_id = 'html-validation'
+        for page in validation_report:
+            errors = validation_report[page]
+            validation_results_string += Report.get_report_results_string("", page, errors,"","")
+        # create our tbody contents
+        tbody_contents = BeautifulSoup(validation_results_string, features="lxml")
+        report_content.find(id=tbody_id).replace_with(tbody_contents)
 
         # Generate html-elements-results table
         # prep all goals and results
