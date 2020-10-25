@@ -361,7 +361,11 @@ def test_html_report_meets_htmle5_essential_requirements_for_false(about_me_dnn_
     results = about_me_dnn_html_report.meets_html5_essential_requirements()
     assert results == False
 
-
+def test_html_report_for_extract_el_from_dict_key_tuple(about_me_html_report):
+    dictionary = {(0, 'H1'): 1, (1, 'H2'): 2, (2, 'P'): 3}
+    expected = {'H1': 1, 'H2': 2, 'P': 3}
+    results = about_me_html_report.extract_el_from_dict_key_tuple(dictionary)
+    assert expected == results
 
 # CSSReport tests
 

@@ -486,6 +486,8 @@ class HTMLReport:
         html_goals_results = self.report_details["required_elements_found"].copy()
         html5_goals_results = html_goals_results.pop("HTML5_essential_elements_found")
 
+        html_goals_results = self.extract_el_from_dict_key_tuple(html_goals_results)
+
         # Produce results for required HTML5 elements
         html_elements_results_string = ""
         # we have to modify an entire tbody (not just a tr)
@@ -498,6 +500,12 @@ class HTMLReport:
             results = "Meets" if actual == goal else "Does Not Meet" 
             html_elements_results_string += Report.get_report_results_string("", element, goal, actual, results)
         # add remaining elements
+        for el in html_goals_details:
+            element = el
+            goal = html_goals_details[el]
+            actual = html_goals_results[el]
+            results = "Meets" if actual == goal else "Does Not Meet"
+            html_elements_results_string += Report.get_report_results_string("", element, goal, actual, results)
 
         # create our tbody contents
         tbody_contents = BeautifulSoup(html_elements_results_string, features="lxml")
@@ -506,7 +514,13 @@ class HTMLReport:
         # Save new HTML as report/report.html
         with open('report/report.html', 'w') as f:
             f.write(str(report_content.contents[2]))
-    
+
+    def extract_el_from_dict_key_tuple(self, the_dict):
+        """ converts all keys from a tuple to 2nd item in tuple """  
+        new_dict = {}
+        for t, i in the_dict.items():
+            new_dict[t[1]] = i
+        return new_dict
 
 class CSSReport:
     def __init__(self, readme_list, dir_path):
