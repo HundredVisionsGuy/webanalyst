@@ -572,19 +572,48 @@ class CSSReport:
         self.__dir_path = dir_path
         self.html_level = "0"
         self.__readme_list = readme_list
+        self.font_families_used = [], 
+        self.min_num_css_files = 0,
+        self.max_num_css_files = 0,
         self.report_details = {
             "css_level": "",
             "css_level_attained": False,
             "css_validator_goals": 0,
             "css_validator_results": {},
-            "min_num_required_files": 0,
-            "num_css_files":0,
+            "num_css_files": 0,
+            "num_style_tags": 0,
+            "repeat_selectors": 0,
+            "repeat_declaration_blocks": 0,
+            "general_css_styles": {
+                "font_families": {
+                    "min": 0,
+                    "max": 0,
+                    "actual": 0,
+                },
+                "color_goals": {
+                    "entire_page": False,
+                    "headers": False,
+                    "color_contrast": False
+                },
+                "color_settings": {
+                    "page_background_set": False,
+                    "page_color_set": False,
+                    "headers_background_set": False,
+                    "headers_color_set": False,
+                    "page_contrast_rating": "Fail",
+                    "headers_contrast_rating": "Fail"
+                }
+            },
+            "project_specific_goals": {},
+            "project_specific_results": {},
             "meets_requirements": False
         }
 
     def get_num_css_files(self):
         css_files = clerk.get_all_files_of_type(self.__dir_path, 'css')
-        return len(css_files)
+        num_css_files = len(css_files)
+        self.report_details["num_css_files"] = num_css_files
+        return num_css_files
 
     def get_num_style_tags(self):
         # get HTML files
@@ -593,6 +622,7 @@ class CSSReport:
         for file in html_files:
             style_tags = html.get_elements("style", file)
             count += len(style_tags)
+        self.report_details["num_style_tags"] = count
         return count
 
 

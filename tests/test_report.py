@@ -396,8 +396,25 @@ def test_about_me_css_report_for_num_of_files(about_me_css_report):
     expected = 0
     assert results == expected
 
+def test_about_me_css_report_for_report_details_num_css_files(about_me_css_report):
+    about_me_css_report.get_num_css_files()
+    results = about_me_css_report.report_details["num_css_files"]
+    expected = 0
+    assert results == expected
+
+def test_large_project_css_report_for_report_details_num_css_files(large_project_css_report):
+    large_project_css_report.get_num_css_files()
+    results = large_project_css_report.report_details["num_css_files"]
+    expected = 4
+    assert results == expected
 
 def test_about_me_css_report_for_num_style_tags_1(about_me_css_report):
     results = about_me_css_report.get_num_style_tags()
+    expected = 1
+    assert results == expected
+
+def test_about_me_css_report_for_report_details_num_style_tags(about_me_css_report):
+    about_me_css_report.get_num_style_tags()
+    results = about_me_css_report.report_details["num_style_tags"]
     expected = 1
     assert results == expected
