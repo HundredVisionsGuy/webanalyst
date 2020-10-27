@@ -574,8 +574,11 @@ class CSSReport:
         self.__readme_list = readme_list
         self.report_details = {
             "css_level": "",
-            "css_level_attained": None,
+            "css_level_attained": False,
+            "css_validator_goals": 0,
+            "css_validator_results": {},
             "min_num_required_files": 0,
+            "num_css_files":0,
             "meets_requirements": False
         }
 
