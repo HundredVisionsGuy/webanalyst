@@ -11,6 +11,7 @@ about_me_path = "tests/test_files/projects/about_me/"
 about_me_file_path = about_me_path + "index.html"
 large_project_path = "tests/test_files/projects/large_project/"
 about_me_dnm_path = "tests/test_files/projects/about_me_does_not_meet/"
+report_html_doc_path = "report/report.html"
 
 @pytest.fixture
 def about_me_report():
@@ -418,3 +419,22 @@ def test_about_me_css_report_for_report_details_num_style_tags(about_me_css_repo
     results = about_me_css_report.report_details["num_style_tags"]
     expected = 1
     assert results == expected
+
+# report.html relatd tests
+def test_about_me_report_html_doc_for_general_results(about_me_general_report):
+    about_me_general_report.publish_results()
+    report_contents = clerk.file_to_string(report_html_doc_path)
+    report_tr = '<tr id="general-wps-results"><td>Avg. Words / Sentence</td><td>[10, 20]</td><td>12.2</td><td>Meets</td></tr>'
+    assert report_tr in report_contents
+
+def test_about_me_html_report_for_general_results_in_report_html_doc_contents(about_me_html_report):
+    about_me_html_report.publish_results()
+    report_contents = clerk.file_to_string(report_html_doc_path)
+    report_tr = '<tr id="general-wps-results"><td>Avg. Words / Sentence</td><td>[10, 20]</td><td>12.2</td><td>Meets</td></tr>'
+    assert report_tr in report_contents
+
+def test_about_me_html_report_for_html_results_in_report_html_doc_html_results_content(about_me_html_report):
+    about_me_html_report.publish_results()
+    report_contents = clerk.file_to_string(report_html_doc_path)
+    report_tr = '<tr><td>H2</td><td>2</td><td>2</td><td>Meets</td></tr>'
+    assert report_tr in report_contents

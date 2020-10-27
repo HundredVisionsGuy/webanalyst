@@ -572,9 +572,11 @@ class CSSReport:
         self.__dir_path = dir_path
         self.html_level = "0"
         self.__readme_list = readme_list
-        self.font_families_used = [], 
-        self.min_num_css_files = 0,
-        self.max_num_css_files = 0,
+        self.font_families_used = []
+        self.min_num_css_files = 0
+        self.max_num_css_files = 0
+        self.css_files = []
+        self.style_tag_contents = []
         self.report_details = {
             "css_level": "",
             "css_level_attained": False,
@@ -609,6 +611,11 @@ class CSSReport:
             "meets_requirements": False
         }
 
+    def generate_report(self):
+        self.get_num_css_files()
+        self.get_num_style_tags()
+        self.get_css_code()
+
     def get_num_css_files(self):
         css_files = clerk.get_all_files_of_type(self.__dir_path, 'css')
         num_css_files = len(css_files)
@@ -625,6 +632,15 @@ class CSSReport:
         self.report_details["num_style_tags"] = count
         return count
 
+    def get_css_code(self):
+        # extract content from all CSS files
+        self.css_files = clerk.get_all_files_of_type(self.__dir_path, "css")
+        
+        # extract CSS from all style tags
+        html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
+        for file in html_files:
+            self.style_tag_contents.append(clerk.get_css_from_style_tag(file))
+        
 
 if __name__ == "__main__":
     about_me_readme_path = "tests/test_files/projects/about_me/"
@@ -636,10 +652,12 @@ if __name__ == "__main__":
     # Create about_me report
     about_me_report = Report(about_me_readme_path)
     about_me_report.generate_report()
+    about_me_report.general_report.publish_results()
     about_me_report.html_report.generate_report()
     about_me_report.html_report.get_required_elements()
     about_me_report.html_report.meets_html5_essential_requirements()
-    print(about_me_report.html_report.get_report_details())
+    about_me_report.html_report.publish_results()
+    about_me_report.css_report.generate_report()
     # # about_me_report.html_report.generate_report()
     # num_sentences = about_me_report.general_report.get_num_sentences()
     # about_me_report.html_report.get_html_requirements_list()
