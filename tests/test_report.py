@@ -16,16 +16,19 @@ report_html_doc_path = "report/report.html"
 @pytest.fixture
 def about_me_report():
     my_report = report.Report(about_me_path)
+    my_report.generate_report()
     return my_report
 
 @pytest.fixture
 def about_me_dnm_report():
     my_report = report.Report(about_me_dnm_path)
+    my_report.generate_report()
     return my_report
 
 @pytest.fixture
 def large_project_report():
     my_test_project = report.Report(large_project_path)
+    my_test_project.generate_report()
     return my_test_project
 
 
@@ -49,42 +52,26 @@ def large_project_readme_list():
 
 
 @pytest.fixture
-def about_me_general_report(about_me_readme_list):
-    general_report = report.GeneralReport(
-        about_me_readme_list, about_me_path)
-    general_report.generate_report()
-    yield general_report
-    # teardown time
-    # delete files in report folder
-    if clerk.file_exists(report.report_path):
-        clerk.delete_file(report.report_path) 
+def about_me_general_report(about_me_report):
+    # about_me_report.general_report.generate_report()
+    return about_me_report.general_report
 
 @pytest.fixture
-def large_project_general_report(large_project_readme_list):
-    large_project_report = report.GeneralReport(
-        large_project_readme_list, large_project_path)
-    large_project_report.generate_report()
-    return large_project_report
+def large_project_general_report(large_project_report):
+    return large_project_report.general_report
 
 
 @pytest.fixture
-def about_me_html_report(about_me_readme_list):
-    html_report = report.HTMLReport(about_me_readme_list, about_me_path)
-    html_report.generate_report()
-    return html_report
+def about_me_html_report(about_me_report):
+    return about_me_report.html_report
 
 @pytest.fixture
-def about_me_dnn_html_report(about_me_dnn_readme_list):
-    html_report = report.HTMLReport(about_me_dnn_readme_list, about_me_dnm_path)
-    html_report.generate_report()
-    return html_report
+def about_me_dnn_html_report(about_me_dnm_report):
+    return about_me_dnm_report.html_report
 
 @pytest.fixture
-def large_project_html_report(large_project_readme_list):
-    html_report = report.HTMLReport(
-        large_project_readme_list, large_project_path)
-    html_report.generate_report()
-    yield html_report
+def large_project_html_report(large_project_report):
+    return large_project_report.html_report
 
 
 @pytest.fixture
@@ -94,10 +81,8 @@ def about_me_css_report(about_me_readme_list):
 
 
 @pytest.fixture
-def large_project_css_report(large_project_readme_list):
-    css_report = report.CSSReport(
-        large_project_readme_list, large_project_path)
-    return css_report
+def large_project_css_report(large_project_report):
+    return large_project_report.css_report
 
 
 @pytest.fixture
@@ -220,7 +205,6 @@ def test_general_report_for_get_report_details_min_number_files(about_me_general
 
 
 def test_publish_results_for_report_file_existing(about_me_general_report):
-    about_me_general_report.publish_results()
     results = clerk.file_exists(report.report_path)
     assert results
 
@@ -422,19 +406,16 @@ def test_about_me_css_report_for_report_details_num_style_tags(about_me_css_repo
 
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
-    about_me_general_report.publish_results()
     report_contents = clerk.file_to_string(report_html_doc_path)
     report_tr = '<tr id="general-wps-results"><td>Avg. Words / Sentence</td><td>[10, 20]</td><td>12.2</td><td>Meets</td></tr>'
     assert report_tr in report_contents
 
 def test_about_me_html_report_for_general_results_in_report_html_doc_contents(about_me_html_report):
-    about_me_html_report.publish_results()
     report_contents = clerk.file_to_string(report_html_doc_path)
     report_tr = '<tr id="general-wps-results"><td>Avg. Words / Sentence</td><td>[10, 20]</td><td>12.2</td><td>Meets</td></tr>'
     assert report_tr in report_contents
 
 def test_about_me_html_report_for_html_results_in_report_html_doc_html_results_content(about_me_html_report):
-    about_me_html_report.publish_results()
     report_contents = clerk.file_to_string(report_html_doc_path)
     report_tr = '<tr><td>H2</td><td>2</td><td>2</td><td>Meets</td></tr>'
     assert report_tr in report_contents

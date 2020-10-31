@@ -34,16 +34,35 @@ This project does meet the requirements for attaining the next level in CSS.
         + `EM`: 3 - 5
 ### CSS
 * Standard Requirements:
-    * No CSS errors
-    * No repeat selectors
+    * No CSS errors (total)
+    * No repeat selectors (per page)
+    * No repeat declaration blocks (per page)
+* General Styles:
+    * Font Families: number of font families to be set
+        + Minimum: 1
+        + Maximum: 2
+    * Color Settings:
+        + Entire Page colors set: background and foreground
+        + Headers: background and foreground
+        + Color Contrast (readability): must pass the [color contrast analyzer tool](https://webaim.org/resources/contrastchecker/) at the following levels
+            - Normal: AAA
+            - Large: AA
 * Project-specific Requirements:
-    * Fonts: required font changes are as follows:
-        + 1 font family must be set
-        + no more than 2 font families for the entire project
-    * Colors: 
-        + background color must be set for entire page
-        + 1 color must be set for all content
-        + color contrast analyzer: must pass at a minimum of 
-            - AA for headers
-            - AAA for all other elements
---------
+    * Required Selectors:
+        + type
+        + class
+        + id
+    * Required Properties:
+        + padding
+        + border
+    * Bonus Opportunity:
+        + link colors: 
+            * +1 for hyperlink colors 
+        + hover effects: 
+            * +1 for hover
+            * +1 for visited
+            * +1 for active (while holding it down)
+        + link color contrast:
+            +1 for link contrast of AAA
+            +1 for hover contrast of AAA
+            +1 for visited contrast of AAA

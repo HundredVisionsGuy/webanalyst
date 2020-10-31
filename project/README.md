@@ -29,7 +29,6 @@ This project [does/does not] meet the requirements for attaining the next level 
         + `H2`: 2 or more
         + `P` : 4 or more
 ### CSS
-### CSS
 * Standard Requirements:
     * No CSS errors (total)
     * No repeat selectors (per page)

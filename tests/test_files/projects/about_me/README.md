@@ -64,5 +64,3 @@ This project does not meet the requirements for attaining the next level in CSS.
             +1 for link contrast of AAA
             +1 for hover contrast of AAA
             +1 for visited contrast of AAA
-        
---------

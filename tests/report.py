@@ -59,9 +59,18 @@ class Report:
         self.css_report = CSSReport(self.__readme_list,
                                     self.__dir_path)
 
-        # run each report
-        self.general_report.generate_report()
 
+        # run each report
+        self.prep_report()
+        self.general_report.generate_report()
+        self.html_report.generate_report()
+        self.css_report.generate_report()
+
+    def prep_report(self):
+        # Create a report HTML file in the report folder
+        report_template_content = clerk.file_to_string(report_template_path)
+        with open('report/report.html', 'w') as f:
+            f.write(report_template_content)
 
 class GeneralReport:
     def __init__(self, readme_list, dir_path):
@@ -241,7 +250,7 @@ class GeneralReport:
 
     def publish_results(self):
         # Get report
-        report_content = html.get_html(report_template_path)
+        report_content = html.get_html(report_path)
         #report_content = report_template
 
         goals_details = self.report_details["min_number_files"]
@@ -255,25 +264,25 @@ class GeneralReport:
         # Min HTML files & Actual HTML files
         #Report.get_report_results_string()
         html_results_string = Report.get_report_results_string("general-html-files-results", "HTML", goals_details['HTML'], self.num_html_files, goals_results['Meets HTML'])
-        html_results_tag = BeautifulSoup(html_results_string,features="lxml")
+        html_results_tag = BeautifulSoup(html_results_string, "html.parser")
         report_content.find(id="general-html-files-results").replace_with(html_results_tag)
         
         # Min CSS files & Actual CSS files
         css_results_string = Report.get_report_results_string("general-css-files-results", "CSS",  goals_details['CSS'], self.num_css_files, goals_results['Meets CSS'])
         
-        css_results_tag = BeautifulSoup(css_results_string, features="lxml")
+        css_results_tag = BeautifulSoup(css_results_string, "html.parser")
         report_content.find(id="general-css-files-results").replace_with(css_results_tag)
         
         spp_results_string = Report.get_report_results_string("general-spp-results", "Avg. Sentences / Paragraph", str(writing_goals["average_SPP"]), writing_results["actual_SPP"], writing_results["meets_SPP"])
-        spp_results_tag = BeautifulSoup(spp_results_string, features="lxml")
+        spp_results_tag = BeautifulSoup(spp_results_string, "html.parser")
         report_content.find(id="general-spp-results").replace_with(spp_results_tag)
 
         wps_results_string = Report.get_report_results_string("general-wps-results", "Avg. Words / Sentence", str(writing_goals["average_WPS"]), writing_results["actual_WPS"], writing_results["meets_WPS"])
-        wps_results_tag = BeautifulSoup(wps_results_string, features="lxml")
+        wps_results_tag = BeautifulSoup(wps_results_string, "html.parser")
         report_content.find(id="general-wps-results").replace_with(wps_results_tag)
 
-        # Save new HTML as report/report.html
-        with open('report/report.html', 'w') as f:
+        # Save new HTML as report/general_report.html
+        with open(report_path, 'w') as f:
             f.write(str(report_content.contents[2]))
         
 
@@ -496,13 +505,13 @@ class HTMLReport:
 
     def publish_results(self):
         # Get report
-        report_content = html.get_html(report_template_path)
+        report_content = html.get_html(report_path)
 
         # HTML Overview Table
         # get a string version of can_attain_level
         can_attain = str(self.can_attain_level())
         html_overview_string = Report.get_report_results_string("html-overview", self.html_level, can_attain, "", "")
-        html_overview_tr = BeautifulSoup(html_overview_string, features="lxml")
+        html_overview_tr = BeautifulSoup(html_overview_string, "html.parser")
         report_content.find(id="html-overview").replace_with(html_overview_tr)
 
         # Validation Report
@@ -518,7 +527,7 @@ class HTMLReport:
             meets = str(cumulative_errors <= self.report_details["validator_goals"])
             validation_results_string += Report.get_report_results_string("", page, error_str, cumulative_errors_string, meets)
         # create our tbody contents
-        tbody_contents = BeautifulSoup(validation_results_string, features="lxml")
+        tbody_contents = BeautifulSoup(validation_results_string, "html.parser")
         report_content.find(id=tbody_id).replace_with(tbody_contents)
 
         # Generate html-elements-results table
@@ -553,12 +562,12 @@ class HTMLReport:
             html_elements_results_string += Report.get_report_results_string("", element, goal, actual, results)
 
         # create our tbody contents
-        tbody_contents = BeautifulSoup(html_elements_results_string, features="lxml")
+        tbody_contents = BeautifulSoup(html_elements_results_string, "html.parser")
         report_content.find(id=tbody_id).replace_with(tbody_contents)
 
         # Save new HTML as report/report.html
-        with open('report/report.html', 'w') as f:
-            f.write(str(report_content.contents[2]))
+        with open(report_path, 'w') as f:
+            f.write(str(report_content.contents[0]))
 
     def extract_el_from_dict_key_tuple(self, the_dict):
         """ converts all keys from a tuple to 2nd item in tuple """  
@@ -639,25 +648,30 @@ class CSSReport:
         # extract CSS from all style tags
         html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
         for file in html_files:
-            self.style_tag_contents.append(clerk.get_css_from_style_tag(file))
+            try:
+                self.style_tag_contents.append(clerk.get_css_from_style_tag(file))
+            except:
+                print("No style tag in this file")
         
 
 if __name__ == "__main__":
     about_me_readme_path = "tests/test_files/projects/about_me/"
     large_project_readme_path = "tests/test_files/projects/large_project/"
-    # large_project = Report(large_project_readme_path)
-    # large_project.generate_report()
-    # large_project.get_readme_text()
+    large_project = Report(large_project_readme_path)
+    large_project.generate_report()
+    large_project.get_readme_text()
 
-    # Create about_me report
-    about_me_report = Report(about_me_readme_path)
-    about_me_report.generate_report()
-    about_me_report.general_report.publish_results()
-    about_me_report.html_report.generate_report()
-    about_me_report.html_report.get_required_elements()
-    about_me_report.html_report.meets_html5_essential_requirements()
-    about_me_report.html_report.publish_results()
-    about_me_report.css_report.generate_report()
+    # # Create about_me report
+    # about_me_report = Report(about_me_readme_path)
+    # about_me_report.generate_report()
+    # about_me_report.general_report
+    # print(about_me_report.general_report.get_title())
+    # about_me_report.general_report.publish_results()
+    # about_me_report.html_report.generate_report()
+    # about_me_report.html_report.get_required_elements()
+    # about_me_report.html_report.meets_html5_essential_requirements()
+    # about_me_report.html_report.publish_results()
+    # about_me_report.css_report.generate_report()
     # # about_me_report.html_report.generate_report()
     # num_sentences = about_me_report.general_report.get_num_sentences()
     # about_me_report.html_report.get_html_requirements_list()
