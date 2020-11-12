@@ -121,7 +121,7 @@ def test_large_project_general_report_for_set_paragraphs(large_project_general_r
     # test for number of paragraphs
     paragraphs = large_project_general_report.get_paragraphs()
     num_paragraphs = len(paragraphs)
-    expected = 4
+    expected = 3
     assert num_paragraphs == expected
 
 

@@ -293,6 +293,8 @@ class HTMLReport:
         self.__readme_list = readme_list
         self.html_requirements_list = []
         self.html_files = []
+        self.validator_errors = {}
+        self.validator_warnings = {}
         self.report_details = {
             "html_level": "",
             "can_attain_level": False,
@@ -325,8 +327,7 @@ class HTMLReport:
         self.get_validator_goals()
         self.ammend_required_elements()
         self.analyze_results()
-        self.publish_results()
-         
+        self.publish_results()    
 
     def get_html_files_list(self):
         self.html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
@@ -488,14 +489,29 @@ class HTMLReport:
     def validate_html(self):
         # create a dictionary with doc titles for keys
         # and num of errors for value
-        # Do we need a validator report as well?
-
+        
         # get titles and run them through validator
         for file_path in self.html_files:
-            errors = len(val.get_markup_validity(file_path))
+            # Get error objects
+            errors_in_file = val.get_markup_validity(file_path)
+            # Get number of errors
+            errors = len(errors_in_file)
             page_name = clerk.get_file_name(file_path)
+            if errors > 0:
+                self.process_errors(page_name, errors_in_file)
             self.report_details['validator_results'][page_name]=str(errors)
-        
+    def process_errors(self, page_name, errors):
+        """ receives errors and records warnings and errors """
+        errors_list = []
+        warnings_list = []
+        for item in errors:
+            if item["type"] == "error":
+                errors_list.append(item)
+            elif item["type"] == "info":
+                warnings_list.append(item)
+        self.validator_errors[page_name] = errors_list
+        self.validator_warnings[page_name] = warnings_list
+
     def analyze_results(self):
         self.can_attain_level()
         self.validate_html()
@@ -655,39 +671,15 @@ class CSSReport:
         
 
 if __name__ == "__main__":
+    # How to run a report:
+    # 1. Set the path to the folder:    path = "path/to/project/folder"
+    # 2. Create a report object:        project_name = Report(path)
+    # 3. Generate a report:             project_name.generate_report()
+    # 4. Go to report/report.html for results
+
     about_me_readme_path = "tests/test_files/projects/about_me/"
     large_project_readme_path = "tests/test_files/projects/large_project/"
     large_project = Report(large_project_readme_path)
     large_project.generate_report()
-    large_project.get_readme_text()
 
-    # # Create about_me report
-    # about_me_report = Report(about_me_readme_path)
-    # about_me_report.generate_report()
-    # about_me_report.general_report
-    # print(about_me_report.general_report.get_title())
-    # about_me_report.general_report.publish_results()
-    # about_me_report.html_report.generate_report()
-    # about_me_report.html_report.get_required_elements()
-    # about_me_report.html_report.meets_html5_essential_requirements()
-    # about_me_report.html_report.publish_results()
-    # about_me_report.css_report.generate_report()
-    # # about_me_report.html_report.generate_report()
-    # num_sentences = about_me_report.general_report.get_num_sentences()
-    # about_me_report.html_report.get_html_requirements_list()
-    # about_me_report.html_report.ammend_required_elements()
-    # print(num_sentences)
-    # # get required elements
-    # about_me_report.html_report.set_required_elements_found()
-    # about_me_report.html_report.generate_report()
-    # about_me_report.html_report.meets_html5_essential_requirements()
-    # # test clerk
-    # paragraph = "Hello, you! How are you? i am fine Mr. selenium.\nsee ya later."
-    # list_of_ps = clerk.split_into_sentences(paragraph)
-    # for i in list_of_ps:
-    #     print(i)
-
-    # can_attain = about_me_report.html_report.can_attain_level()
-    # print(f"It is {can_attain} that this project can attain the level.")
-
-    # html_list = about_me_report.html_report.get_html_requirements_list()
+ 
