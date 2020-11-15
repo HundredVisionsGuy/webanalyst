@@ -500,6 +500,7 @@ class HTMLReport:
             if errors > 0:
                 self.process_errors(page_name, errors_in_file)
             self.report_details['validator_results'][page_name]=str(errors)
+    
     def process_errors(self, page_name, errors):
         """ receives errors and records warnings and errors """
         errors_list = []
@@ -524,27 +525,23 @@ class HTMLReport:
         report_content = html.get_html(report_path)
 
         # HTML Overview Table
-        # get a string version of can_attain_level
-        can_attain = str(self.can_attain_level())
-        html_overview_string = Report.get_report_results_string("html-overview", self.html_level, can_attain, "", "")
-        html_overview_tr = BeautifulSoup(html_overview_string, "html.parser")
+        html_overview_tr = self.get_html_overview_row()
         report_content.find(id="html-overview").replace_with(html_overview_tr)
 
         # Validation Report
-        validation_report = self.report_details['validator_results'].copy()
-        validation_results_string = ""
-        tbody_id = 'html-validation'
-        cumulative_errors = 0
-        for page in validation_report:
-            errors = validation_report[page]
-            error_str = str(errors) + " errors"
-            cumulative_errors += int(errors)
-            cumulative_errors_string = str(cumulative_errors) + " total errors"
-            meets = str(cumulative_errors <= self.report_details["validator_goals"])
-            validation_results_string += Report.get_report_results_string("", page, error_str, cumulative_errors_string, meets)
+        # get the results of the validation as a string
+        validation_results_string = self.get_validation_results_string()
+        
         # create our tbody contents
         tbody_contents = BeautifulSoup(validation_results_string, "html.parser")
+        tbody_id = 'html-validation'
         report_content.find(id=tbody_id).replace_with(tbody_contents)
+
+        # Generate Error report
+        error_report_contents = self.get_validator_error_report()
+        tbody_contents = BeautifulSoup(error_report_contents, "html.parser")
+        tr_id = "html-validator-errors"
+        report_content.find(id=tr_id).replace_with(tbody_contents)
 
         # Generate html-elements-results table
         # prep all goals and results
@@ -559,6 +556,7 @@ class HTMLReport:
         html_goals_results = self.extract_el_from_dict_key_tuple(html_goals_results)
 
         # Produce results for required HTML5 elements
+        # html_elements_results_string = self.get_html_results_string(html5_goals_results, html5_goals_results, html_goals_details, html5_goals_results)
         html_elements_results_string = ""
         # we have to modify an entire tbody (not just a tr)
         tbody_id = "html-elements-results"
@@ -576,7 +574,8 @@ class HTMLReport:
             actual = html_goals_results[el]
             results = "Meets" if actual == goal else "Does Not Meet"
             html_elements_results_string += Report.get_report_results_string("", element, goal, actual, results)
-
+        ######
+        ######
         # create our tbody contents
         tbody_contents = BeautifulSoup(html_elements_results_string, "html.parser")
         report_content.find(id=tbody_id).replace_with(tbody_contents)
@@ -584,6 +583,66 @@ class HTMLReport:
         # Save new HTML as report/report.html
         with open(report_path, 'w') as f:
             f.write(str(report_content.contents[0]))
+
+    def get_html_overview_row(self):
+         # get a string version of can_attain_level
+        can_attain = str(self.can_attain_level())
+        html_overview_string = Report.get_report_results_string("html-overview", self.html_level, can_attain, "", "")
+        overview_row = BeautifulSoup(html_overview_string, "html.parser")
+        return overview_row
+
+    def get_validation_results_string(self):
+        validation_report = self.validator_errors.copy()
+        results = ""
+        
+        cumulative_errors = 0
+        for page, errors in validation_report.items():
+            num_errors = len(errors)
+            error_str = str(num_errors) + " error"
+            if num_errors != 1:
+                error_str += 's'
+            cumulative_errors += num_errors
+            cumulative_errors_string = str(cumulative_errors) + " total errors"
+            meets = str(cumulative_errors <= self.report_details["validator_goals"])
+            results += Report.get_report_results_string("", page, error_str, cumulative_errors_string, meets)
+        return results
+        
+    def get_validator_error_report(self):
+        results = ""
+        errors = self.validator_errors
+        tr_id = "html-validator-errors"
+        if not errors:
+            # write 1 column entry indicating there are no errors
+            congrats = "Congratulations, no errors were found."
+            results = '<tr id="' + tr_id + '"><td colspan="4">' + congrats + '</td></tr>'
+            return results
+        else:
+            for page, error in errors.items():
+                er = error[0]
+                message = er['message']
+                # clean message of smart quotes for HTML rendering
+                message = message.replace('“','"').replace('”','"')
+                last_line = er['lastLine']
+                try:
+                    first_line = er['firstLine']
+                except:
+                    first_line = last_line
+                last_column = er['lastColumn']
+                first_column = er['firstColumn']
+
+                # render any HTML code viewable on the screen
+                extract = er['extract'].replace("<", "&lt;").replace(">", "&gt;")
+                # place extract inside of a code tag
+                extract = "<code>" + extract + "</code>"
+
+                location = 'From line {}, column {}; to line {}, column {}.'.format(first_line,
+                first_column, last_line, last_column)
+
+
+                new_row = Report.get_report_results_string(tr_id, page, message, location, extract)
+                new_row = new_row.replace("Meets", extract)
+                results += new_row
+        return results
 
     def extract_el_from_dict_key_tuple(self, the_dict):
         """ converts all keys from a tuple to 2nd item in tuple """  
