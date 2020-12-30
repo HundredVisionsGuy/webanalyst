@@ -596,9 +596,6 @@ class HTMLReport:
         results = ""
         
         cumulative_errors = 0
-        # loop through each page in the validation report
-        # and create a table row of results for every
-        # error in every page
         for page, errors in validation_report.items():
             num_errors = len(errors)
             error_str = str(num_errors) + " error"
