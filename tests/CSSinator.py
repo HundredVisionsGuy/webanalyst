@@ -10,7 +10,7 @@ import re
 # TODO:
 # 1. Move testing code
 # 2. convert code to list of selectors
-#   3. convert code to list of declarations
+# 3. convert code to list of declarations
 # add CSS checks (other than simply validation)
 
 

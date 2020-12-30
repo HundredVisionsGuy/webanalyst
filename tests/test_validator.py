@@ -34,7 +34,7 @@ def invalid_markup():
 @pytest.fixture
 def invalid_css_results():
     results = val.validate_css(invalid_css_code)
-    return results
+    yield results
 
 
 @pytest.fixture
@@ -46,7 +46,7 @@ def css_errors_list(invalid_css_results):
 @pytest.fixture
 def valid_css_results():
     results = val.validate_css(valid_css_code)
-    return results
+    yield results
 
 
 def test_get_num_markup_errors(invalid_markup):
@@ -68,15 +68,15 @@ def test_css_validator_link():
     assert results == 200
 
 
-def test_is_css_valid_for_no_errors():
+def test_is_css_valid_for_no_errors(valid_css_results):
     expected = True
-    results = val.is_css_valid(valid_css_code)
+    results = val.is_css_valid(valid_css_results)
     assert expected == results
 
 
-def test_is_css_valid_for_errors():
+def test_is_css_valid_for_errors(invalid_css_results):
     expected = False
-    results = val.is_css_valid(invalid_css_code)
+    results = val.is_css_valid(invalid_css_results)
     assert expected == results
 
 

@@ -404,6 +404,13 @@ def test_about_me_css_report_for_report_details_num_style_tags(about_me_css_repo
     expected = 1
     assert results == expected
 
+def test_about_me_css_report_validate_css_for_0_errors(about_me_css_report):
+    about_me_css_report.validate_css()
+    css_errors = about_me_css_report.report_details['css_validator_results']
+    results = len(css_errors)
+    expected = 0
+    assert results == expected
+
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
     report_contents = clerk.file_to_string(report_html_doc_path)

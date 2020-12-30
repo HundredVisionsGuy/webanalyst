@@ -13,6 +13,7 @@ import sys
 import mechanicalsoup
 from pathlib import Path
 import bs4
+from bs4 import BeautifulSoup
 import re
 
 w3cURL = 'https://validator.w3.org/nu/?out=json'
@@ -92,10 +93,12 @@ def get_num_html_files():
     return len(html_files)
 
 
-def is_css_valid(code):
+def is_css_valid(validator_results):
     """Checks to make sure CSS code is valid"""
-    validate_css(code)
-    return bool(browser.get_current_page().select('#congrats'))
+    # create a soup of validator results
+    soup = BeautifulSoup(str(validator_results[0]), 'html.parser')
+    return bool(soup.find(id="congrats"))
+    
 
 
 def validate_css(css_code):
@@ -123,8 +126,11 @@ if __name__ == "__main__":
 
     css_code = clerk.get_css_from_style_tag(
         'tests/test_files/html_with_css.html')
-    is_css_valid = validate_css(css_code)
-    print(is_css_valid)
-    is_css_valid = validate_css("p } color: #336699; }")
-    print(is_css_valid)
-    print(validate_css("#header { display: flex; }"))
+    css_validator_results = validate_css(css_code)
+    is_valid = is_css_valid(css_validator_results)
+    print(is_valid)
+    css_validator_results = validate_css("p } color: #336699; }")
+    print(css_validator_results)
+    is_valid = is_css_valid(css_validator_results)
+    print(is_valid)
+    # print(validate_css("#header { display: flex; }"))

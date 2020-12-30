@@ -662,6 +662,7 @@ class CSSReport:
         self.font_families_used = []
         self.min_num_css_files = 0
         self.max_num_css_files = 0
+        self.css_errors = {}
         self.css_files = []
         self.style_tag_contents = []
         self.report_details = {
@@ -702,6 +703,7 @@ class CSSReport:
         self.get_num_css_files()
         self.get_num_style_tags()
         self.get_css_code()
+        self.validate_css()
 
     def get_num_css_files(self):
         css_files = clerk.get_all_files_of_type(self.__dir_path, 'css')
@@ -731,6 +733,29 @@ class CSSReport:
             except:
                 print("No style tag in this file")
         
+    def validate_css(self):
+        # create a dictionary with doc titles for keys
+        # and a number of CSS validation errors for value
+
+        # get titles and run them through CSS validator
+        for file_path in self.css_files:
+            # Get contents of the file
+            contents = clerk.file_to_string(file_path)
+            # ignore if no errors
+            if val.is_css_valid(contents):
+                continue
+            # get error report
+            error_report = val.validate_css(contents)
+           
+            # store # of errors
+            print(error_report)
+            # store results
+        for code in self.style_tag_contents:
+            if val.is_css_valid(code):
+                continue
+            error_report = val.validate_css(code)
+            print(error_report)
+
 
 if __name__ == "__main__":
     # How to run a report:
@@ -740,8 +765,11 @@ if __name__ == "__main__":
     # 4. Go to report/report.html for results
 
     about_me_readme_path = "tests/test_files/projects/about_me/"
+    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
     large_project_readme_path = "tests/test_files/projects/large_project/"
-    large_project = Report(large_project_readme_path)
-    large_project.generate_report()
+    # large_project = Report(large_project_readme_path)
+    # large_project.generate_report()
+    about_me_dnn_project = Report(about_me_dnn_readme_path)
+    about_me_dnn_project.generate_report()
 
  
