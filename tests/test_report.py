@@ -66,7 +66,7 @@ def about_me_html_report(about_me_report):
     return about_me_report.html_report
 
 @pytest.fixture
-def about_me_dnn_html_report(about_me_dnm_report):
+def about_me_dnm_html_report(about_me_dnm_report):
     return about_me_dnm_report.html_report
 
 @pytest.fixture
@@ -79,6 +79,10 @@ def about_me_css_report(about_me_readme_list):
     css_report = report.CSSReport(about_me_readme_list, about_me_path)
     return css_report
 
+@pytest.fixture
+def about_me_dnm_css_report(about_me_dnn_readme_list):
+    css_report = report.CSSReport(about_me_dnn_readme_list, about_me_dnm_path)
+    return css_report
 
 @pytest.fixture
 def large_project_css_report(large_project_report):
@@ -343,8 +347,8 @@ def test_html_report_for_set_required_elements_about_me_h2(about_me_html_report)
     results = about_me_html_report.report_details["required_elements"]["H2"]
     assert results == 2
 
-def test_html_report_meets_htmle5_essential_requirements_for_false(about_me_dnn_html_report):
-    results = about_me_dnn_html_report.meets_html5_essential_requirements()
+def test_html_report_meets_htmle5_essential_requirements_for_false(about_me_dnm_html_report):
+    results = about_me_dnm_html_report.meets_html5_essential_requirements()
     assert results == False
 
 def test_html_report_for_extract_el_from_dict_key_tuple(about_me_html_report):
@@ -409,6 +413,13 @@ def test_about_me_css_report_validate_css_for_0_errors(about_me_css_report):
     css_errors = about_me_css_report.report_details['css_validator_results']
     results = len(css_errors)
     expected = 0
+    assert results == expected
+
+def test_about_me_dnm_css_report_for_validate_css_results_for_2_errors(about_me_dnm_css_report):
+    about_me_dnm_css_report.validate_css()
+    css_errors = about_me_dnm_css_report.report_details['css_validator_results']
+    results = len(css_errors)
+    expected = 2
     assert results == expected
 
 # report.html relatd tests

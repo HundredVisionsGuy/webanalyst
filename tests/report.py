@@ -768,5 +768,5 @@ if __name__ == "__main__":
     # large_project.generate_report()
     about_me_dnn_project = Report(about_me_dnn_readme_path)
     about_me_dnn_project.generate_report()
-
+    about_me_dnn_project.css_report.validate_css()
  
