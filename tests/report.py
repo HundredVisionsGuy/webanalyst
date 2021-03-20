@@ -379,7 +379,7 @@ class HTMLReport:
             el_meets = actual_number >= number_required
 
             # modify the report details on required elements found
-            self.report_details["required_elements_found"][el] = [actual_number, number_required, el_meets]
+            self.report_details["required_elements_found"][el] = [number_required, actual_number, el_meets]
 
 
     def set_html5_required_elements_found(self):
@@ -388,11 +388,14 @@ class HTMLReport:
         )
         # get # of html files in folder - this is our multiplier
         for el in enumerate(html5_elements):
-            key = el[1].lower()
-            # val is how many were found
-            val = html.get_num_elements_in_folder(key, self.__dir_path)
-            self.report_details["required_elements_found"]["HTML5_essential_elements_found"][key.upper(
-            )] = val
+            element = el[1].lower()
+            # how many were found
+            number_found = html.get_num_elements_in_folder(element, self.__dir_path)
+            number_required = self.report_details['required_elements']['HTML5_essential_elements'][element.upper()]
+            element_meets = number_found >= number_required
+
+            self.report_details["required_elements_found"]["HTML5_essential_elements_found"][element.upper(
+            )] = [number_required, number_found, element_meets]
 
     # def meets_html5_essential_requirements(self):
     #     # Get HTML5_essential_elements
