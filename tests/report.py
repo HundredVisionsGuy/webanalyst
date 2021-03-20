@@ -366,12 +366,22 @@ class HTMLReport:
         html_essential_elements = ["DOCTYPE", "HTML", "HEAD", "TITLE", "BODY"]
         for i in html_essential_elements:
             required_elements.remove(i)
+
         # iterate through each element and get the total number
+        # then compare to required number 
         for el in enumerate(required_elements):
-            num = html.get_num_elements_in_folder(el[1], self.__dir_path)
-            # add the element and its number to required_elements_found
-            self.report_details["required_elements_found"][el] = num
-        
+            actual_number = html.get_num_elements_in_folder(el[1], self.__dir_path)
+
+            # get how many of that element is required
+            number_required = self.report_details['required_elements'][el[1]]
+
+            # do we have enough of that element to meet?
+            el_meets = actual_number >= number_required
+
+            # modify the report details on required elements found
+            self.report_details["required_elements_found"][el] = [actual_number, number_required, el_meets]
+
+
     def set_html5_required_elements_found(self):
         # Get HTML5_essential_elements
         html5_elements = self.report_details["required_elements"]["HTML5_essential_elements"].copy(
@@ -384,38 +394,40 @@ class HTMLReport:
             self.report_details["required_elements_found"]["HTML5_essential_elements_found"][key.upper(
             )] = val
 
-    def meets_html5_essential_requirements(self):
-        # Get HTML5_essential_elements
-        html5_elements = self.report_details["required_elements"]["HTML5_essential_elements"].copy(
-        )
-        # get # of html files in folder - this is our multiplier
-        num_files = len(self.get_html_files_list())
-        for el in enumerate(html5_elements):
-            key = el[1]
-            val = html.get_num_elements_in_folder(key, self.__dir_path)
-            # if each element has exactly the number of required elements, it passes
-            if val != num_files:
-                return False
-        # all must pass or no pass
-        # any failures and return False
-        # otherwise, return True
-        return True
+    # def meets_html5_essential_requirements(self):
+    #     # Get HTML5_essential_elements
+    #     html5_elements = self.report_details["required_elements"]["HTML5_essential_elements"].copy(
+    #     )
+    #     # get # of html files in folder - this is our multiplier
+    #     num_files = len(self.get_html_files_list())
+    #     for el in enumerate(html5_elements):
+    #         key = el[1]
+    #         val = html.get_num_elements_in_folder(key, self.__dir_path)
+    #         # if each element has exactly the number of required elements, it passes
+    #         if val != num_files:
+    #             return False
+    #     # all must pass or no pass
+    #     # any failures and return False
+    #     # otherwise, return True
+    #     return True
 
     def meets_required_elements(self):
+        all_elements_meet = True # assume they meet until proved otherwise
         # Get all essential_elements
         html5_elements = self.report_details["required_elements"].copy(
         )
         html5_elements.pop('HTML5_essential_elements', None)
         # remove essential HTML5 elements
         print(html5_elements)
-        # check all other tags to see if they meet
+        # check all other tags to see if they meet - record whether each one meets individually
         for i in enumerate(html5_elements.items()):
+            all_elements_meet = True
             key, min_value = i[1]
-            print("Key = {} Val = {}".format(key, min_value))
-            val = html.get_num_elements_in_folder(key, self.__dir_path)
-            if val < min_value:
-                return False
-        return True
+            actual_value = html.get_num_elements_in_folder(key, self.__dir_path)
+            element_meets = actual_value >= min_value
+            if not element_meets:
+                all_elements_meet = False # it just takes one not meeting
+        return all_elements_meet
 
     def check_element_for_required_number(self, file_path, element, min_num):
         num_elements = html.get_num_elements_in_file(element, file_path)
