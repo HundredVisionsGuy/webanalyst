@@ -395,22 +395,6 @@ class HTMLReport:
             self.report_details["required_elements_found"]["HTML5_essential_elements_found"][element.upper(
             )] = [number_required, number_found, element_meets]
 
-    # def meets_html5_essential_requirements(self):
-    #     # Get HTML5_essential_elements
-    #     html5_elements = self.report_details["required_elements"]["HTML5_essential_elements"].copy(
-    #     )
-    #     # get # of html files in folder - this is our multiplier
-    #     num_files = len(self.get_html_files_list())
-    #     for el in enumerate(html5_elements):
-    #         key = el[1]
-    #         val = html.get_num_elements_in_folder(key, self.__dir_path)
-    #         # if each element has exactly the number of required elements, it passes
-    #         if val != num_files:
-    #             return False
-    #     # all must pass or no pass
-    #     # any failures and return False
-    #     # otherwise, return True
-    #     return True
 
     def meets_required_elements(self):
         all_elements_meet = True # assume they meet until proved otherwise
