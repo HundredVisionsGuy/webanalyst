@@ -38,12 +38,10 @@ class Report:
         if results != "":
             results_string += "<td>" + str(results) + "</td>"
         if results_key:
+            meets = "Meets"
+        else:
             meets = "Does Not Meet"
-            if results_key:
-                meets = "Meets"
-            else:
-                meets = "Does Not Meet"
-            results_string += "<td>" + meets + "</td>"
+        results_string += "<td>" + meets + "</td>"
         results_string += "</tr>"
         return results_string
 
@@ -369,11 +367,11 @@ class HTMLReport:
 
         # iterate through each element and get the total number
         # then compare to required number 
-        for el in enumerate(required_elements):
-            actual_number = html.get_num_elements_in_folder(el[1], self.__dir_path)
+        for el in required_elements:
+            actual_number = html.get_num_elements_in_folder(el, self.__dir_path)
 
             # get how many of that element is required
-            number_required = self.report_details['required_elements'][el[1]]
+            number_required = self.report_details['required_elements'][el]
 
             # do we have enough of that element to meet?
             el_meets = actual_number >= number_required
@@ -558,36 +556,26 @@ class HTMLReport:
         tr_id = "html-validator-errors"
         report_content.find(id=tr_id).replace_with(tbody_contents)
 
-        # Generate html-elements-results table
-        # prep all goals and results
-        # for HTML elements
-        # and HTML5 required elements
-        html_goals_details = self.report_details["required_elements"].copy()
-        html5_goals_details = html_goals_details.pop("HTML5_essential_elements")
+        html_goals_results = list(self.report_details["required_elements_found"].items())
+        html5_goals_results = list(html_goals_results.pop(0)[1].items())
 
-        html_goals_results = self.report_details["required_elements_found"].copy()
-        html5_goals_results = html_goals_results.pop("HTML5_essential_elements_found")
-
-        html_goals_results = self.extract_el_from_dict_key_tuple(html_goals_results)
-
-        # Produce results for required HTML5 elements
-        # html_elements_results_string = self.get_html_results_string(html5_goals_results, html5_goals_results, html_goals_details, html5_goals_results)
         html_elements_results_string = ""
         # we have to modify an entire tbody (not just a tr)
         tbody_id = "html-elements-results"
-        for el in html5_goals_details:
+        for el in html5_goals_results:
             # get element, goal, actual, and results
-            element = el
-            goal = html5_goals_details[el]
-            actual = html5_goals_results[el]
-            results = "Meets" if actual == goal else "Does Not Meet" 
+            element = el[0]
+            goal = el[1][0]
+            actual = el[1][1]
+            results = el[1][2]
             html_elements_results_string += Report.get_report_results_string("", element, goal, actual, results)
         # add remaining elements
-        for el in html_goals_details:
-            element = el
-            goal = html_goals_details[el]
-            actual = html_goals_results[el]
-            results = "Meets" if actual == goal else "Does Not Meet"
+        for el in html_goals_results:
+            # get element, goal, actual, and results
+            element = el[0]
+            goal = el[1][0]
+            actual = el[1][1]
+            results = el[1][2]
             html_elements_results_string += Report.get_report_results_string("", element, goal, actual, results)
         ######
         ######
