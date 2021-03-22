@@ -28,9 +28,10 @@ class Report:
         return self.__readme_list
 
     @staticmethod
-    def get_report_results_string(tr_id, type_column, target, results, results_key):
-        if tr_id:
-            results_string = '<tr id="' + tr_id + '">'
+    def get_report_results_string(tr_class, type_column, target, results, results_key):
+        results_key = str(results_key)
+        if tr_class:
+            results_string = '<tr class="' + tr_class + '">'
         else:
             results_string = '<tr>'
         results_string += '<td>' + type_column + '</td>'
@@ -596,7 +597,7 @@ class HTMLReport:
             element = el[0]
             goal = el[1][0]
             actual = el[1][1]
-            results = el[1][2]
+            results = str(el[1][2])
             html_elements_results_string += Report.get_report_results_string(
                 "", element, goal, actual, results)
         # add remaining elements
@@ -647,40 +648,41 @@ class HTMLReport:
 
     def get_validator_error_report(self):
         results = ""
-        errors = self.validator_errors['HTML']
-        tr_id = "html-validator-errors"
-        if not errors:
+        errors_dict = self.validator_errors['HTML']
+        tr_class = "html-validator-errors"
+        if not errors_dict:
             # write 1 column entry indicating there are no errors
             congrats = "Congratulations, no errors were found."
-            results = '<tr id="' + tr_id + '"><td colspan="4">' + congrats + '</td></tr>'
+            results = '<tr class="' + tr_class + \
+                '"><td colspan="4">' + congrats + '</td></tr>'
             return results
         else:
-            for page, error in errors.items():
-                er = error[0]
-                message = er['message']
-                # clean message of smart quotes for HTML rendering
-                message = message.replace('“', '"').replace('”', '"')
-                last_line = er['lastLine']
-                try:
-                    first_line = er['firstLine']
-                except:
-                    first_line = last_line
-                last_column = er['lastColumn']
-                first_column = er['firstColumn']
+            for page, errors in errors_dict.items():
+                for error in errors:
+                    message = error['message']
+                    # clean message of smart quotes for HTML rendering
+                    message = message.replace('“', '"').replace('”', '"')
+                    last_line = error['lastLine']
+                    try:
+                        first_line = error['firstLine']
+                    except:
+                        first_line = last_line
+                    last_column = error['lastColumn']
+                    first_column = error['firstColumn']
 
-                # render any HTML code viewable on the screen
-                extract = er['extract'].replace(
-                    "<", "&lt;").replace(">", "&gt;")
-                # place extract inside of a code tag
-                extract = "<code>" + extract + "</code>"
+                    # render any HTML code viewable on the screen
+                    extract = error['extract'].replace(
+                        "<", "&lt;").replace(">", "&gt;")
+                    # place extract inside of a code tag
+                    extract = "<code>" + extract + "</code>"
 
-                location = 'From line {}, column {}; to line {}, column {}.'.format(first_line,
-                                                                                    first_column, last_line, last_column)
+                    location = 'From line {}, column {}; to line {}, column {}.'.format(first_line,
+                                                                                        first_column, last_line, last_column)
 
-                new_row = Report.get_report_results_string(
-                    tr_id, page, message, location, extract)
-                new_row = new_row.replace("Meets", extract)
-                results += new_row
+                    new_row = Report.get_report_results_string(
+                        tr_class, page, message, location, extract)
+                    new_row = new_row.replace("Meets", extract)
+                    results += new_row
         return results
 
     def extract_el_from_dict_key_tuple(self, the_dict):
