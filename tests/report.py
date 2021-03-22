@@ -10,6 +10,7 @@ logging.basicConfig(format='%(asctime)s - %(message)s',
 report_template_path = "tests/report_template.html"
 report_path = "report/report.html"
 
+
 class Report:
     def __init__(self, dir_path):
         self.__readme_path = dir_path + "README.md"
@@ -29,7 +30,7 @@ class Report:
     @staticmethod
     def get_report_results_string(tr_id, type_column, target, results, results_key):
         if tr_id:
-            results_string = '<tr id="'+ tr_id + '">'
+            results_string = '<tr id="' + tr_id + '">'
         else:
             results_string = '<tr>'
         results_string += '<td>' + type_column + '</td>'
@@ -57,7 +58,6 @@ class Report:
         self.css_report = CSSReport(self.__readme_list,
                                     self.__dir_path)
 
-
         # run each report
         self.prep_report()
         self.general_report.generate_report()
@@ -69,6 +69,7 @@ class Report:
         report_template_content = clerk.file_to_string(report_template_path)
         with open('report/report.html', 'w') as f:
             f.write(report_template_content)
+
 
 class GeneralReport:
     def __init__(self, readme_list, dir_path):
@@ -257,32 +258,40 @@ class GeneralReport:
         writing_results = self.report_details["writing_goal_results"]
 
         # Modify table in section#general
-        
+
         # Append the following tds
         # Min HTML files & Actual HTML files
-        #Report.get_report_results_string()
-        html_results_string = Report.get_report_results_string("general-html-files-results", "HTML", goals_details['HTML'], self.num_html_files, goals_results['Meets HTML'])
+        # Report.get_report_results_string()
+        html_results_string = Report.get_report_results_string(
+            "general-html-files-results", "HTML", goals_details['HTML'], self.num_html_files, goals_results['Meets HTML'])
         html_results_tag = BeautifulSoup(html_results_string, "html.parser")
-        report_content.find(id="general-html-files-results").replace_with(html_results_tag)
-        
-        # Min CSS files & Actual CSS files
-        css_results_string = Report.get_report_results_string("general-css-files-results", "CSS",  goals_details['CSS'], self.num_css_files, goals_results['Meets CSS'])
-        
-        css_results_tag = BeautifulSoup(css_results_string, "html.parser")
-        report_content.find(id="general-css-files-results").replace_with(css_results_tag)
-        
-        spp_results_string = Report.get_report_results_string("general-spp-results", "Avg. Sentences / Paragraph", str(writing_goals["average_SPP"]), writing_results["actual_SPP"], writing_results["meets_SPP"])
-        spp_results_tag = BeautifulSoup(spp_results_string, "html.parser")
-        report_content.find(id="general-spp-results").replace_with(spp_results_tag)
+        report_content.find(
+            id="general-html-files-results").replace_with(html_results_tag)
 
-        wps_results_string = Report.get_report_results_string("general-wps-results", "Avg. Words / Sentence", str(writing_goals["average_WPS"]), writing_results["actual_WPS"], writing_results["meets_WPS"])
+        # Min CSS files & Actual CSS files
+        css_results_string = Report.get_report_results_string(
+            "general-css-files-results", "CSS",  goals_details['CSS'], self.num_css_files, goals_results['Meets CSS'])
+
+        css_results_tag = BeautifulSoup(css_results_string, "html.parser")
+        report_content.find(
+            id="general-css-files-results").replace_with(css_results_tag)
+
+        spp_results_string = Report.get_report_results_string("general-spp-results", "Avg. Sentences / Paragraph", str(
+            writing_goals["average_SPP"]), writing_results["actual_SPP"], writing_results["meets_SPP"])
+        spp_results_tag = BeautifulSoup(spp_results_string, "html.parser")
+        report_content.find(
+            id="general-spp-results").replace_with(spp_results_tag)
+
+        wps_results_string = Report.get_report_results_string("general-wps-results", "Avg. Words / Sentence", str(
+            writing_goals["average_WPS"]), writing_results["actual_WPS"], writing_results["meets_WPS"])
         wps_results_tag = BeautifulSoup(wps_results_string, "html.parser")
-        report_content.find(id="general-wps-results").replace_with(wps_results_tag)
+        report_content.find(
+            id="general-wps-results").replace_with(wps_results_tag)
 
         # Save new HTML as report/general_report.html
         with open(report_path, 'w') as f:
             f.write(str(report_content.contents[2]))
-        
+
 
 class HTMLReport:
     def __init__(self, readme_list, dir_path):
@@ -298,7 +307,10 @@ class HTMLReport:
             "can_attain_level": False,
             "html_level_attained": None,
             "validator_goals": 0,
-            "validator_results": {},
+            "validator_results": {
+                "CSS Errors": 0,
+                "HTML Errors": 0
+            },
             "num_html_files": 0,
             "required_elements": {
                 "HTML5_essential_elements": {
@@ -325,7 +337,7 @@ class HTMLReport:
         self.get_validator_goals()
         self.ammend_required_elements()
         self.analyze_results()
-        self.publish_results()    
+        self.publish_results()
 
     def get_html_files_list(self):
         self.html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
@@ -359,16 +371,17 @@ class HTMLReport:
         # get a copy of the required elements
         required_elements = self.get_required_elements().copy()
 
-        # remove the HTML5_essential_elements 
+        # remove the HTML5_essential_elements
         # that was already covered
         html_essential_elements = ["DOCTYPE", "HTML", "HEAD", "TITLE", "BODY"]
         for i in html_essential_elements:
             required_elements.remove(i)
 
         # iterate through each element and get the total number
-        # then compare to required number 
+        # then compare to required number
         for el in required_elements:
-            actual_number = html.get_num_elements_in_folder(el, self.__dir_path)
+            actual_number = html.get_num_elements_in_folder(
+                el, self.__dir_path)
 
             # get how many of that element is required
             number_required = self.report_details['required_elements'][el]
@@ -377,8 +390,8 @@ class HTMLReport:
             el_meets = actual_number >= number_required
 
             # modify the report details on required elements found
-            self.report_details["required_elements_found"][el] = [number_required, actual_number, el_meets]
-
+            self.report_details["required_elements_found"][el] = [
+                number_required, actual_number, el_meets]
 
     def set_html5_required_elements_found(self):
         # Get HTML5_essential_elements
@@ -388,16 +401,17 @@ class HTMLReport:
         for el in enumerate(html5_elements):
             element = el[1].lower()
             # how many were found
-            number_found = html.get_num_elements_in_folder(element, self.__dir_path)
-            number_required = self.report_details['required_elements']['HTML5_essential_elements'][element.upper()]
+            number_found = html.get_num_elements_in_folder(
+                element, self.__dir_path)
+            number_required = self.report_details['required_elements']['HTML5_essential_elements'][element.upper(
+            )]
             element_meets = number_found >= number_required
 
             self.report_details["required_elements_found"]["HTML5_essential_elements_found"][element.upper(
             )] = [number_required, number_found, element_meets]
 
-
     def meets_required_elements(self):
-        all_elements_meet = True # assume they meet until proved otherwise
+        all_elements_meet = True  # assume they meet until proved otherwise
         # Get all essential_elements
         html5_elements = self.report_details["required_elements"].copy(
         )
@@ -408,10 +422,11 @@ class HTMLReport:
         for i in enumerate(html5_elements.items()):
             all_elements_meet = True
             key, min_value = i[1]
-            actual_value = html.get_num_elements_in_folder(key, self.__dir_path)
+            actual_value = html.get_num_elements_in_folder(
+                key, self.__dir_path)
             element_meets = actual_value >= min_value
             if not element_meets:
-                all_elements_meet = False # it just takes one not meeting
+                all_elements_meet = False  # it just takes one not meeting
         return all_elements_meet
 
     def check_element_for_required_number(self, file_path, element, min_num):
@@ -479,14 +494,14 @@ class HTMLReport:
                 key = key.strip()[1:-1]
                 # add key and value to required elements
                 self.report_details["required_elements"][key] = int(val)
-        
+
     def get_report_details(self):
         return self.report_details
-        
+
     def validate_html(self):
         # create a dictionary with doc titles for keys
         # and num of errors for value
-        
+
         # get titles and run them through validator
         for file_path in self.html_files:
             # Get error objects
@@ -496,19 +511,46 @@ class HTMLReport:
             page_name = clerk.get_file_name(file_path)
             if errors > 0:
                 self.process_errors(page_name, errors_in_file)
-            self.report_details['validator_results'][page_name]=str(errors)
-    
+
     def process_errors(self, page_name, errors):
         """ receives errors and records warnings and errors """
-        errors_list = []
-        warnings_list = []
+        errors_dict = {"HTML": {},
+                       "CSS": {}}
+        warnings_dict = {"HTML": {},
+                         "CSS": {}}
+
+        # Loop through all the errors and separate
+        # error from warning and CSS from HTML
+        # Must use try/except whenever adding an item
+        # because it will crash if we try and append it
+        # to a non-existant list
         for item in errors:
             if item["type"] == "error":
-                errors_list.append(item)
+                if "CSS" in item["message"]:
+                    self.report_details["validator_results"]["CSS Errors"] += 1
+                    try:
+                        errors_dict["CSS"][page_name].append(item)
+                    except:
+                        errors_dict["CSS"][page_name] = [item, ]
+                else:
+                    try:
+                        errors_dict["HTML"][page_name].append(item)
+                    except:
+                        errors_dict["HTML"][page_name] = [item, ]
             elif item["type"] == "info":
-                warnings_list.append(item)
-        self.validator_errors[page_name] = errors_list
-        self.validator_warnings[page_name] = warnings_list
+                if "CSS" in item["message"]:
+                    try:
+                        warnings_dict["CSS"][page_name].append(item)
+                    except:
+                        warnings_dict["CSS"][page_name] = [item, ]
+                else:
+                    try:
+                        warnings_dict["HTML"][page_name].append(item)
+                    except:
+                        warnings_dict["HTML"][page_name] = [item, ]
+
+        self.validator_errors = errors_dict
+        self.validator_warnings = warnings_dict
 
     def analyze_results(self):
         self.can_attain_level()
@@ -528,9 +570,10 @@ class HTMLReport:
         # Validation Report
         # get the results of the validation as a string
         validation_results_string = self.get_validation_results_string()
-        
+
         # create our tbody contents
-        tbody_contents = BeautifulSoup(validation_results_string, "html.parser")
+        tbody_contents = BeautifulSoup(
+            validation_results_string, "html.parser")
         tbody_id = 'html-validation'
         report_content.find(id=tbody_id).replace_with(tbody_contents)
 
@@ -540,7 +583,8 @@ class HTMLReport:
         tr_id = "html-validator-errors"
         report_content.find(id=tr_id).replace_with(tbody_contents)
 
-        html_goals_results = list(self.report_details["required_elements_found"].items())
+        html_goals_results = list(
+            self.report_details["required_elements_found"].items())
         html5_goals_results = list(html_goals_results.pop(0)[1].items())
 
         html_elements_results_string = ""
@@ -552,7 +596,8 @@ class HTMLReport:
             goal = el[1][0]
             actual = el[1][1]
             results = el[1][2]
-            html_elements_results_string += Report.get_report_results_string("", element, goal, actual, results)
+            html_elements_results_string += Report.get_report_results_string(
+                "", element, goal, actual, results)
         # add remaining elements
         for el in html_goals_results:
             # get element, goal, actual, and results
@@ -560,11 +605,13 @@ class HTMLReport:
             goal = el[1][0]
             actual = el[1][1]
             results = el[1][2]
-            html_elements_results_string += Report.get_report_results_string("", element, goal, actual, results)
+            html_elements_results_string += Report.get_report_results_string(
+                "", element, goal, actual, results)
         ######
         ######
         # create our tbody contents
-        tbody_contents = BeautifulSoup(html_elements_results_string, "html.parser")
+        tbody_contents = BeautifulSoup(
+            html_elements_results_string, "html.parser")
         report_content.find(id=tbody_id).replace_with(tbody_contents)
 
         # Save new HTML as report/report.html
@@ -572,16 +619,17 @@ class HTMLReport:
             f.write(str(report_content.contents[0]))
 
     def get_html_overview_row(self):
-         # get a string version of can_attain_level
+        # get a string version of can_attain_level
         can_attain = str(self.can_attain_level())
-        html_overview_string = Report.get_report_results_string("html-overview", self.html_level, can_attain, "", "")
+        html_overview_string = Report.get_report_results_string(
+            "html-overview", self.html_level, can_attain, "", "")
         overview_row = BeautifulSoup(html_overview_string, "html.parser")
         return overview_row
 
     def get_validation_results_string(self):
         validation_report = self.validator_errors.copy()
         results = ""
-        
+
         cumulative_errors = 0
         for page, errors in validation_report.items():
             num_errors = len(errors)
@@ -590,10 +638,12 @@ class HTMLReport:
                 error_str += 's'
             cumulative_errors += num_errors
             cumulative_errors_string = str(cumulative_errors) + " total errors"
-            meets = str(cumulative_errors <= self.report_details["validator_goals"])
-            results += Report.get_report_results_string("", page, error_str, cumulative_errors_string, meets)
+            meets = str(cumulative_errors <=
+                        self.report_details["validator_goals"])
+            results += Report.get_report_results_string(
+                "", page, error_str, cumulative_errors_string, meets)
         return results
-        
+
     def get_validator_error_report(self):
         results = ""
         errors = self.validator_errors
@@ -608,7 +658,7 @@ class HTMLReport:
                 er = error[0]
                 message = er['message']
                 # clean message of smart quotes for HTML rendering
-                message = message.replace('“','"').replace('”','"')
+                message = message.replace('“', '"').replace('”', '"')
                 last_line = er['lastLine']
                 try:
                     first_line = er['firstLine']
@@ -618,25 +668,27 @@ class HTMLReport:
                 first_column = er['firstColumn']
 
                 # render any HTML code viewable on the screen
-                extract = er['extract'].replace("<", "&lt;").replace(">", "&gt;")
+                extract = er['extract'].replace(
+                    "<", "&lt;").replace(">", "&gt;")
                 # place extract inside of a code tag
                 extract = "<code>" + extract + "</code>"
 
                 location = 'From line {}, column {}; to line {}, column {}.'.format(first_line,
-                first_column, last_line, last_column)
+                                                                                    first_column, last_line, last_column)
 
-
-                new_row = Report.get_report_results_string(tr_id, page, message, location, extract)
+                new_row = Report.get_report_results_string(
+                    tr_id, page, message, location, extract)
                 new_row = new_row.replace("Meets", extract)
                 results += new_row
         return results
 
     def extract_el_from_dict_key_tuple(self, the_dict):
-        """ converts all keys from a tuple to 2nd item in tuple """  
+        """ converts all keys from a tuple to 2nd item in tuple """
         new_dict = {}
         for t, i in the_dict.items():
             new_dict[t[1]] = i
         return new_dict
+
 
 class CSSReport:
     def __init__(self, readme_list, dir_path):
@@ -708,15 +760,16 @@ class CSSReport:
     def get_css_code(self):
         # extract content from all CSS files
         self.css_files = clerk.get_all_files_of_type(self.__dir_path, "css")
-        
+
         # extract CSS from all style tags
         html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
         for file in html_files:
             try:
-                self.style_tag_contents.append(clerk.get_css_from_style_tag(file))
+                self.style_tag_contents.append(
+                    clerk.get_css_from_style_tag(file))
             except:
                 print("No style tag in this file")
-        
+
     def validate_css(self):
         # create a dictionary with doc titles for keys
         # and a number of CSS validation errors for value
@@ -730,7 +783,7 @@ class CSSReport:
                 continue
             # get error report
             error_report = val.validate_css(contents)
-           
+
             # store # of errors
             print(error_report)
             # store results
@@ -756,4 +809,3 @@ if __name__ == "__main__":
     about_me_dnn_project = Report(about_me_dnn_readme_path)
     about_me_dnn_project.generate_report()
     about_me_dnn_project.css_report.validate_css()
- 
