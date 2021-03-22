@@ -629,34 +629,38 @@ class HTMLReport:
         return overview_row
 
     def get_validation_results_string(self):
-        validation_report = self.validator_errors["HTML"].copy()
         results = ""
+        if not self.validator_errors:
+            return '<tr><td rowspan="4">Congratulations! No Errors Found</td></tr>'
+        else:
+            validation_report = self.validator_errors["HTML"].copy()
 
-        cumulative_errors = 0
-        for page, errors in validation_report.items():
-            num_errors = len(errors)
-            error_str = str(num_errors) + " error"
-            if num_errors != 1:
-                error_str += 's'
-            cumulative_errors += num_errors
-            cumulative_errors_string = str(cumulative_errors) + " total errors"
-            meets = str(cumulative_errors <=
-                        self.report_details["validator_goals"])
-            results += Report.get_report_results_string(
-                "", page, error_str, cumulative_errors_string, meets)
-        return results
+            cumulative_errors = 0
+            for page, errors in validation_report.items():
+                num_errors = len(errors)
+                error_str = str(num_errors) + " error"
+                if num_errors != 1:
+                    error_str += 's'
+                cumulative_errors += num_errors
+                cumulative_errors_string = str(
+                    cumulative_errors) + " total errors"
+                meets = str(cumulative_errors <=
+                            self.report_details["validator_goals"])
+                results += Report.get_report_results_string(
+                    "", page, error_str, cumulative_errors_string, meets)
+            return results
 
     def get_validator_error_report(self):
         results = ""
-        errors_dict = self.validator_errors['HTML']
-        tr_class = "html-validator-errors"
-        if not errors_dict:
+        if not self.validator_errors:
             # write 1 column entry indicating there are no errors
             congrats = "Congratulations, no errors were found."
-            results = '<tr class="' + tr_class + \
-                '"><td colspan="4">' + congrats + '</td></tr>'
+            results = '<tr><td colspan="4">' + congrats + '</td></tr>'
             return results
         else:
+            errors_dict = self.validator_errors['HTML']
+            tr_class = "html-validator-errors"
+
             for page, errors in errors_dict.items():
                 for error in errors:
                     message = error['message']
@@ -809,6 +813,6 @@ if __name__ == "__main__":
     large_project_readme_path = "tests/test_files/projects/large_project/"
     # large_project = Report(large_project_readme_path)
     # large_project.generate_report()
-    about_me_dnn_project = Report(about_me_dnn_readme_path)
+    about_me_dnn_project = Report(about_me_readme_path)
     about_me_dnn_project.generate_report()
     about_me_dnn_project.css_report.validate_css()
