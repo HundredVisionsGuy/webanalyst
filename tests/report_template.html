@@ -1,20 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report Results</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.1/css/bulma.min.css">
     <style>
-        th, td {
+        th,
+        td {
             padding: .5em 1em;
         }
+
         section.p-1 {
             margin: .5em 0;
-            border-bottom:  .1em solid #333;
+            border-bottom: .1em solid #333;
+        }
+
+        tr.errors {
+            background-color: rgb(209, 141, 141);
         }
     </style>
 </head>
+
 <body class="container">
     <section class="section">
         <header class="p-1">
@@ -34,7 +42,7 @@
                                 <th>Minimum # Required</th>
                                 <th>Actual # in Project</th>
                                 <th>Results</th>
-                            </tr>  
+                            </tr>
                         </thead>
                         <tbody>
                             <tr id="general-html-files-results">
@@ -60,7 +68,7 @@
                                 <th>Range of Values</th>
                                 <th>Actual Results</th>
                                 <th>Meets?</th>
-                            </tr>  
+                            </tr>
                         </thead>
                         <tbody>
                             <tr id="general-spp-results">
@@ -153,7 +161,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                            </tr>          
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -163,6 +171,44 @@
                     <h2 class="subtitle">CSS Results</h2>
                 </header>
                 <div class="table-container">
+                    <table class="table is-striped is-hoverable">
+                        <caption class="has-text-weight-semibold">CSS Validator Reports</caption>
+                        <thead>
+                            <tr>
+                                <th>Page name</th>
+                                <th>Error Message</th>
+                                <th>Location</th>
+                                <th>Extract</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="css-validation">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table is-striped is-hoverable">
+                        <caption class="has-text-weight-semibold">CSS Validator Errors</caption>
+                        <thead>
+                            <tr>
+                                <th>Page name</th>
+                                <th>Error Message</th>
+                                <th>Location</th>
+                                <th>Extract</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="css-validator-errors">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <table class="table is-striped is-hoverable">
                         <thead>
                             <tr>
@@ -203,4 +249,5 @@
         </div>
     </section>
 </body>
+
 </html>

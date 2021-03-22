@@ -570,8 +570,9 @@ class HTMLReport:
         report_content.find(id="html-overview").replace_with(html_overview_tr)
 
         # Validation Report
+        # HTML Validation
         # get the results of the validation as a string
-        validation_results_string = self.get_validation_results_string()
+        validation_results_string = self.get_validation_results_string('HTML')
 
         # create our tbody contents
         tbody_contents = BeautifulSoup(
@@ -579,10 +580,28 @@ class HTMLReport:
         tbody_id = 'html-validation'
         report_content.find(id=tbody_id).replace_with(tbody_contents)
 
+        # CSS Validation
+        # get the results of the validation as a string
+        validation_results_string = self.get_validation_results_string('CSS')
+
+        # create our tbody contents
+        tbody_contents = BeautifulSoup(
+            validation_results_string, "html.parser")
+        tbody_id = 'css-validation'
+        report_content.find(id=tbody_id).replace_with(tbody_contents)
+
         # Generate Error report
+        # For HTML Errors
         error_report_contents = self.get_validator_error_report()
         tbody_contents = BeautifulSoup(error_report_contents, "html.parser")
         tr_id = "html-validator-errors"
+        report_content.find(id=tr_id).replace_with(tbody_contents)
+
+        # For CSS Errors
+        # For HTML Errors
+        error_report_contents = self.get_validator_error_report('CSS')
+        tbody_contents = BeautifulSoup(error_report_contents, "html.parser")
+        tr_id = "css-validator-errors"
         report_content.find(id=tr_id).replace_with(tbody_contents)
 
         html_goals_results = list(
@@ -628,12 +647,12 @@ class HTMLReport:
         overview_row = BeautifulSoup(html_overview_string, "html.parser")
         return overview_row
 
-    def get_validation_results_string(self):
+    def get_validation_results_string(self, validation_type="HTML"):
         results = ""
         if not self.validator_errors:
             return '<tr><td rowspan="4">Congratulations! No Errors Found</td></tr>'
         else:
-            validation_report = self.validator_errors["HTML"].copy()
+            validation_report = self.validator_errors[validation_type].copy()
 
             cumulative_errors = 0
             for page, errors in validation_report.items():
@@ -650,7 +669,7 @@ class HTMLReport:
                     "", page, error_str, cumulative_errors_string, meets)
             return results
 
-    def get_validator_error_report(self):
+    def get_validator_error_report(self, validation_type="HTML"):
         results = ""
         if not self.validator_errors:
             # write 1 column entry indicating there are no errors
@@ -658,7 +677,7 @@ class HTMLReport:
             results = '<tr><td colspan="4">' + congrats + '</td></tr>'
             return results
         else:
-            errors_dict = self.validator_errors['HTML']
+            errors_dict = self.validator_errors[validation_type]
             tr_class = "html-validator-errors"
 
             for page, errors in errors_dict.items():
@@ -813,6 +832,6 @@ if __name__ == "__main__":
     large_project_readme_path = "tests/test_files/projects/large_project/"
     # large_project = Report(large_project_readme_path)
     # large_project.generate_report()
-    about_me_dnn_project = Report(about_me_readme_path)
+    about_me_dnn_project = Report(about_me_dnn_readme_path)
     about_me_dnn_project.generate_report()
-    about_me_dnn_project.css_report.validate_css()
+    # about_me_dnn_project.css_report.validate_css()
