@@ -38,7 +38,7 @@ class Report:
             results_string += '<td>' + str(target) + '</td>'
         if results != "":
             results_string += "<td>" + str(results) + "</td>"
-        if results_key:
+        if results_key == "True":
             meets = "Meets"
         else:
             meets = "Does Not Meet"
@@ -533,6 +533,7 @@ class HTMLReport:
                     except:
                         errors_dict["CSS"][page_name] = [item, ]
                 else:
+                    self.report_details["validator_results"]["HTML Errors"] += 1
                     try:
                         errors_dict["HTML"][page_name].append(item)
                     except:
@@ -627,7 +628,7 @@ class HTMLReport:
         return overview_row
 
     def get_validation_results_string(self):
-        validation_report = self.validator_errors.copy()
+        validation_report = self.validator_errors["HTML"].copy()
         results = ""
 
         cumulative_errors = 0
@@ -646,7 +647,7 @@ class HTMLReport:
 
     def get_validator_error_report(self):
         results = ""
-        errors = self.validator_errors
+        errors = self.validator_errors['HTML']
         tr_id = "html-validator-errors"
         if not errors:
             # write 1 column entry indicating there are no errors
