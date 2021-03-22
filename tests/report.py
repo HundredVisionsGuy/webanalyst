@@ -63,6 +63,9 @@ class Report:
         self.prep_report()
         self.general_report.generate_report()
         self.html_report.generate_report()
+        # Get CSS validation and send to css report
+        css_validation_results = self.html_report.validator_errors["CSS"]
+        self.css_report.set_css_validation(css_validation_results)
         self.css_report.generate_report()
 
     def prep_report(self):
@@ -598,7 +601,6 @@ class HTMLReport:
         report_content.find(id=tr_id).replace_with(tbody_contents)
 
         # For CSS Errors
-        # For HTML Errors
         error_report_contents = self.get_validator_error_report('CSS')
         tbody_contents = BeautifulSoup(error_report_contents, "html.parser")
         tr_id = "css-validator-errors"
@@ -761,6 +763,9 @@ class CSSReport:
             "meets_requirements": False
         }
 
+    def set_css_validation(self, css_validation_results):
+        self.report_details['css_validator_results'] = css_validation_results
+
     def generate_report(self):
         self.get_num_css_files()
         self.get_num_style_tags()
@@ -797,27 +802,10 @@ class CSSReport:
                 print("No style tag in this file")
 
     def validate_css(self):
-        # create a dictionary with doc titles for keys
-        # and a number of CSS validation errors for value
-
-        # get titles and run them through CSS validator
-        for file_path in self.css_files:
-            # Get contents of the file
-            contents = clerk.file_to_string(file_path)
-            # ignore if no errors
-            if val.is_css_valid(contents):
-                continue
-            # get error report
-            error_report = val.validate_css(contents)
-
-            # store # of errors
-            print(error_report)
-            # store results
-        for code in self.style_tag_contents:
-            if val.is_css_valid(code):
-                continue
-            error_report = val.validate_css(code)
-            print(error_report)
+        # The HTML report now does it, so we don't have
+        # to make a CSS validation call
+        # We do, however, need to gather information from the report
+        pass
 
 
 if __name__ == "__main__":
