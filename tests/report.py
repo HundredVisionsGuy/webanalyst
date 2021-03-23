@@ -793,6 +793,12 @@ class CSSReport:
     def get_css_code(self):
         # extract content from all CSS files
         self.css_files = clerk.get_all_files_of_type(self.__dir_path, "css")
+        for file in self.css_files:
+            try:
+                self.style_tag_contents.append(
+                    clerk.get_css_from_stylesheet(file))
+            except:
+                print("Something went wrong witht the stylesheet code")
 
         # extract CSS from all style tags
         html_files = clerk.get_all_files_of_type(self.__dir_path, "html")

@@ -16,9 +16,11 @@ websites = r"[.](com|net|org|io|gov)"
 # tag removal pattern
 TAG_RE = re.compile(r'<[^>]+>')
 
+
 def file_exists(filename):
     filename = Path(filename)
     return filename.exists()
+
 
 def delete_file(filepath):
     data_file = Path(filepath)
@@ -26,6 +28,7 @@ def delete_file(filepath):
         data_file.unlink()
     except IsADirectoryError as e:
         print(f'Error: {data_file} : {e.strerror}')
+
 
 def get_path_list(path):
     path_list = path.split('/')
@@ -52,8 +55,10 @@ def get_file_type(path):
     suffix = my_file.suffix
     return suffix[1:]
 
+
 def get_file_name(path):
     return Path(path).name
+
 
 def get_css_from_style_tag(path):
     full_code = file_to_string(path)
@@ -61,6 +66,10 @@ def get_css_from_style_tag(path):
     parser.parseStr(full_code)
     css_advancedTag = parser.getElementsByTagName('style')
     return css_advancedTag[0].innerText
+
+
+def get_css_from_stylesheet(path):
+    return file_to_string(path)
 
 
 def get_all_project_files(dir):
