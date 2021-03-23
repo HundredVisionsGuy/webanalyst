@@ -254,7 +254,7 @@ class GeneralReport:
     def publish_results(self):
         # Get report
         report_content = html.get_html(report_path)
-        #report_content = report_template
+        # report_content = report_template
 
         goals_details = self.report_details["min_number_files"]
         goals_results = self.report_details["num_files_results"]
@@ -765,6 +765,8 @@ class CSSReport:
 
     def set_css_validation(self, css_validation_results):
         self.report_details['css_validator_results'] = css_validation_results
+        self.report_details['css_validator_errors'] = len(
+            css_validation_results)
 
     def generate_report(self):
         self.get_num_css_files()
@@ -802,10 +804,42 @@ class CSSReport:
                 print("No style tag in this file")
 
     def validate_css(self):
-        # The HTML report now does it, so we don't have
-        # to make a CSS validation call
-        # We do, however, need to gather information from the report
-        pass
+        # The HTML report did all CSS validation from Style tags,
+        # We do, however, need CSS validation on CSS files
+        for file_path in self.css_files:
+            # Get error objects
+            errors_in_file = val.get_markup_validity(file_path)
+            # Get number of errors
+            errors = len(errors_in_file)
+            page_name = clerk.get_file_name(file_path)
+        if errors > 0:
+            self.process_errors(page_name, errors_in_file)
+
+    def process_errors(self, page_name, errors):
+        """ receives errors and records warnings and errors """
+        errors_dict = {}
+        warnings_dict = {}
+
+        # Loop through all the errors and separate
+        # error from warning
+        # Must use try/except whenever adding an item
+        # because it will crash if we try and append it
+        # to a non-existant list
+        for item in errors:
+            if item["type"] == "error":
+                self.report_details["css_validator_errors"] += 1
+                try:
+                    errors_dict[page_name].append(item)
+                except:
+                    errors_dict[page_name] = [item, ]
+            elif item["type"] == "info":
+                try:
+                    warnings_dict[page_name].append(item)
+                except:
+                    warnings_dict[page_name] = [item, ]
+
+        self.report_details["css_validator_results"][page_name] = errors_dict[page_name]
+        self.report_details["css_validator_results"][page_name] += warnings_dict[page_name]
 
 
 if __name__ == "__main__":
