@@ -41,6 +41,7 @@ class Declaration:
             else:
                 self.property = elements[0].strip()
                 self.value = elements[1].strip()
+                self.validate_declaration()
 
     def get_property(self):
         return self.property
@@ -48,9 +49,24 @@ class Declaration:
     def get_value(self):
         return self.value
 
+    def validate_declaration(self):
+        # Check to see if there's only 1 character in value
+        # 0 is valid; anything else is invalid
+        if len(self.value) == 1 and not self.value == "0":
+            self.is_valid = False
+
+        # Make sure there are no spaces in between property or value
+        prop_list = self.property.split()
+        if len(prop_list) > 1:
+            self.is_valid = False
+
+        val_list = self.value.split()
+        if len(val_list) > 1:
+            self.is_valid = False
+
 if __name__ == "__main__":
-    valid1 = "color: #336699;"
-    dec1 = Declaration(valid1)
+    invalid = "property:val; something"
+    dec1 = Declaration(invalid)
     print(dec1.property)
     print(dec1.value)
     if dec1.is_valid:

@@ -19,3 +19,15 @@ def test_valid_color_declaration_property(valid_color_declaration):
 
 def test_valid_color_declaration_is_valid(valid_color_declaration):
     assert valid_color_declaration.is_valid
+
+def test_invalid1_declaration_is_valid():
+    dec = stylesheet.Declaration(declarations["invalid1"])
+    assert not dec.is_valid
+
+def test_invalid2_declaration_is_valid():
+    dec = stylesheet.Declaration(declarations["invalid2"])
+    assert not dec.is_valid
+
+def test_invalid3_declaration_is_valid():
+    dec = stylesheet.Declaration(declarations["invalid3"])
+    assert not dec.is_valid
