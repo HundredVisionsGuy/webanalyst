@@ -7,10 +7,42 @@ declarations = {
     "invalid2": "property:;",
     "invalid3": "property:val; something"}
 
+declaration_block_with_selector = """
+article#gallery {
+    display: flex;
+    flex-wrap: wrap;
+    width: 96vw;
+    margin: 0 auto;
+}
+"""
+declaration_block_just_block = """
+    width: 200px;
+    background-color: #7D8C45;
+    padding: .7em;
+    border: .3em solid #142326;
+    margin: .5rem;
+"""
+
 @pytest.fixture
 def valid_color_declaration():
     dec = stylesheet.Declaration(declarations["valid1"])
     return dec 
+
+@pytest.fixture 
+def declaration_block1():
+    block = stylesheet.DeclarationBlock(declaration_block_with_selector)
+    return block
+
+@pytest.fixture
+def declaration_block2():
+    block = stylesheet.DeclarationBlock(declaration_block_just_block)
+    return block
+
+def test_declaration_block_with_selector(declaration_block1):
+    assert len(declaration_block1.declarations) == 4
+
+def test_declaration_block_without_selector(declaration_block2):
+    assert len(declaration_block2.declarations) == 5
 
 def test_valid_color_declaration_property(valid_color_declaration):
     expected = "color"

@@ -64,6 +64,33 @@ class Declaration:
         if len(val_list) > 1:
             self.is_valid = False
 
+class DeclarationBlock:
+    def __init__(self, text):
+        self.__text = text
+        self.declarations = []
+        self.__set_declarations()
+    
+    def __set_declarations(self):
+        declarations = self.__text
+        # remove selectors and braces if present
+        if "{" in self.__text:
+            declarations = declarations.split("{")
+            declarations = declarations[1]
+        if "}" in declarations:
+            declarations = declarations.split("}")
+            declarations = declarations[0]
+        declarations = declarations.split(";")
+        # remove all spaces and line returns
+        for i in range(len(declarations)):
+            declarations[i] = declarations[i].replace("\n", "")
+            declarations[i] = declarations[i].strip()
+            if not declarations[i]:
+                declarations.pop(i)
+        self.declarations = declarations
+        
+
+    
+
 if __name__ == "__main__":
     invalid = "property:val; something"
     dec1 = Declaration(invalid)
@@ -73,3 +100,14 @@ if __name__ == "__main__":
         print("the declaration is valid")
     else:
         print("The declaration is invalid")
+
+    declaration_block_with_selector = """
+article#gallery {
+    display: flex;
+    flex-wrap: wrap;
+    width: 96vw;
+    margin: 0 auto;
+}
+"""
+    block = DeclarationBlock(declaration_block_with_selector)
+    print(block.declarations)
