@@ -12,11 +12,33 @@ class Stylesheet:
 class Ruleset:
     def __init__(self, text):
         self.__text = text
-        self.__selector = ""
-        self.__declaration_block = ""
-        self.__declarations = []
-        self.__properties = []
-        self.__values = []
+        self.selector = ""
+        self.declaration_block = None
+        self.is_valid = True
+        self.validate()
+        self.initialize()
+
+    def initialize(self):
+        if self.is_valid:
+            contents = self.__text.split("{")
+            self.selector = contents[0].replace("\n", "").strip()
+            block = contents[1].replace("\n", "")
+            self.declaration_block = DeclarationBlock(block)
+
+    def validate(self):
+        try:
+            open_brace_pos = self.__text.index("{")
+            close_brace_pos = self.__text.index("}")
+            if open_brace_pos > close_brace_pos:
+                # { needs to come before }
+                self.is_valid = False
+        except:
+            self.is_valid = False
+
+        if "{" not in self.__text or "}" not in self.__text:
+            self.is_valid = False
+        
+
 
 class Declaration:
     def __init__(self, text):
@@ -89,7 +111,6 @@ class DeclarationBlock:
         self.declarations = declarations
         
 
-    
 
 if __name__ == "__main__":
     invalid = "property:val; something"
@@ -111,3 +132,12 @@ article#gallery {
 """
     block = DeclarationBlock(declaration_block_with_selector)
     print(block.declarations)
+    invalid_css = """
+body }
+    background: #efefef;
+    color: #101010;
+
+"""
+    ruleset = Ruleset(invalid_css)
+    print(ruleset.is_valid)
+    ruleset2 = Ruleset(declaration_block_with_selector)

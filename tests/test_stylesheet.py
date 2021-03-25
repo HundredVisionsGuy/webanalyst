@@ -15,6 +15,14 @@ article#gallery {
     margin: 0 auto;
 }
 """
+
+invalid_css = """
+body }
+    background: #efefef;
+    color: #101010;
+{
+"""
+
 declaration_block_just_block = """
     width: 200px;
     background-color: #7D8C45;
@@ -22,6 +30,16 @@ declaration_block_just_block = """
     border: .3em solid #142326;
     margin: .5rem;
 """
+
+@pytest.fixture
+def ruleset1():
+    ruleset = stylesheet.Ruleset(declaration_block_with_selector)
+    return ruleset
+
+@pytest.fixture
+def invalid_ruleset():
+    ruleset = stylesheet.Ruleset(invalid_css)
+    return ruleset
 
 @pytest.fixture
 def valid_color_declaration():
@@ -37,6 +55,15 @@ def declaration_block1():
 def declaration_block2():
     block = stylesheet.DeclarationBlock(declaration_block_just_block)
     return block
+
+def test_ruleset1_for_selector(ruleset1):
+    assert ruleset1.selector == "article#gallery"
+
+def test_invalid_ruleset_for_swapped_brace_position(invalid_ruleset):
+    assert not invalid_ruleset.is_valid
+
+def test_ruleset1_for_validity(ruleset1):
+    assert ruleset1.is_valid
 
 def test_declaration_block_with_selector(declaration_block1):
     assert len(declaration_block1.declarations) == 4
