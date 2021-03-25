@@ -1,5 +1,6 @@
 import pytest 
 import stylesheet 
+import clerk
 
 declarations = {
     "valid1": "color: #336699;",
@@ -56,6 +57,11 @@ def declaration_block2():
     block = stylesheet.DeclarationBlock(declaration_block_just_block)
     return block
 
+@pytest.fixture
+def layout_css():
+    layout_css = clerk.file_to_string("tests/test_files/projects/large_project/css/layout.css")
+    yield layout_css
+
 def test_ruleset1_for_selector(ruleset1):
     assert ruleset1.selector == "article#gallery"
 
@@ -90,3 +96,10 @@ def test_invalid2_declaration_is_valid():
 def test_invalid3_declaration_is_valid():
     dec = stylesheet.Declaration(declarations["invalid3"])
     assert not dec.is_valid
+
+def test_nested_at_rules_for_three(layout_css):
+    assert "@media" in layout_css
+
+def test_nested_at_rules_for_non_nested_at_rule():
+    with pytest.raises(Exception):
+        stylesheet.NestedAtRules(declaration_block_with_selector)

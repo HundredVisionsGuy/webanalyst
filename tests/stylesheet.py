@@ -1,14 +1,38 @@
+nested_at_rules = (
+    "@media",
+    "@supports",
+    "@document",
+    "@page",
+    "@font-face",
+    "@keyframes",
+    "@viewport",
+    "@counter-style",
+    "@font-feature-values",
+    "@property"
+)
 
 class Stylesheet:
     def __init__(self, href, text, stylesheet_type = "file"):
         self.__type = stylesheet_type
         self.__href = href
         self.__text = text
+        self.__nested_at_rules = []
         self.__rulesets = []
-        self.__at_rules = []
         self.__comments = []
         
         
+class NestedAtRules:
+    def __init__(self, text):
+        is_valid = False
+        for rule in nested_at_rules:
+            if rule in text:
+                is_valid = True
+        if not is_valid:
+            raise Exception("The CSS has no nested @rules.")
+        self.__text = text
+        self.rule = ""
+        self.__declaration_blocks = []
+
 class Ruleset:
     def __init__(self, text):
         self.__text = text
@@ -38,8 +62,6 @@ class Ruleset:
         if "{" not in self.__text or "}" not in self.__text:
             self.is_valid = False
         
-
-
 class Declaration:
     def __init__(self, text):
         self.__text = text
@@ -141,3 +163,7 @@ body }
     ruleset = Ruleset(invalid_css)
     print(ruleset.is_valid)
     ruleset2 = Ruleset(declaration_block_with_selector)
+    try:
+        failed_nested = NestedAtRules(declaration_block_with_selector)
+    except Exception as e:
+        print(f"You have a problem: {e}")
