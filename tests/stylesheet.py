@@ -87,25 +87,22 @@ class Declaration:
                 self.value = elements[1].strip()
                 self.validate_declaration()
 
-    def get_property(self):
-        return self.property
-
-    def get_value(self):
-        return self.value
-
     def validate_declaration(self):
         # Check to see if there's only 1 character in value
         # 0 is valid; anything else is invalid
         if len(self.value) == 1 and not self.value == "0":
             self.is_valid = False
 
-        # Make sure there are no spaces in between property or value
+        # Make sure there are no spaces in between property
         prop_list = self.property.split()
         if len(prop_list) > 1:
             self.is_valid = False
 
-        val_list = self.value.split()
-        if len(val_list) > 1:
+        # Make sure there's nothing after the semi-colon
+        # but account for the empty string element after the split
+        # as well as spaces (just in case)
+        val_list = self.value.split(";")
+        if len(val_list) > 1 and val_list[1].strip():
             self.is_valid = False
 
 class DeclarationBlock:
@@ -130,13 +127,15 @@ class DeclarationBlock:
             declarations[i] = declarations[i].strip()
             if not declarations[i]:
                 declarations.pop(i)
+            else:
+                declarations[i] = Declaration(declarations[i])
         self.declarations = declarations
         
 
 
 if __name__ == "__main__":
-    invalid = "property:val; something"
-    dec1 = Declaration(invalid)
+    valid = "color: #336699;"
+    dec1 = Declaration(valid)
     print(dec1.property)
     print(dec1.value)
     if dec1.is_valid:
