@@ -35,12 +35,24 @@ class Stylesheet:
         self.text = text
         self.__nested_at_rules = []
         self.__rulesets = []
-        self.__comments = []
+        self.comments = []
         self.minify()
+        self.extract_comments()
     
     def minify(self):
         """ remove all whitespace, line returns, and tabs from text """
         self.text = minify_code(self.text)
+
+    def extract_comments(self):
+        comment_split_first_half = self.text.split("/*")
+        comments = []
+
+        for i in comment_split_first_half:
+            if "*/" in i:
+                comment = i.split("*/")
+                comments.append("/*" + comment[0] + "*/")
+
+        self.comments = comments
         
 class NestedAtRule:
     def __init__(self, text):

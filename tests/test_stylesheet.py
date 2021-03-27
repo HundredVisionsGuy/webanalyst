@@ -70,7 +70,8 @@ def layout_css_at_rules(layout_css):
 
 @pytest.fixture
 def layout_css_stylesheet(layout_css):
-    css_sheet = stylesheet.Stylesheet(layout_css)
+    css_sheet = stylesheet.Stylesheet("layout.css", layout_css)
+    return css_sheet
 
 
 def test_ruleset1_for_selector(ruleset1):
@@ -123,3 +124,9 @@ def test_nested_at_rules_for_rules(layout_css_at_rules):
 def test_style_sheet_object_minify_method():
     sheet = stylesheet.Stylesheet("local", declaration_block_with_selector)
     assert sheet.text == minified_declaration_block_with_selector
+
+def test_style_sheet_object_extract_comments(layout_css_stylesheet):
+    assert len(layout_css_stylesheet.comments) == 6
+
+def test_style_sheet_object_extract_comments_for_first_comment(layout_css_stylesheet):
+    assert layout_css_stylesheet.comments[0] == "/* layout.css */"
