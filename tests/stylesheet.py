@@ -1,3 +1,13 @@
+def split_by_partition(text, part):
+    # base case
+    if text.count(part) == 0:
+        return [text,]
+    # recursive case
+    else:
+        text_tuple = text.partition(part)
+        return [text_tuple[0],] + split_by_partition(text_tuple[2], part)
+   
+
 nested_at_rules = (
     "@media",
     "@supports",
@@ -11,17 +21,28 @@ nested_at_rules = (
     "@property"
 )
 
+def minify_code(text):
+    """ remove all new lines, tabs, and double spaces """
+    text = text.replace("\n", "")
+    text = text.replace("  ", "")
+    text = text.replace("\t", "")
+    return text
+
 class Stylesheet:
     def __init__(self, href, text, stylesheet_type = "file"):
         self.__type = stylesheet_type
         self.__href = href
-        self.__text = text
+        self.text = text
         self.__nested_at_rules = []
         self.__rulesets = []
         self.__comments = []
+        self.minify()
+    
+    def minify(self):
+        """ remove all whitespace, line returns, and tabs from text """
+        self.text = minify_code(self.text)
         
-        
-class NestedAtRules:
+class NestedAtRule:
     def __init__(self, text):
         is_valid = False
         for rule in nested_at_rules:
@@ -29,9 +50,19 @@ class NestedAtRules:
                 is_valid = True
         if not is_valid:
             raise Exception("The CSS has no nested @rules.")
-        self.__text = text
+        self.__text = minify_code(text)
         self.rule = ""
-        self.__declaration_blocks = []
+        self.declaration_block = None
+        self.set_at_rule()
+    
+    def set_at_rule(self):
+        # remove anything before the @ sign
+        rule_list = self.__text.split("@")
+        rule_list = "@" + rule_list[1]
+        # split at the first {
+        pos = rule_list.find("{")
+        self.rule = rule_list[:pos].strip()
+        self.declaration_block = DeclarationBlock(rule_list[pos:])
 
 class Ruleset:
     def __init__(self, text):
@@ -61,6 +92,32 @@ class Ruleset:
 
         if "{" not in self.__text or "}" not in self.__text:
             self.is_valid = False
+        
+class DeclarationBlock:
+    def __init__(self, text):
+        self.__text = text
+        self.declarations = []
+        self.__set_declarations()
+    
+    def __set_declarations(self):
+        declarations = self.__text
+        # remove selectors and braces if present
+        if "{" in self.__text:
+            declarations = declarations.split("{")
+            declarations = declarations[1]
+        if "}" in declarations:
+            declarations = declarations.split("}")
+            declarations = declarations[0]
+        declarations = declarations.split(";")
+        # remove all spaces and line returns
+        for i in range(len(declarations)):
+            declarations[i] = declarations[i].replace("\n", "")
+            declarations[i] = declarations[i].strip()
+            if not declarations[i]:
+                declarations.pop(i)
+            else:
+                declarations[i] = Declaration(declarations[i])
+        self.declarations = declarations
         
 class Declaration:
     def __init__(self, text):
@@ -105,43 +162,27 @@ class Declaration:
         if len(val_list) > 1 and val_list[1].strip():
             self.is_valid = False
 
-class DeclarationBlock:
-    def __init__(self, text):
-        self.__text = text
-        self.declarations = []
-        self.__set_declarations()
-    
-    def __set_declarations(self):
-        declarations = self.__text
-        # remove selectors and braces if present
-        if "{" in self.__text:
-            declarations = declarations.split("{")
-            declarations = declarations[1]
-        if "}" in declarations:
-            declarations = declarations.split("}")
-            declarations = declarations[0]
-        declarations = declarations.split(";")
-        # remove all spaces and line returns
-        for i in range(len(declarations)):
-            declarations[i] = declarations[i].replace("\n", "")
-            declarations[i] = declarations[i].strip()
-            if not declarations[i]:
-                declarations.pop(i)
-            else:
-                declarations[i] = Declaration(declarations[i])
-        self.declarations = declarations
-        
-
 
 if __name__ == "__main__":
-    valid = "color: #336699;"
-    dec1 = Declaration(valid)
-    print(dec1.property)
-    print(dec1.value)
-    if dec1.is_valid:
-        print("the declaration is valid")
-    else:
-        print("The declaration is invalid")
+    import clerk
+
+    # layout_css = clerk.file_to_string("tests/test_files/projects/large_project/css/layout.css")
+    # layout_css = minify_code(layout_css)
+    # rulesets = layout_css.split("}")
+    # for rule in rulesets:
+    #     rule = rule + ";"
+    #     if "@" in rule:
+    #         # remove any comments to left of @ rule
+    #         at_rule = NestedAtRule(rule)
+
+    # valid = "color: #336699;"
+    # dec1 = Declaration(valid)
+    # print(dec1.property)
+    # print(dec1.value)
+    # if dec1.is_valid:
+    #     print("the declaration is valid")
+    # else:
+    #     print("The declaration is invalid")
 
     declaration_block_with_selector = """
 article#gallery {
@@ -151,18 +192,5 @@ article#gallery {
     margin: 0 auto;
 }
 """
-    block = DeclarationBlock(declaration_block_with_selector)
-    print(block.declarations)
-    invalid_css = """
-body }
-    background: #efefef;
-    color: #101010;
-
-"""
-    ruleset = Ruleset(invalid_css)
-    print(ruleset.is_valid)
-    ruleset2 = Ruleset(declaration_block_with_selector)
-    try:
-        failed_nested = NestedAtRules(declaration_block_with_selector)
-    except Exception as e:
-        print(f"You have a problem: {e}")
+    sheet = Stylesheet("tag",declaration_block_with_selector)
+    print(sheet.text)

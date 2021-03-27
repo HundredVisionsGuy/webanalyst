@@ -16,6 +16,7 @@ article#gallery {
     margin: 0 auto;
 }
 """
+minified_declaration_block_with_selector = "article#gallery {display: flex;flex-wrap: wrap;width: 96vw;margin: 0 auto;}"
 
 invalid_css = """
 body }
@@ -62,6 +63,16 @@ def layout_css():
     layout_css = clerk.file_to_string("tests/test_files/projects/large_project/css/layout.css")
     yield layout_css
 
+@pytest.fixture
+def layout_css_at_rules(layout_css):
+    rulesets = stylesheet.NestedAtRule(layout_css)
+    yield rulesets
+
+@pytest.fixture
+def layout_css_stylesheet(layout_css):
+    css_sheet = stylesheet.Stylesheet(layout_css)
+
+
 def test_ruleset1_for_selector(ruleset1):
     assert ruleset1.selector == "article#gallery"
 
@@ -102,4 +113,13 @@ def test_nested_at_rules_for_three(layout_css):
 
 def test_nested_at_rules_for_non_nested_at_rule():
     with pytest.raises(Exception):
-        stylesheet.NestedAtRules(declaration_block_with_selector)
+        stylesheet.NestedAtRule(declaration_block_with_selector)
+
+def test_nested_at_rules_for_rules(layout_css_at_rules):
+    rule = "@media only screen and (min-width: 520px)"
+    expected = layout_css_at_rules.rule
+    assert rule == expected
+
+def test_style_sheet_object_minify_method():
+    sheet = stylesheet.Stylesheet("local", declaration_block_with_selector)
+    assert sheet.text == minified_declaration_block_with_selector
