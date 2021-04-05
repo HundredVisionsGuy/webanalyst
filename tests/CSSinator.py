@@ -92,6 +92,44 @@ def get_declarations(css_list):
         declarations.remove('')
     return declarations
 
+def get_comment_positions(code):
+    positions = []
+    try:
+        positions.append(code.index("/*"))
+        positions.append(code.index("*/"))
+        return positions
+    except:
+        return
+
+def separate_code(code):
+    """ splits code into two lists: code & comments """
+    code = code.strip()
+    splitzky = { "code": [],
+        "comments": [] }
+        
+    new_code = []
+    comments = []
+    # Get positions of comments and place all code up to the comments
+    # in code and comments in comments
+    # do this till all code has been separated
+    while code:
+        positions = get_comment_positions(code)
+        if positions and len(positions) == 2:
+            start = positions[0]
+            stop = positions[1]
+            new_code.append(code[:start])
+            comments.append(code[start:stop+2])
+            code = code[stop + 2:]
+            code = code.strip()
+        else:
+            if "/*" not in code and "*/" not in code:
+                new_code.append(code)
+                code = ""
+            else:
+                print("We have a problem with the code syntax.")
+    splitzky["code"] = new_code
+    splitzky["comments"] = comments
+    return splitzky
 
 if __name__ == "__main__":
     print("hello, I'm CSSinator.")
