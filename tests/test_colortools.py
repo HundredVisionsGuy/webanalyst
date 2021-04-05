@@ -44,7 +44,7 @@ def test_rgb_to_hex_for_336699():
     assert results == expected
 
 
-def test_rgb_to_hex_for_336699():
+def test_rgb_to_hex_for_string_336699():
     results = color.rgb_to_hex("rgb(51,102,153)")
     expected = "#336699"
     assert results == expected
