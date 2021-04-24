@@ -1,12 +1,12 @@
 def split_by_partition(text, part):
     # base case
     if text.count(part) == 0:
-        return [text,]
+        return [text, ]
     # recursive case
     else:
         text_tuple = text.partition(part)
-        return [text_tuple[0],] + split_by_partition(text_tuple[2], part)
-   
+        return [text_tuple[0], ] + split_by_partition(text_tuple[2], part)
+
 
 nested_at_rules = (
     "@media",
@@ -21,6 +21,7 @@ nested_at_rules = (
     "@property"
 )
 
+
 def minify_code(text):
     """ remove all new lines, tabs, and double spaces """
     text = text.replace("\n", "")
@@ -28,8 +29,9 @@ def minify_code(text):
     text = text.replace("\t", "")
     return text
 
+
 class Stylesheet:
-    def __init__(self, href, text, stylesheet_type = "file"):
+    def __init__(self, href, text, stylesheet_type="file"):
         self.__type = stylesheet_type
         self.__href = href
         self.text = text
@@ -38,7 +40,7 @@ class Stylesheet:
         self.comments = []
         self.minify()
         self.extract_comments()
-    
+
     def minify(self):
         """ remove all whitespace, line returns, and tabs from text """
         self.text = minify_code(self.text)
@@ -53,7 +55,8 @@ class Stylesheet:
                 comments.append("/*" + comment[0] + "*/")
 
         self.comments = comments
-        
+
+
 class NestedAtRule:
     def __init__(self, text):
         is_valid = False
@@ -66,7 +69,7 @@ class NestedAtRule:
         self.rule = ""
         self.declaration_block = None
         self.set_at_rule()
-    
+
     def set_at_rule(self):
         # remove anything before the @ sign
         rule_list = self.__text.split("@")
@@ -75,6 +78,7 @@ class NestedAtRule:
         pos = rule_list.find("{")
         self.rule = rule_list[:pos].strip()
         self.declaration_block = DeclarationBlock(rule_list[pos:])
+
 
 class Ruleset:
     def __init__(self, text):
@@ -104,13 +108,14 @@ class Ruleset:
 
         if "{" not in self.__text or "}" not in self.__text:
             self.is_valid = False
-        
+
+
 class DeclarationBlock:
     def __init__(self, text):
         self.__text = text
         self.declarations = []
         self.__set_declarations()
-    
+
     def __set_declarations(self):
         declarations = self.__text
         # remove selectors and braces if present
@@ -130,7 +135,8 @@ class DeclarationBlock:
             else:
                 declarations[i] = Declaration(declarations[i])
         self.declarations = declarations
-        
+
+
 class Declaration:
     def __init__(self, text):
         self.__text = text
@@ -138,7 +144,7 @@ class Declaration:
         self.value = ""
         self.is_valid = False
         self.set_declaration()
-    
+
     def set_declaration(self):
         """ validate while trying to set declaration """
         # assume it's valid until proven otherwise
@@ -196,13 +202,43 @@ if __name__ == "__main__":
     # else:
     #     print("The declaration is invalid")
 
-    declaration_block_with_selector = """
-article#gallery {
-    display: flex;
-    flex-wrap: wrap;
-    width: 96vw;
-    margin: 0 auto;
-}
-"""
-    sheet = Stylesheet("tag",declaration_block_with_selector)
+    css_code = """
+    /* styles.css
+        Apply general styles to the entire
+        document
+    */
+
+    /* TODO
+    *  Use the adobe color mixer to select
+        a color combination for the body
+        Make sure it passes the Color Contrast tool with at least a AA rating
+    */
+
+    body {
+        background-color: #B3855D;
+        color: #142326;
+        font-family: 'Ubuntu', sans-serif;
+        font-size: initial;
+    }
+    article#gallery {
+        display: flex;
+        flex-wrap: wrap;
+        width: 96vw;
+        margin: 0 auto;
+    }
+    figure {
+        width: 200px;
+        background-color: #7D8C45;
+        padding: .7em;
+        border: .3em solid #142326;
+        margin: .5rem;
+    }
+    /* set image to  match width of the
+        figure */
+    figure img {
+        width: 100%;
+        max-width: 100%;
+    }
+    """
+    sheet = Stylesheet("tag", css_code)
     print(sheet.text)

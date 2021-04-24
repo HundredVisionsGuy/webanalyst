@@ -57,6 +57,8 @@ figure img {
     max-width: 100%;
 }
 """
+
+
 def missing_end_semicolon(css_code):
     # remove all whitespace and line breaks
     # if there is no semicolon preceding closing curly bracket,
@@ -92,6 +94,7 @@ def get_declarations(css_list):
         declarations.remove('')
     return declarations
 
+
 def get_comment_positions(code):
     positions = []
     try:
@@ -101,12 +104,13 @@ def get_comment_positions(code):
     except:
         return
 
+
 def separate_code(code):
     """ splits code into two lists: code & comments """
     code = code.strip()
-    splitzky = { "code": [],
-        "comments": [] }
-        
+    splitzky = {"code": [],
+                "comments": []}
+
     new_code = []
     comments = []
     # Get positions of comments and place all code up to the comments
@@ -117,8 +121,10 @@ def separate_code(code):
         if positions and len(positions) == 2:
             start = positions[0]
             stop = positions[1]
-            new_code.append(code[:start])
-            comments.append(code[start:stop+2])
+            if code[:start]:
+                new_code.append(code[:start])
+            if code[start:stop+2]:
+                comments.append(code[start:stop+2])
             code = code[stop + 2:]
             code = code.strip()
         else:
@@ -130,6 +136,7 @@ def separate_code(code):
     splitzky["code"] = new_code
     splitzky["comments"] = comments
     return splitzky
+
 
 if __name__ == "__main__":
     print("hello, I'm CSSinator.")
@@ -144,7 +151,6 @@ if __name__ == "__main__":
     # is_valid = is_css_valid(valid_css)
     # print("Are results valid? {}".format(is_valid))
 
-
     # Test out cssutils
 
     css = split_css(css_with_errors)
@@ -153,3 +159,5 @@ if __name__ == "__main__":
         sheet = cssutils.parseString(css_with_errors)
     except Exception as ex:
         print(ex)
+
+    split = separate_code(css_code)
