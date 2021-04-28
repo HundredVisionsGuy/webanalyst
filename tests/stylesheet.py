@@ -46,15 +46,27 @@ class Stylesheet:
         self.text = minify_code(self.text)
 
     def extract_comments(self):
-        comment_split_first_half = self.text.split("/*")
+        # split all CSS text at opening comment
+        text_comment_split = self.text.split("/*")
         comments = []
+        code_without_comments = ""
+        # loop through the list of code
+        # in each iteration extract the comment
 
-        for i in comment_split_first_half:
+        for i in text_comment_split:
+            # append comment to comments
             if "*/" in i:
                 comment = i.split("*/")
                 comments.append("/*" + comment[0] + "*/")
-
+                # append code to code_without_comments
+                code_without_comments += comment[1]
+            else:
+                # no comments, just get code
+                code_without_comments += i
+        # add comments
         self.comments = comments
+        # replace code (comments extracted)
+        self.text = code_without_comments
 
 
 class NestedAtRule:
