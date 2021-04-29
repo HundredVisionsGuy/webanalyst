@@ -168,3 +168,7 @@ def test_stylesheet_extract_comments_for_code_after_extraction(layout_css_styles
 
 def test_stylesheet_extract_text_after_code_extraction(layout_css_stylesheet):
     assert layout_css_stylesheet.text[:6] == "body {"
+
+
+def test_stylesheet_for_extracted_nested_at_rules(layout_css_stylesheet):
+    assert len(layout_css_stylesheet.nested_at_rules) == 3

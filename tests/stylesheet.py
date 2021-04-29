@@ -35,11 +35,12 @@ class Stylesheet:
         self.__type = stylesheet_type
         self.__href = href
         self.text = text
-        self.__nested_at_rules = []
+        self.nested_at_rules = []
         self.__rulesets = []
         self.comments = []
         self.minify()
         self.extract_comments()
+        self.extract_nested_at_rules()
 
     def minify(self):
         """ remove all whitespace, line returns, and tabs from text """
@@ -67,6 +68,56 @@ class Stylesheet:
         self.comments = comments
         # replace code (comments extracted)
         self.text = code_without_comments
+
+    def extract_nested_at_rules(self):
+        # Search through nested at rules
+        at_rules = []
+        non_at_rules_css = []
+        for rule in nested_at_rules:
+            if rule in self.text:
+                # we have a nested at rule
+                # split the text at the rule
+                split_text = self.text.split(rule)
+                # loop through text peeling off css and at-rules
+                for i in range(len(split_text)):
+                    # We need to check the first item to see if
+                    # it had a nested at-rule (it would be an empty string)
+                    if i == 0:
+                        if not split_text[i].strip():
+                            # we had an at-rule at the beginning, so
+                            # we will continue and add the at-rule in the
+                            # next iteration
+                            continue
+                        else:
+                            non_at_rules_css.append(split_text[i])
+                            continue
+                    # check in the 2nd loop if the first item was empty
+
+                    # we have an at-rule, but there could still
+                    # be css at the end
+                    # split at end of at-rule
+                    at_rule, css = self.separate_nested_atrule_and_css(
+                        rule, split_text[i])
+                    if at_rule:
+                        nested_at_rule = NestedAtRule(at_rule)
+                        at_rules.append(nested_at_rule)
+                    if css:
+                        non_at_rules_css.append(css)
+            # Let's append the nested at rules and css text
+            if not at_rules and not at_rules:
+                continue
+            self.text = '\n'.join(non_at_rules_css)
+            self.nested_at_rules = at_rules
+            print("did we get it?")
+
+    def separate_nested_atrule_and_css(self, rule, text):
+        at_rule_and_css = text.split("}}")
+        if len(at_rule_and_css) > 1:
+            nested_at_rule = rule + at_rule_and_css[0]
+            css = at_rule_and_css[1]
+            return [nested_at_rule, css]
+        else:
+            return [None, css]
 
 
 class NestedAtRule:
@@ -251,6 +302,26 @@ if __name__ == "__main__":
         width: 100%;
         max-width: 100%;
     }
+    /* 520px screens and wider */
+    @media only screen and (min-width: 520px) {
+    header h1 {
+        font-size: 1.8rem;
+    }
+    }
+    /* 590px screens and wider */
+    @media only screen and (min-width: 590px) {
+    header h1 {
+        font-size: 2rem;
+    }
+    }
     """
-    sheet = Stylesheet("tag", css_code)
+    declaration_block_with_selector = """
+    article#gallery {
+        display: flex;
+        flex-wrap: wrap;
+        width: 96vw;
+        margin: 0 auto;
+    }
+    """
+    sheet = Stylesheet("local", declaration_block_with_selector)
     print(sheet.text)
