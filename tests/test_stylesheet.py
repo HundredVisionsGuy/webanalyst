@@ -144,7 +144,7 @@ def test_nested_at_rules_for_non_nested_at_rule():
 
 
 def test_nested_at_rules_for_rules(layout_css_at_rules):
-    rule = "@media only screen and (min-width: 520px)"
+    rule = "@keyframes pulse"
     expected = layout_css_at_rules.rule
     assert rule == expected
 
@@ -171,4 +171,4 @@ def test_stylesheet_extract_text_after_code_extraction(layout_css_stylesheet):
 
 
 def test_stylesheet_for_extracted_nested_at_rules(layout_css_stylesheet):
-    assert len(layout_css_stylesheet.nested_at_rules) == 3
+    assert len(layout_css_stylesheet.nested_at_rules) == 4

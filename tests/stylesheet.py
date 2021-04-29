@@ -266,6 +266,7 @@ if __name__ == "__main__":
     #     print("The declaration is invalid")
 
     css_code = """
+    @font-face
     /* styles.css
         Apply general styles to the entire
         document
@@ -295,6 +296,14 @@ if __name__ == "__main__":
         padding: .7em;
         border: .3em solid #142326;
         margin: .5rem;
+    }
+    @keyframes pulse {
+        0% {
+            background-color: #001f3f;
+        }
+        100% {
+            background-color: #ff4136;
+        }
     }
     /* set image to  match width of the
         figure */
