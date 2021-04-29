@@ -36,11 +36,12 @@ class Stylesheet:
         self.__href = href
         self.text = text
         self.nested_at_rules = []
-        self.__rulesets = []
+        self.rulesets = []
         self.comments = []
         self.minify()
         self.extract_comments()
         self.extract_nested_at_rules()
+        self.extract_rulesets()
 
     def minify(self):
         """ remove all whitespace, line returns, and tabs from text """
@@ -85,8 +86,9 @@ class Stylesheet:
                     if i == 0:
                         if not split_text[i].strip():
                             # we had an at-rule at the beginning, so
-                            # we will continue and add the at-rule in the
-                            # next iteration
+                            # we will add it to the 2nd item then continue
+                            if split_text[1].strip():
+                                split_text[1] = rule + split_text[1]
                             continue
                         else:
                             non_at_rules_css.append(split_text[i])
@@ -99,7 +101,7 @@ class Stylesheet:
                     at_rule, css = self.separate_nested_atrule_and_css(
                         rule, split_text[i])
                     if at_rule:
-                        nested_at_rule = NestedAtRule(at_rule)
+                        nested_at_rule = NestedAtRule(at_rule + "}}")
                         at_rules.append(nested_at_rule)
                     if css:
                         non_at_rules_css.append(css)
@@ -111,13 +113,26 @@ class Stylesheet:
             print("did we get it?")
 
     def separate_nested_atrule_and_css(self, rule, text):
+        if rule in text:
+            start = len(rule)
+            text = text[start:]
         at_rule_and_css = text.split("}}")
         if len(at_rule_and_css) > 1:
-            nested_at_rule = rule + at_rule_and_css[0]
+            if rule in at_rule_and_css[0]:
+                nested_at_rule = at_rule_and_css[0]
+            else:
+                nested_at_rule = rule + at_rule_and_css[0]
             css = at_rule_and_css[1]
             return [nested_at_rule, css]
         else:
             return [None, css]
+
+    def extract_rulesets(self):
+        # get all rulesets
+        print(self.nested_at_rules)
+
+        # append all nested@rules
+        print(self.text)
 
 
 class NestedAtRule:
@@ -243,6 +258,9 @@ class Declaration:
         if len(val_list) > 1 and val_list[1].strip():
             self.is_valid = False
 
+    def get_declaration(self):
+        return self.property + ": " + self.value
+
 
 if __name__ == "__main__":
     import clerk
@@ -256,17 +274,25 @@ if __name__ == "__main__":
     #         # remove any comments to left of @ rule
     #         at_rule = NestedAtRule(rule)
 
-    # valid = "color: #336699;"
-    # dec1 = Declaration(valid)
-    # print(dec1.property)
-    # print(dec1.value)
-    # if dec1.is_valid:
-    #     print("the declaration is valid")
-    # else:
-    #     print("The declaration is invalid")
+    valid = "color: #336699;"
+    dec1 = Declaration(valid)
+    print(dec1.get_declaration())
+    print(dec1.property)
+    print(dec1.value)
+    if dec1.is_valid:
+        print("the declaration is valid")
+    else:
+        print("The declaration is invalid")
 
     css_code = """
-    @font-face
+    @keyframes pulse {
+        0% {
+            background-color: #001f3f;
+        }
+        100% {
+            background-color: #ff4136;
+        }
+    }
     /* styles.css
         Apply general styles to the entire
         document
@@ -297,14 +323,7 @@ if __name__ == "__main__":
         border: .3em solid #142326;
         margin: .5rem;
     }
-    @keyframes pulse {
-        0% {
-            background-color: #001f3f;
-        }
-        100% {
-            background-color: #ff4136;
-        }
-    }
+    
     /* set image to  match width of the
         figure */
     figure img {
@@ -313,15 +332,15 @@ if __name__ == "__main__":
     }
     /* 520px screens and wider */
     @media only screen and (min-width: 520px) {
-    header h1 {
-        font-size: 1.8rem;
-    }
+        header h1 {
+            font-size: 1.8rem;
+        }
     }
     /* 590px screens and wider */
     @media only screen and (min-width: 590px) {
-    header h1 {
-        font-size: 2rem;
-    }
+        header h1 {
+            font-size: 2rem;
+        }
     }
     """
     declaration_block_with_selector = """
@@ -332,5 +351,5 @@ if __name__ == "__main__":
         margin: 0 auto;
     }
     """
-    sheet = Stylesheet("local", declaration_block_with_selector)
+    sheet = Stylesheet("local", css_code)
     print(sheet.text)
