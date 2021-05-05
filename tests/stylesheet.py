@@ -119,11 +119,11 @@ class Stylesheet:
             return [None, css]
 
     def extract_rulesets(self):
-        # get all rulesets
-        print(self.nested_at_rules)
-
-        # append all nested@rules
-        print(self.text)
+        # split rulesets by closing of rulesets: }
+        ruleset_list = self.text.split("}")
+        for ruleset in ruleset_list:
+            ruleset = Ruleset(ruleset + "}")
+            self.rulesets.append(ruleset)
 
 
 class NestedAtRule:
