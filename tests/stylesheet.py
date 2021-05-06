@@ -9,12 +9,12 @@ def split_by_partition(text, part):
 
 
 nested_at_rules = (
-    "@media",
     "@supports",
     "@document",
     "@page",
     "@font-face",
     "@keyframes",
+    "@media",
     "@viewport",
     "@counter-style",
     "@font-feature-values",
@@ -74,43 +74,34 @@ class Stylesheet:
         # Search through nested at rules
         at_rules = []
         non_at_rules_css = []
-        for rule in nested_at_rules:
-            if rule in self.text:
-                # we have a nested at rule
-                # split the text at the rule
-                split_text = self.text.split(rule)
-                # loop through text peeling off css and at-rules
-                for i in range(len(split_text)):
-                    # We need to check the first item to see if
-                    # it had a nested at-rule (it would be an empty string)
-                    if i == 0:
-                        if not split_text[i].strip():
-                            # we had an at-rule at the beginning, so
-                            # we will add it to the 2nd item then continue
-                            if split_text[1].strip():
-                                split_text[1] = rule + split_text[1]
-                            continue
-                        else:
-                            non_at_rules_css.append(split_text[i])
-                            continue
-                    # check in the 2nd loop if the first item was empty
-
-                    # we have an at-rule, but there could still
-                    # be css at the end
-                    # split at end of at-rule
-                    at_rule, css = self.separate_nested_atrule_and_css(
-                        rule, split_text[i])
-                    if at_rule:
-                        nested_at_rule = NestedAtRule(at_rule + "}}")
-                        at_rules.append(nested_at_rule)
-                    if css:
-                        non_at_rules_css.append(css)
-            # Let's append the nested at rules and css text
-            if not at_rules and not at_rules:
+        # split at the double }} (end of a nested at rule)
+        css_split = self.text.split("}}")
+        if len(css_split) == 1:
+            return
+        for code in css_split:
+            # continue if empty
+            if not code.strip():
                 continue
-            self.text = '\n'.join(non_at_rules_css)
-            self.nested_at_rules = at_rules
-            print("did we get it?")
+            for rule in nested_at_rules:
+                # check each
+                if rule in code:
+                    # we found a nested @rule
+                    # split code from @rule
+                    split_code = code.split(rule)
+                    if len(split_code) == 2:
+                        if split_code[0]:
+                            # it began with an @rule (hence the split)
+                            non_at_rules_css.append(split_code[0])
+                            at_rules.append(rule + split_code[1] + "}}")
+                        else:
+                            at_rules.append(rule + split_code[1] + "}}")
+                    else:
+                        # it's only an @rule
+                        at_rules.append(rule + split_code + "}}")
+
+        self.text = ''.join(non_at_rules_css)
+        self.nested_at_rules = at_rules
+        print("did we get it?")
 
     def separate_nested_atrule_and_css(self, rule, text):
         if rule in text:
@@ -128,11 +119,11 @@ class Stylesheet:
             return [None, css]
 
     def extract_rulesets(self):
-        # get all rulesets
-        print(self.nested_at_rules)
-
-        # append all nested@rules
-        print(self.text)
+        # split rulesets by closing of rulesets: }
+        ruleset_list = self.text.split("}")
+        for ruleset in ruleset_list:
+            ruleset = Ruleset(ruleset + "}")
+            self.rulesets.append(ruleset)
 
 
 class NestedAtRule:
@@ -339,14 +330,13 @@ if __name__ == "__main__":
     @media only screen and (min-width: 520px) {
         header h1 {
             font-size: 1.8rem;
-        }
-    }
+        }}
+    a:hover { color: aqua; }
     /* 590px screens and wider */
     @media only screen and (min-width: 590px) {
         header h1 {
             font-size: 2rem;
-        }
-    }
+        }}
     """
     declaration_block_with_selector = """
     article#gallery {
@@ -357,4 +347,6 @@ if __name__ == "__main__":
     }
     """
     sheet = Stylesheet("local", css_code)
+    print(sheet.text)
+    sheet2 = Stylesheet("local", declaration_block_with_selector)
     print(sheet.text)
