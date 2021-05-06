@@ -152,6 +152,7 @@ class NestedAtRule:
         # remove anything before the @ sign
         rule_list = self.__text.split("@")
         rule_list = "@" + rule_list[1]
+        
         # split at the first {
         pos = rule_list.find("{")
         self.rule = rule_list[:pos].strip()
@@ -196,6 +197,7 @@ class DeclarationBlock:
 
     def __set_declarations(self):
         declarations = self.__text
+
         # remove selectors and braces if present
         if "{" in self.__text:
             declarations = declarations.split("{")
@@ -203,7 +205,9 @@ class DeclarationBlock:
         if "}" in declarations:
             declarations = declarations.split("}")
             declarations = declarations[0]
+
         declarations = declarations.split(";")
+
         # remove all spaces and line returns
         for i in range(len(declarations)):
             declarations[i] = declarations[i].replace("\n", "")
@@ -212,6 +216,7 @@ class DeclarationBlock:
                 declarations.pop(i)
             else:
                 declarations[i] = Declaration(declarations[i])
+
         self.declarations = declarations
 
 
