@@ -685,6 +685,7 @@ class HTMLReport:
             for page, errors in errors_dict.items():
                 for error in errors:
                     message = error['message']
+
                     # clean message of smart quotes for HTML rendering
                     message = message.replace('“', '"').replace('”', '"')
                     last_line = error['lastLine']
@@ -698,6 +699,7 @@ class HTMLReport:
                     # render any HTML code viewable on the screen
                     extract = error['extract'].replace(
                         "<", "&lt;").replace(">", "&gt;")
+                        
                     # place extract inside of a code tag
                     extract = "<code>" + extract + "</code>"
 
