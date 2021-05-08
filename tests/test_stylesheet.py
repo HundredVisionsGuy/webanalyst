@@ -32,6 +32,7 @@ declaration_block_just_block = """
     border: .3em solid #142326;
     margin: .5rem;
 """
+
 css_with_comments = """
 /* stylesheet.css */
 body { font-size: 120%; }
@@ -59,16 +60,20 @@ def valid_color_declaration():
 
 
 @pytest.fixture
-def declaration_block1():
-    block = stylesheet.DeclarationBlock(declaration_block_with_selector)
-    return block
+def stylesheet_with_one_declaration_block():
+    sheet = stylesheet.Stylesheet("local", declaration_block_with_selector, "")
+    return sheet
 
 
 @pytest.fixture
-def declaration_block2():
+def declaration_block_no_selector():
     block = stylesheet.DeclarationBlock(declaration_block_just_block)
     return block
 
+@pytest.fixture
+def declaration_block_with_one_selector():
+    block = stylesheet.DeclarationBlock(declaration_block_with_selector)
+    return block
 
 @pytest.fixture
 def layout_css():
@@ -101,12 +106,12 @@ def test_ruleset1_for_validity(ruleset1):
     assert ruleset1.is_valid
 
 
-def test_declaration_block_with_selector(declaration_block1):
-    assert len(declaration_block1.declarations) == 4
+def test_declaration_block_with_selector(declaration_block_with_one_selector):
+    assert len(declaration_block_with_one_selector.declarations) == 4
 
 
-def test_declaration_block_without_selector(declaration_block2):
-    assert len(declaration_block2.declarations) == 5
+def test_declaration_block_without_selector(declaration_block_no_selector):
+    assert len(declaration_block_no_selector.declarations) == 5
 
 
 def test_valid_color_declaration_property(valid_color_declaration):
@@ -172,3 +177,10 @@ def test_stylesheet_extract_text_after_code_extraction(layout_css_stylesheet):
 
 def test_stylesheet_for_extracted_nested_at_rules(layout_css_stylesheet):
     assert len(layout_css_stylesheet.nested_at_rules) == 4
+
+# Test properties of Stylesheet
+def test_stylesheet_for_selectors_with_one(stylesheet_with_one_declaration_block):
+    assert len(stylesheet_with_one_declaration_block.selectors) == 1
+
+def test_layout_css_stylesheet_for_multiple_selectors(layout_css_stylesheet):
+    assert len(layout_css_stylesheet.selectors) == 22

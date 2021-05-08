@@ -42,6 +42,8 @@ class Stylesheet:
         self.extract_comments()
         self.extract_nested_at_rules()
         self.extract_rulesets()
+        self.selectors = []
+        self.get_selectors()
 
     def minify(self):
         """ remove all whitespace, line returns, and tabs from text """
@@ -122,9 +124,13 @@ class Stylesheet:
         # split rulesets by closing of rulesets: }
         ruleset_list = self.text.split("}")
         for ruleset in ruleset_list:
-            ruleset = Ruleset(ruleset + "}")
-            self.rulesets.append(ruleset)
+            if ruleset:
+                ruleset = Ruleset(ruleset + "}")
+                self.rulesets.append(ruleset)
 
+    def get_selectors(self):
+        for rule in self.rulesets:
+            self.selectors.append(rule.selector)
 
 class NestedAtRule:
     def __init__(self, text):
@@ -260,15 +266,6 @@ class Declaration:
 
 if __name__ == "__main__":
     import clerk
-
-    # layout_css = clerk.file_to_string("tests/test_files/projects/large_project/css/layout.css")
-    # layout_css = minify_code(layout_css)
-    # rulesets = layout_css.split("}")
-    # for rule in rulesets:
-    #     rule = rule + ";"
-    #     if "@" in rule:
-    #         # remove any comments to left of @ rule
-    #         at_rule = NestedAtRule(rule)
 
     valid = "color: #336699;"
     dec1 = Declaration(valid)
