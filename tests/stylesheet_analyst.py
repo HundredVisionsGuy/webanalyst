@@ -15,6 +15,24 @@ def get_repeat_selectors(sheet):
                 repeat_selectors.append([selector, count])
     return repeat_selectors
 
+def has_type_selector(sheet):
+    sheet.sort_selectors()
+    type_selectors = get_type_selectors()
+    for selector in type_selectors:
+        if selector in sheet.selectors:
+            return True
+    return False
+
+def get_type_selectors():
+    type_selectors = ["body", "html", "p", "h1", "h2",
+    "h3", "h4", "h5", "h6", "ul", "ol", "li",
+    "dt", "dd", "dl", "a", "br", "hr", "table",
+    "tr", "td", "th", "thead", "tbody", "tfoot",
+    "div", "span", "i", "b", "em", "strong",
+    "kbd", "button", "input"]
+    type_selectors.sort()
+    return type_selectors
+
 if __name__ == "__main__":
     import clerk
 
@@ -25,3 +43,4 @@ if __name__ == "__main__":
     test_sheet = styles.Stylesheet("local", layout_css, "file")
     repeat_selectors = get_repeat_selectors(test_sheet)
     print(repeat_selectors)
+    has_type_selector(test_sheet)
