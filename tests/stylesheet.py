@@ -103,7 +103,6 @@ class Stylesheet:
 
         self.text = ''.join(non_at_rules_css)
         self.nested_at_rules = at_rules
-        print("did we get it?")
 
     def separate_nested_atrule_and_css(self, rule, text):
         if rule in text:
@@ -132,6 +131,10 @@ class Stylesheet:
         for rule in self.rulesets:
             self.selectors.append(rule.selector)
 
+    def sort_selectors(self):
+        self.selectors.sort()
+
+        
 class NestedAtRule:
     def __init__(self, text):
         is_valid = False
