@@ -818,8 +818,7 @@ class CSSReport:
                 print("No style tag in this file")
 
     def validate_css(self):
-        # The HTML report did all CSS validation from Style tags,
-        # We do, however, need CSS validation on CSS files
+        # Get CSS validation on CSS files
         errors = 0
         for file_path in self.css_files:
             # Get error objects
@@ -827,8 +826,15 @@ class CSSReport:
             # Get number of errors
             errors = len(errors_in_file)
             page_name = clerk.get_file_name(file_path)
+        # Validate style tag contents
+        self.validate_style_tag_contents(self.style_tag_contents)
         if errors > 0:
             self.process_errors(page_name, errors_in_file)
+
+    def validate_style_tag_contents(self, contents):
+        for item in contents:
+            css_errors = val.validate_css(item)
+            print(css_errors)
 
     def process_errors(self, page_name, errors):
         """ receives errors and records warnings and errors """
@@ -864,11 +870,15 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    readme_path = "project/"
     # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    # project = Report(about_me_dnn_readme_path)
+    # project.generate_report()
+
     # large_project_readme_path = "tests/test_files/projects/large_project/"
     # # large_project = Report(large_project_readme_path)
     # # large_project.generate_report()
+    
+    readme_path = "project/"
     project = Report(readme_path)
     project.generate_report()
-    # about_me_dnn_project.css_report.validate_css()
+    
