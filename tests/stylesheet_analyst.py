@@ -1,9 +1,10 @@
-import stylesheet as styles
-
-# Purpose:
+# stylesheet_analyst.py
+# by Chris Winikka
 # verify correct syntax using expanded syntax
 # see [Use expanded syntax](https://developer.mozilla.org/en-US/docs/MDN/Contribute/Guidelines/Code_guidelines/CSS#Use_expanded_syntax)
 # to be used by report.py
+
+import stylesheet as styles
 
 def get_repeat_selectors(sheet):
     repeat_selectors = []
@@ -29,13 +30,21 @@ def get_type_selectors():
     "dt", "dd", "dl", "a", "br", "hr", "table",
     "tr", "td", "th", "thead", "tbody", "tfoot",
     "div", "span", "i", "b", "em", "strong",
-    "kbd", "button", "input"]
+    "kbd", "button", "input", "abbr", "address", "applet",
+    "area", "article", "aside", "audio", "bdi", "bdo", "blockquote",
+    "canvas", "caption", "cite", "code", "col", "colgroup",
+    "data", "datalist", "details", "dfn", "dialog",
+    "embed", "fieldset", "figurecaption", "figure",
+    "footer", "form", "header", "iframe", "img",
+    "ins", "label", "legend", "main", "map", "mark",
+    "meter", "nav", "object", "optgroup", "option",
+    "output", "param", ""]
     type_selectors.sort()
     return type_selectors
 
 if __name__ == "__main__":
     import clerk
-
+    
     # Test off of large project
     layout_css = clerk.file_to_string(
         "tests/test_files/projects/large_project/css/layout.css")
