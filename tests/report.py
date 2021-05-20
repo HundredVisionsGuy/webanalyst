@@ -236,7 +236,10 @@ class GeneralReport:
         self.meets_num_css_files()
 
         # calculate WPS and SPP
-        SPP = len(self.sentences) / len(self.paragraphs)
+        try: 
+            SPP = len(self.sentences) / len(self.paragraphs)
+        except ZeroDivisionError:
+            SPP = 0
         self.report_details["writing_goal_results"]["actual_SPP"] = SPP
 
         # Is SPP within range?
@@ -244,7 +247,10 @@ class GeneralReport:
         self.report_details["writing_goal_results"]["meets_SPP"] = SPP > minSPP and SPP < maxSPP
 
         # calculate words per sentence WPS
-        WPS = self.word_count / self.get_num_sentences()
+        try:
+            WPS = self.word_count / self.get_num_sentences()
+        except ZeroDivisionError:
+            WPS = 0
         self.report_details["writing_goal_results"]["actual_WPS"] = WPS
 
         # Is WPS within range?
@@ -814,6 +820,7 @@ class CSSReport:
     def validate_css(self):
         # The HTML report did all CSS validation from Style tags,
         # We do, however, need CSS validation on CSS files
+        errors = 0
         for file_path in self.css_files:
             # Get error objects
             errors_in_file = val.get_markup_validity(file_path)
@@ -848,7 +855,6 @@ class CSSReport:
 
         self.report_details["css_validator_results"][page_name] = errors_dict[page_name]
         self.report_details["css_validator_results"][page_name] += warnings_dict[page_name]
-
 
 if __name__ == "__main__":
     # How to run a report:
