@@ -818,14 +818,14 @@ class CSSReport:
                 print("No style tag in this file")
 
     def validate_css(self):
-        # The HTML report did all CSS validation from Style tags,
-        # We do, however, need CSS validation on CSS files
         errors = 0
         for file_path in self.css_files:
+            # Get code (just run it all)
+            css_code = clerk.file_to_string(file_path)
             # Get error objects
-            errors_in_file = val.get_markup_validity(file_path)
+            errors_in_file = val.validate_css(css_code)
             # Get number of errors
-            errors = len(errors_in_file)
+            errors += len(errors_in_file)
             page_name = clerk.get_file_name(file_path)
         if errors > 0:
             self.process_errors(page_name, errors_in_file)
