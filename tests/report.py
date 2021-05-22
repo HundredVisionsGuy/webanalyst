@@ -236,7 +236,7 @@ class GeneralReport:
         self.meets_num_css_files()
 
         # calculate WPS and SPP
-        try: 
+        try:
             SPP = len(self.sentences) / len(self.paragraphs)
         except ZeroDivisionError:
             SPP = 0
@@ -705,7 +705,7 @@ class HTMLReport:
                     # render any HTML code viewable on the screen
                     extract = error['extract'].replace(
                         "<", "&lt;").replace(">", "&gt;")
-                        
+
                     # place extract inside of a code tag
                     extract = "<code>" + extract + "</code>"
 
@@ -818,6 +818,7 @@ class CSSReport:
                 print("No style tag in this file")
 
     def validate_css(self):
+        # Get CSS validation on CSS files
         errors = 0
         for file_path in self.css_files:
             # Get code (just run it all)
@@ -827,8 +828,15 @@ class CSSReport:
             # Get number of errors
             errors += len(errors_in_file)
             page_name = clerk.get_file_name(file_path)
+        # Validate style tag contents
+        self.validate_style_tag_contents(self.style_tag_contents)
         if errors > 0:
             self.process_errors(page_name, errors_in_file)
+
+    def validate_style_tag_contents(self, contents):
+        for item in contents:
+            css_errors = val.validate_css(item)
+            print(css_errors)
 
     def process_errors(self, page_name, errors):
         """ receives errors and records warnings and errors """
@@ -856,6 +864,7 @@ class CSSReport:
         self.report_details["css_validator_results"][page_name] = errors_dict[page_name]
         self.report_details["css_validator_results"][page_name] += warnings_dict[page_name]
 
+
 if __name__ == "__main__":
     # How to run a report:
     # 1. Set the path to the folder:    path = "path/to/project/folder"
@@ -863,11 +872,14 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    about_me_readme_path = "tests/test_files/projects/about_me/"
-    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
-    large_project_readme_path = "tests/test_files/projects/large_project/"
-    # large_project = Report(large_project_readme_path)
-    # large_project.generate_report()
-    about_me_dnn_project = Report(about_me_dnn_readme_path)
-    about_me_dnn_project.generate_report()
-    # about_me_dnn_project.css_report.validate_css()
+    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    # project = Report(about_me_dnn_readme_path)
+    # project.generate_report()
+
+    # large_project_readme_path = "tests/test_files/projects/large_project/"
+    # # large_project = Report(large_project_readme_path)
+    # # large_project.generate_report()
+
+    readme_path = "project/"
+    project = Report(readme_path)
+    project.generate_report()

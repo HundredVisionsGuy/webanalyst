@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
 
 [packages]
 atomicwrites = "==1.4.0"
@@ -33,6 +34,7 @@ mechanicalsoup = "*"
 cssutils = "*"
 pytest-cov = "*"
 pep8 = "*"
+pylint = "*"
 
 [requires]
 python_version = "3.7"
