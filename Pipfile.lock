@@ -462,7 +462,7 @@
                 "sha256:88206b0eb87e6d677d424843ac5209e3fb9d0190d0ee169599165ec25e9d9115"
             ],
             "index": "pypi",
-            "version": "==1.25.9"
+            "version": ">=1.26.5"
         },
         "wcwidth": {
             "hashes": [
