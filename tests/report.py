@@ -743,7 +743,7 @@ class CSSReport:
             "css_validator_goals": 0,
             "css_validator_results": {},
             "num_css_files": 0,
-            "num_style_tags": 0,
+            "style_tags": [],
             "repeat_selectors": 0,
             "repeat_declaration_blocks": 0,
             "general_css_styles": {
@@ -778,7 +778,7 @@ class CSSReport:
 
     def generate_report(self):
         self.get_num_css_files()
-        self.get_num_style_tags()
+        self.get_style_tags()
         self.get_css_code()
         self.validate_css()
 
@@ -788,15 +788,14 @@ class CSSReport:
         self.report_details["num_css_files"] = num_css_files
         return num_css_files
 
-    def get_num_style_tags(self):
+    def get_style_tags(self):
         # get HTML files
         html_files = clerk.get_all_files_of_type(self.__dir_path, 'html')
-        count = 0
         for file in html_files:
             style_tags = html.get_elements("style", file)
-            count += len(style_tags)
-        self.report_details["num_style_tags"] = count
-        return count
+            self.report_details["style_tags"].append((file, len(style_tags)))
+        
+        # return count
 
     def get_css_code(self):
         # extract content from all CSS files
