@@ -517,9 +517,9 @@ class HTMLReport:
             # Get error objects
             errors_in_file = val.get_markup_validity(file_path)
             # Get number of errors
-            errors = len(errors_in_file)
+            num_errors = len(errors_in_file)
             page_name = clerk.get_file_name(file_path)
-            if errors > 0:
+            if num_errors > 0:
                 self.process_errors(page_name, errors_in_file)
 
     def process_errors(self, page_name, errors):
@@ -773,6 +773,7 @@ class CSSReport:
 
     def set_css_validation(self, css_validation_results):
         self.report_details['css_validator_results'] = css_validation_results
+        self.css_errors.update(css_validation_results)
         self.report_details['css_validator_errors'] = len(
             css_validation_results)
 
@@ -823,17 +824,10 @@ class CSSReport:
             # Get error objects
             errors_in_file = val.get_markup_validity(file_path)
             # Add to number of errors
-            errors = len(errors_in_file)
+            errors += len(errors_in_file)
             page_name = clerk.get_file_name(file_path)
-        # Validate style tag contents
-        self.validate_style_tag_contents(self.style_tag_contents)
         if errors > 0:
             self.process_errors(page_name, errors_in_file)
-
-    def validate_style_tag_contents(self, contents):
-        for item in contents:
-            css_errors = val.validate_css(item)
-            print(css_errors)
 
     def process_errors(self, page_name, errors):
         """ receives errors and records warnings and errors """
