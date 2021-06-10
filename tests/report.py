@@ -4,6 +4,7 @@ import HTMLinator as html
 from bs4 import BeautifulSoup
 import logging
 import validator as val
+import os
 
 logging.basicConfig(format='%(asctime)s - %(message)s',
                     datefmt='%d-%b-%y %H:%M:%S')
@@ -794,6 +795,9 @@ class CSSReport:
         html_files = clerk.get_all_files_of_type(self.__dir_path, 'html')
         for file in html_files:
             style_tags = html.get_elements("style", file)
+            for tag in style_tags:
+                filename = os.path.basename(file)
+                self.style_tag_contents.append((filename, tag.string))
             self.report_details["style_tags"].append((file, len(style_tags)))
         
         # return count
