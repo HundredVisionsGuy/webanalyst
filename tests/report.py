@@ -311,6 +311,9 @@ class HTMLReport:
         self.__readme_list = readme_list
         self.html_requirements_list = []
         self.html_files = []
+        self.style_tags = []
+        self.set_style_tags()
+        self.get_style_tags()
         self.validator_errors = {}
         self.validator_warnings = {}
         self.report_details = {
@@ -725,6 +728,12 @@ class HTMLReport:
         for t, i in the_dict.items():
             new_dict[t[1]] = i
         return new_dict
+
+    def set_style_tags(self):
+        pass
+
+    def get_style_tags(self):
+        return None
 
 
 class CSSReport:

@@ -377,6 +377,12 @@ def test_large_project_html_report_for_get_validator_goals_to_set_details(large_
     expected = 2
     assert results == expected
 
+def test_set_style_tags_with_about_me_project(about_me_html_report):
+    about_me_html_report.set_style_tags()
+    results = bool(about_me_html_report.style_tags)
+    expected = True
+    assert results == expected
+
 # CSSReport tests
 
 
