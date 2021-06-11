@@ -576,6 +576,7 @@ class HTMLReport:
         self.set_html5_required_elements_found()
         self.set_required_elements_found()
         self.meets_required_elements()
+        self.meets_html5_essential_requirements()
 
     def publish_results(self):
         # Get report
@@ -731,6 +732,14 @@ class HTMLReport:
         for t, i in the_dict.items():
             new_dict[t[1]] = i
         return new_dict
+
+    def meets_html5_essential_requirements(self):
+        required_elements = self.report_details["required_elements_found"]["HTML5_essential_elements_found"]
+        for element in required_elements.values():
+            print(element[-1])
+            if element[-1] == False:
+                return False
+        return True
 
     def set_style_tags(self):
         pass
