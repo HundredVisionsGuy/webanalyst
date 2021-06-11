@@ -65,7 +65,10 @@ class Report:
         self.general_report.generate_report()
         self.html_report.generate_report()
         # Get CSS validation and send to css report
-        css_validation_results = self.html_report.validator_errors["CSS"]
+        try:
+            css_validation_results = self.html_report.validator_errors["CSS"]
+        except:
+            css_validation_results = {}
         self.css_report.set_css_validation(css_validation_results)
         self.css_report.generate_report()
 
@@ -747,6 +750,7 @@ class CSSReport:
         self.css_errors = {}
         self.css_files = []
         self.style_tag_contents = []
+        self.num_style_tags = 0
         self.report_details = {
             "css_level": "",
             "css_level_attained": False,
@@ -811,6 +815,7 @@ class CSSReport:
         
         # return count
 
+
     def get_css_code(self):
         # extract content from all CSS files
         self.css_files = clerk.get_all_files_of_type(self.__dir_path, "css")
@@ -839,8 +844,8 @@ class CSSReport:
             # Add to number of errors
             errors += len(errors_in_file)
             page_name = clerk.get_file_name(file_path)
-        if errors > 0:
-            self.process_errors(page_name, errors_in_file)
+            if errors > 0:
+                self.process_errors(page_name, errors_in_file)
 
     def process_errors(self, page_name, errors):
         """ receives errors and records warnings and errors """
