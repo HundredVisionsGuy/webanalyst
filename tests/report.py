@@ -315,8 +315,6 @@ class HTMLReport:
         self.html_requirements_list = []
         self.html_files = []
         self.style_tags = []
-        self.set_style_tags()
-        self.get_style_tags()
         self.validator_errors = {}
         self.validator_warnings = {}
         self.report_details = {
@@ -736,16 +734,9 @@ class HTMLReport:
     def meets_html5_essential_requirements(self):
         required_elements = self.report_details["required_elements_found"]["HTML5_essential_elements_found"]
         for element in required_elements.values():
-            print(element[-1])
             if element[-1] == False:
                 return False
         return True
-
-    def set_style_tags(self):
-        pass
-
-    def get_style_tags(self):
-        return None
 
 
 class CSSReport:
@@ -823,7 +814,9 @@ class CSSReport:
             self.report_details["style_tags"].append((file, len(style_tags)))
         
         # return count
-
+    def get_num_style_tags(self):
+        self.num_style_tags = len(self.report_details['style_tags'])
+        return self.num_style_tags
 
     def get_css_code(self):
         # extract content from all CSS files
@@ -849,7 +842,7 @@ class CSSReport:
         errors = 0
         for file_path in self.css_files:
             # Get error objects
-            errors_in_file = val.get_markup_validity(file_path)
+            errors_in_file = val.validate_css(file_path)
             # Add to number of errors
             errors += len(errors_in_file)
             page_name = clerk.get_file_name(file_path)
@@ -867,6 +860,13 @@ class CSSReport:
         # because it will crash if we try and append it
         # to a non-existant list
         for item in errors:
+            # We need to grab all tr.error contents for errors
+            soup = BeautifulSoup(item.text, 'html.parser')
+            error_rows = soup.find_all('tr')
+            for row in error_rows:
+                print(row)
+            # get the length to determine # of errors
+
             if item["type"] == "error":
                 self.report_details["css_validator_errors"] += 1
                 try:
@@ -890,9 +890,10 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
-    # project = Report(about_me_dnn_readme_path)
-    # project.generate_report()
+    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    project = Report(about_me_dnn_readme_path)
+    project.generate_report()
+    project.css_report.get_num_style_tags()
 
     # large_project_readme_path = "tests/test_files/projects/large_project/"
     # # large_project = Report(large_project_readme_path)
@@ -901,4 +902,5 @@ if __name__ == "__main__":
     readme_path = "project/"
     project = Report(readme_path)
     project.generate_report()
+    project.css_report.get_num_style_tags()
     

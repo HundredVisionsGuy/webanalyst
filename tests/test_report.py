@@ -17,7 +17,7 @@ report_html_doc_path = "report/report.html"
 def about_me_report():
     my_report = report.Report(about_me_path)
     my_report.generate_report()
-    return my_report
+    yield my_report
 
 @pytest.fixture
 def about_me_dnm_report():
@@ -377,12 +377,6 @@ def test_large_project_html_report_for_get_validator_goals_to_set_details(large_
     expected = 2
     assert results == expected
 
-def test_set_style_tags_with_about_me_project(about_me_html_report):
-    about_me_html_report.set_style_tags()
-    results = bool(about_me_html_report.style_tags)
-    expected = True
-    assert results == expected
-
 # CSSReport tests
 
 
@@ -403,14 +397,9 @@ def test_large_project_css_report_for_report_details_num_css_files(large_project
     expected = 4
     assert results == expected
 
-def test_about_me_css_report_for_num_style_tags_1(about_me_css_report):
-    results = about_me_css_report.get_num_style_tags()
-    expected = 1
-    assert results == expected
-
-def test_about_me_css_report_for_report_details_num_style_tags(about_me_css_report):
+def test_about_me_css_report_for_num_style_tags(about_me_css_report):
     about_me_css_report.get_style_tags()
-    results = about_me_css_report.report_details["num_style_tags"]
+    results = about_me_css_report.get_num_style_tags()
     expected = 1
     assert results == expected
 
