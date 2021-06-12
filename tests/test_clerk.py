@@ -46,7 +46,7 @@ def test_file_to_string_in_working_directory():
 
 def test_file_to_string_in_project_directory():
     readme_text = clerk.file_to_string(project_readme_path)
-    expected = "# Project Name: _\n***NOTE: this README is just a template for future projects.***"
+    expected = "# Project Name: "
     assert expected in readme_text
 
 
@@ -92,4 +92,11 @@ def test_get_file_name_for_html_file_path():
 def test_get_file_name_for_css_file_path():
     results = clerk.get_file_name(css_file_path)
     expected = "test.css"
+    assert results == expected
+
+def test_clear_extra_text():
+    sample = "\n             body has something       in here.    "
+    expected = "body has something in here."
+    results = clerk.clear_extra_text(sample)
+    assert results == expected
 

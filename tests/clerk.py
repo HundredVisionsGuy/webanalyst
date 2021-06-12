@@ -126,6 +126,11 @@ def remove_tags(element):
     """Removes all HTML tags from block tag (str)"""
     return TAG_RE.sub('', element)
 
+def clear_extra_text(str):
+    """ Removes line returns and extra spaces """
+    str = str.replace("\n", "")
+    str = re.sub('\s+',' ', str)
+    return str.strip()
 
 if __name__ == "__main__":
     html_with_css = "tests/test_files/html_with_css.html"

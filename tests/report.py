@@ -861,27 +861,55 @@ class CSSReport:
         # to a non-existant list
         for item in errors:
             # We need to grab all tr.error contents for errors
-            soup = BeautifulSoup(item.text, 'html.parser')
-            error_rows = soup.find_all('tr')
-            for row in error_rows:
-                print(row)
-            # get the length to determine # of errors
+            error_rows = self.get_error_rows(item)
 
-            if item["type"] == "error":
-                self.report_details["css_validator_errors"] += 1
-                try:
-                    errors_dict[page_name].append(item)
-                except:
-                    errors_dict[page_name] = [item, ]
-            elif item["type"] == "info":
-                try:
-                    warnings_dict[page_name].append(item)
-                except:
-                    warnings_dict[page_name] = [item, ]
+            # process errors
+            if error_rows:
+                errors_dict[page_name] = []
+                for row in error_rows:
+                    row_dict = self.get_results_details("error", row)
+                    errors_dict[page_name].append(row_dict)
+                
+
+            # process warnings
+            warning_rows = self.get_warning_rows(item)
+            if warning_rows:
+                warnings_dict[page_name] = []
+                for row in warning_rows:
+                    row_dict = self.get_results_details("warning", row)
+                    print(row)
 
         self.report_details["css_validator_results"][page_name] = errors_dict[page_name]
-        self.report_details["css_validator_results"][page_name] += warnings_dict[page_name]
+        if warnings_dict:
+            self.report_details["css_validator_results"][page_name] += warnings_dict[page_name]
 
+    def get_error_rows(self, item):
+        item_string = item.contents
+        item_string = "".join([str(elem) for elem in item_string])
+        error_soup = BeautifulSoup(item_string, 'html.parser')
+        error_rows = error_soup.find_all('tr', {'class':'error'})
+        return error_rows
+
+    def get_results_details(self, type, tag):
+        details = {}
+        details[type] = "error"
+        line_number = tag.contents[1]['title']
+        details["line_number"] = line_number
+        context = tag.contents[3].text
+        details["context"] = context
+        message = tag.contents[5].text
+        message = clerk.clear_extra_text(message)
+        details["error_msg"] = message
+        code = tag.contents[5].find('span')
+        details['extract'] = code
+        return details
+    
+    def get_warning_rows(self, item):
+        item_string = item.contents
+        item_string = "".join([str(elem) for elem in item_string])
+        error_soup = BeautifulSoup(item_string, 'html.parser')
+        rows = error_soup.find_all('tr', {'class':'warning'})
+        return rows
 
 if __name__ == "__main__":
     # How to run a report:
