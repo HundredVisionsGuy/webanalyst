@@ -100,3 +100,13 @@ def test_clear_extra_text():
     results = clerk.clear_extra_text(sample)
     assert results == expected
 
+
+def test_get_linked_css_for_one_filename():
+    test_code = '<!DOCTYPE html>\n<html lang="en">\n\n<head> \n    <meta charset="UTF-8">\n<link rel="stylesheet" href="mystyles.css">    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>About Me</title>\n    <style>\n        body {\n            color: #121212 background-fred: #f1f1f1;\n        }\n    </style>\n</head>\n\n<h1>About Me<h1>\n        <h2>Background</h2>\n        <p>I was born a young child in Phoenix, Arizona. I was the last of five children, but I had a good childhood.\n        </p>\n\n        <h2>Hobbies</h2>\n        <p>I love to play <strong>guitar and code. I have both an electric and acoustic guitar, but I prefer my\n                acoustic.</p>\n\n\n</html>'
+    results = clerk.get_linked_css(test_code)
+    assert "mystyles.css" in results
+
+def test_get_linked_css_for_two_filenames():
+    test_code = '<!DOCTYPE html>\n<html lang="en">\n\n<head> \n<link rel="stylesheet" href="styles.css">    <meta charset="UTF-8">\n<link rel="stylesheet" href="mystyles.css">    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>About Me</title>\n    <style>\n        body {\n            color: #121212 background-fred: #f1f1f1;\n        }\n    </style>\n</head>\n\n<h1>About Me<h1>\n        <h2>Background</h2>\n        <p>I was born a young child in Phoenix, Arizona. I was the last of five children, but I had a good childhood.\n        </p>\n\n        <h2>Hobbies</h2>\n        <p>I love to play <strong>guitar and code. I have both an electric and acoustic guitar, but I prefer my\n                acoustic.</p>\n\n\n</html>'
+    results = clerk.get_linked_css(test_code)
+    assert "mystyles.css" in results

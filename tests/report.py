@@ -314,6 +314,7 @@ class HTMLReport:
         self.__readme_list = readme_list
         self.html_requirements_list = []
         self.html_files = []
+        self.linked_stylesheets = {}
         self.style_tags = []
         self.validator_errors = {}
         self.validator_warnings = {}
@@ -351,6 +352,7 @@ class HTMLReport:
         self.get_html_level()
         self.get_validator_goals()
         self.ammend_required_elements()
+        self.set_linked_stylesheets()
         self.analyze_results()
         self.publish_results()
 
@@ -738,6 +740,17 @@ class HTMLReport:
                 return False
         return True
 
+    def set_linked_stylesheets(self):
+        """ will generate a list of HTML docs and the CSS they link to """
+        linked = {}
+        # loop through html_files
+        # in each file get the href of any link if that href matches a file in the folder
+        for file in self.html_files:
+            contents = clerk.file_to_string(file)
+            link_hrefs = clerk.get_linked_css(contents)
+            filename = clerk.get_file_name(file)
+            linked[filename] = link_hrefs
+        self.linked_stylesheets = linked
 
 class CSSReport:
     def __init__(self, readme_list, dir_path):
@@ -822,6 +835,8 @@ class CSSReport:
         # extract content from all CSS files
         self.css_files = clerk.get_all_files_of_type(self.__dir_path, "css")
         for file in self.css_files:
+            # First check to make sure all pages have a link to the style sheet
+
             try:
                 self.style_tag_contents.append(
                     clerk.get_css_from_stylesheet(file))
@@ -918,17 +933,18 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
-    project = Report(about_me_dnn_readme_path)
-    project.generate_report()
-    project.css_report.get_num_style_tags()
+    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    # project = Report(about_me_dnn_readme_path)
+    # project.generate_report()
+    # project.css_report.get_num_style_tags()
 
-    # large_project_readme_path = "tests/test_files/projects/large_project/"
-    # # large_project = Report(large_project_readme_path)
-    # # large_project.generate_report()
+    large_project_readme_path = "tests/test_files/projects/large_project/"
+    large_project = Report(large_project_readme_path)
+    large_project.generate_report()
+    large_project.css_report.get_num_style_tags()
     
-    readme_path = "project/"
-    project = Report(readme_path)
-    project.generate_report()
-    project.css_report.get_num_style_tags()
+    # readme_path = "project/"
+    # project = Report(readme_path)
+    # project.generate_report()
+    # project.css_report.get_num_style_tags()
     

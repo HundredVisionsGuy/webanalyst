@@ -67,6 +67,25 @@ def get_css_from_style_tag(path):
     css_advancedTag = parser.getElementsByTagName('style')
     return css_advancedTag[0].innerText
 
+def get_linked_css(contents_str):
+    """ returns a list of linked CSS files """
+    filenames = []
+    parser = h_parser.AdvancedHTMLParser()
+    parser.parseStr(contents_str)
+    linked_files = parser.getElementsByTagName('link')
+    if len(linked_files) > 1:
+        for file in linked_files:
+            linked_file = file.getAttribute('href')
+            if 'https://' in linked_file:
+                continue
+            filenames.append(linked_file)
+    elif len(linked_files) == 1:
+        filename = linked_files[0].getAttribute('href')
+        filenames.append(filename)
+    else:
+        return None
+    return filenames
+
 
 def get_css_from_stylesheet(path):
     return file_to_string(path)
@@ -157,6 +176,7 @@ if __name__ == "__main__":
 
     # test getting list of all files with .css extension
     test_project_files = 'tests/test_files/project'
-    results = get_all_files_of_type(test_project_files, '*.css*')
+    results = get_all_files_of_type(test_project_files, 'css')
     for i in results:
         print(i)
+
