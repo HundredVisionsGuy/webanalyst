@@ -64,6 +64,8 @@ class Report:
         self.prep_report()
         self.general_report.generate_report()
         self.html_report.generate_report()
+        # send linked stylesheets to css report
+        self.css_report.linked_stylesheets = self.html_report.linked_stylesheets
         # Get CSS validation and send to css report
         try:
             css_validation_results = self.html_report.validator_errors["CSS"]
@@ -764,6 +766,7 @@ class CSSReport:
         self.css_files = []
         self.style_tag_contents = []
         self.num_style_tags = 0
+        self.linked_stylesheets = {}
         self.report_details = {
             "css_level": "",
             "css_level_attained": False,
