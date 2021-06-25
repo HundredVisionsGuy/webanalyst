@@ -148,7 +148,7 @@ def remove_tags(element):
 def clear_extra_text(str):
     """ Removes line returns and extra spaces """
     str = str.replace("\n", "")
-    str = re.sub('\s+',' ', str)
+    str = re.sub(r'\s+',' ', str)
     return str.strip()
 
 if __name__ == "__main__":
