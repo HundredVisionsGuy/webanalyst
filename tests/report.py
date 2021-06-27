@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import logging
 import validator as val
 import os
+from CSSinator import Stylesheet as stylesheet
 
 logging.basicConfig(format='%(asctime)s - %(message)s',
                     datefmt='%d-%b-%y %H:%M:%S')
@@ -822,14 +823,14 @@ class CSSReport:
     def get_style_tags(self):
         # get HTML files
         html_files = clerk.get_all_files_of_type(self.__dir_path, 'html')
+        # get the contents of any style tag in each html doc
         for file in html_files:
             style_tags = html.get_elements("style", file)
             for tag in style_tags:
                 filename = os.path.basename(file)
                 self.style_tag_contents.append((filename, tag.string))
             self.report_details["style_tags"].append((file, len(style_tags)))
-        
-        # return count
+        return self.report_details["style_tags"]
     def get_num_style_tags(self):
         self.num_style_tags = len(self.report_details['style_tags'])
         return self.num_style_tags
