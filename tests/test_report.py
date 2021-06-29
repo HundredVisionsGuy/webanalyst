@@ -95,7 +95,6 @@ def paragraph_tag():
     p_tag = BeautifulSoup(p, 'html.parser')
     return p_tag
 
-
 @pytest.fixture
 def about_me_required_elements():
     return ['DOCTYPE', 'HTML', 'HEAD', 'TITLE', 'BODY', 'H1', 'H2', 'P', 'STRONG', 'EM']
@@ -386,6 +385,7 @@ def test_large_project_html_report_for_set_linked_stylesheets(large_project_html
     expected = {"gallery.html":["css/navigation.css", "css/general.css", "css/layout.css"],"index.html":None
     }
     assert large_project_html_report.linked_stylesheets == expected
+
 
 # CSSReport tests
 

@@ -326,6 +326,7 @@ class HTMLReport:
             "can_attain_level": False,
             "html_level_attained": None,
             "validator_goals": 0,
+            "uses_inline_styles": False,
             "validator_results": {
                 "CSS Errors": 0,
                 "HTML Errors": 0
@@ -580,6 +581,7 @@ class HTMLReport:
         self.set_required_elements_found()
         self.meets_required_elements()
         self.meets_html5_essential_requirements()
+        self.check_for_inline_styles()
 
     def publish_results(self):
         # Get report
@@ -755,6 +757,17 @@ class HTMLReport:
             linked[filename] = link_hrefs
         self.linked_stylesheets = linked
 
+    def check_for_inline_styles(self):
+        files_with_inline_styles = {}
+        for file in self.html_files:
+            markup = html.get_html(file)
+            has_inline_styles = self.uses_inline_styles(markup)
+            filename = clerk.get_file_name(file)
+            files_with_inline_styles[filename] = has_inline_styles
+        self.report_details["uses_inline_styles"] = files_with_inline_styles
+
+
+
 class CSSReport:
     def __init__(self, readme_list, dir_path):
         self.__dir_path = dir_path
@@ -831,6 +844,7 @@ class CSSReport:
                 self.style_tag_contents.append((filename, tag.string))
             self.report_details["style_tags"].append((file, len(style_tags)))
         return self.report_details["style_tags"]
+    
     def get_num_style_tags(self):
         self.num_style_tags = len(self.report_details['style_tags'])
         return self.num_style_tags
@@ -929,6 +943,8 @@ class CSSReport:
         error_soup = BeautifulSoup(item_string, 'html.parser')
         rows = error_soup.find_all('tr', {'class':'warning'})
         return rows
+
+
 
 if __name__ == "__main__":
     # How to run a report:
