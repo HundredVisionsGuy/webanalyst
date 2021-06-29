@@ -758,12 +758,14 @@ class HTMLReport:
         self.linked_stylesheets = linked
 
     def check_for_inline_styles(self):
-        files_with_inline_styles = {}
+        files_with_inline_styles = []
         for file in self.html_files:
-            markup = html.get_html(file)
-            has_inline_styles = self.uses_inline_styles(markup)
-            filename = clerk.get_file_name(file)
-            files_with_inline_styles[filename] = has_inline_styles
+            markup = clerk.file_to_string(file)
+            has_inline_styles = html.uses_inline_styles(markup)
+            if has_inline_styles:
+                filename = clerk.get_file_name(file)
+                files_with_inline_styles.append(filename)
+
         self.report_details["uses_inline_styles"] = files_with_inline_styles
 
 
