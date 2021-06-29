@@ -80,9 +80,9 @@ def about_me_css_report(about_me_readme_list):
     return css_report
 
 @pytest.fixture
-def about_me_dnm_css_report(about_me_dnn_readme_list):
-    css_report = report.CSSReport(about_me_dnn_readme_list, about_me_dnm_path)
-    return css_report
+def about_me_dnm_css_report(about_me_dnm_report):
+    # css_report = report.CSSReport(about_me_dnn_readme_list, about_me_dnm_path)
+    return about_me_dnm_report.css_report
 
 @pytest.fixture
 def large_project_css_report(large_project_report):
@@ -422,9 +422,6 @@ def test_about_me_css_report_validate_css_for_0_errors(about_me_css_report):
     assert results == expected
 
 def test_about_me_dnm_css_report_for_validate_css_results_for_2_errors(about_me_dnm_css_report):
-    # about_me_dnm_css_report.get_css_code()
-    # about_me_dnm_css_report.validate_css()
-    
     css_errors = about_me_dnm_css_report.report_details['css_validator_results']
     print(css_errors)
     results = len(css_errors)

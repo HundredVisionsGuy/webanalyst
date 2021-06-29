@@ -768,8 +768,6 @@ class HTMLReport:
 
         self.report_details["uses_inline_styles"] = files_with_inline_styles
 
-
-
 class CSSReport:
     def __init__(self, readme_list, dir_path):
         self.__dir_path = dir_path
@@ -955,9 +953,14 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
-    # project = Report(about_me_dnn_readme_path)
-    # project.generate_report()
+    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    project = Report(about_me_dnn_readme_path)
+    project.generate_report()
+    project.css_report.get_css_code()
+    project.css_report.validate_css()
+    css_errors = project.css_report.report_details['css_validator_results']['styles.css']
+    print(css_errors)
+    results = len(css_errors)
     # project.css_report.get_num_style_tags()
 
     large_project_readme_path = "tests/test_files/projects/large_project/"
