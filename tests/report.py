@@ -73,7 +73,7 @@ class Report:
         except:
             css_validation_results = {}
         self.css_report.set_css_validation(css_validation_results)
-        self.css_report.generate_report()
+        self.css_report.generate_report(self.html_report.html_files)
 
     def prep_report(self):
         # Create a report HTML file in the report folder
@@ -773,6 +773,8 @@ class CSSReport:
         self.__dir_path = dir_path
         self.html_level = "0"
         self.__readme_list = readme_list
+        self.html_files = []
+        self.project_css_by_html_doc = {}
         self.font_families_used = []
         self.min_num_css_files = 0
         self.max_num_css_files = 0
@@ -821,11 +823,51 @@ class CSSReport:
         self.report_details['css_validator_errors'] = len(
             css_validation_results)
 
-    def generate_report(self):
+    def generate_report(self, html_files):
+        self.html_files = html_files
+        self.get_project_css_by_file(html_files)
         self.get_num_css_files()
         self.get_style_tags()
         self.get_css_code()
         self.validate_css()
+
+    def get_project_css_by_file(self, html_files):
+        # create a dictionary of files in the project 
+        # each with a list of CSS applied
+        file_dict = {}
+        for file in html_files:
+            filename = clerk.get_file_name(file)
+            file_dict[filename] = []
+            head_children = self.get_children(file, "head")
+            styles = self.get_css_elements(head_children)
+            body_children = self.get_children(file, "body")
+            styles += self.get_css_elements(body_children)
+            file_dict[filename] = styles
+        self.project_css_by_html_doc = file_dict
+    
+    def get_children(self, path, parent):
+        code = html.get_html(path)
+        try:
+            head = code.find(parent)
+            children = head.findChildren()
+            return children
+        except:
+            return None
+
+    def get_css_elements(self, nodes):
+        styles=[]
+        if not nodes:
+            return styles
+        for el in nodes:
+            if el.name == 'link':
+                if el.attrs["href"] and el.attrs['href'][-4:] == '.css':
+                    styles.append(el.attrs['href'])
+            if el.name == 'style':
+                # append styles to file_dict
+                css_string = el.string
+                css_string = str(css_string)
+                styles.append("style_tag=" + css_string)
+        return styles
 
     def get_num_css_files(self):
         css_files = clerk.get_all_files_of_type(self.__dir_path, 'css')
@@ -953,20 +995,21 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
-    project = Report(about_me_dnn_readme_path)
-    project.generate_report()
-    project.css_report.get_css_code()
-    project.css_report.validate_css()
-    css_errors = project.css_report.report_details['css_validator_results']['styles.css']
-    print(css_errors)
-    results = len(css_errors)
+    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    # project = Report(about_me_dnn_readme_path)
+    # project.generate_report()
+    # project.css_report.get_css_code()
+    # project.css_report.validate_css()
+    # css_errors = project.css_report.report_details['css_validator_results']['styles.css']
+    # print(css_errors)
+    # results = len(css_errors)
     # project.css_report.get_num_style_tags()
 
     large_project_readme_path = "tests/test_files/projects/large_project/"
     large_project = Report(large_project_readme_path)
     large_project.generate_report()
-    large_project.css_report.get_num_style_tags()
+    large_project.css_report.get_css_code()
+    large_project.css_report.validate_css()
     
     # readme_path = "project/"
     # project = Report(readme_path)

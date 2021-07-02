@@ -428,6 +428,26 @@ def test_about_me_dnm_css_report_for_validate_css_results_for_2_errors(about_me_
     expected = 2
     assert results == expected
 
+def test_about_me_css_report_for_get_project_css_by_file(about_me_css_report):
+    # should have been generated
+    about_me_css_report.generate_report(["tests\\test_files\\projects\\about_me_does_not_meet\\index.html",])
+    num_css_tags = len(about_me_css_report.project_css_by_html_doc["index.html"])
+    assert num_css_tags == 1
+
+def test_about_me_css_report_for_get_children_head(about_me_css_report):
+    children = about_me_css_report.get_children('tests\\test_files\\projects\\about_me\\index.html', 'head')
+    assert len(children) == 4
+
+def test_large_project_css_report_for_get_children_head(large_project_css_report):
+    children = large_project_css_report.get_children('tests\\test_files\\projects\\large_project\\gallery.html', 'head')
+    assert len(children) == 8
+
+def test_large_project_css_report_for_get_project_css_by_file(large_project_css_report):
+    large_project_html_docs = ['tests\\test_files\\projects\\large_project\\gallery.html', 'tests\\test_files\\projects\\large_project\\index.html']
+    large_project_css_report.generate_report(large_project_html_docs)
+    num_css_files = len(large_project_css_report.project_css_by_html_doc["gallery.html"])
+    assert num_css_files == 3
+
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
     report_contents = clerk.file_to_string(report_html_doc_path)

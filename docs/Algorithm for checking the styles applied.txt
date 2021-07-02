@@ -1,0 +1,38 @@
+Algorithm for checking the styles applied to each page in a project 
+and in correct order
+
+NOTES: {
+    * We must only grab the stylesheets as objects once we have the master list of pages and which CSS they contain.
+    * We do want the CSS from styletags but in string form to compare before converting to a stylesheet object.
+    * We should get the styletag contents when digging through the pages, since we're already there.
+}
+
+
+What should the end product look like? What do we want out of this algorithm?
+how about a list of pages and the styles being applied as indicated by (filename or styletag) and in the order in which they appear.
+Dictionary? 
+project_css_by_html_doc
+{"html_page": ["filename.css", "styletag=CSS_CODE_AS_STRING", "filename.css"],
+ "html_page2": ["filename.css", "styletag=CSS_CODE_AS_STRING", "filename.css"]}
+
+SET pages to all html docs in a project folder
+GET markup from each page
+FOREACH page in pages   
+    Append page title to dictionary
+    GET tags from the HEAD
+        CALL get_css_elements() with tags
+    GET style tags from the BODY
+        CALL get_css_elements() with tags
+
+DEFINE get_css_elements
+    SET css_elements as list
+    FOREACH tag in tags
+        IF tag is LINK
+            IF href ends with .CSS
+                GET the filename 
+                GET the contents
+                INIT Stylesheet object with contents
+                APPEND tag to css_elements
+        IF tag style 
+            APPEND tag to css_elements
+    RETURN css_elements
