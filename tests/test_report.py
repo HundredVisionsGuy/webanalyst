@@ -86,7 +86,7 @@ def about_me_dnm_css_report(about_me_dnm_report):
 
 @pytest.fixture
 def large_project_css_report(large_project_report):
-    return large_project_report.css_report
+    yield large_project_report.css_report
 
 
 @pytest.fixture
@@ -124,7 +124,7 @@ def test_large_project_general_report_for_set_paragraphs(large_project_general_r
     # test for number of paragraphs
     paragraphs = large_project_general_report.get_paragraphs()
     num_paragraphs = len(paragraphs)
-    expected = 3
+    expected = 4
     assert num_paragraphs == expected
 
 
@@ -276,7 +276,7 @@ def test_about_me_html_report_for_num_of_files(about_me_html_report):
 
 def test_large_project_html_report_for_num_of_files(large_project_html_report):
     results = large_project_html_report.get_num_html_files()
-    expected = 2
+    expected = 3
     assert results == expected
 
 
@@ -382,7 +382,7 @@ def test_set_linked_stylesheets_for_no_CSS_files(about_me_html_report):
     assert expected == results
 
 def test_large_project_html_report_for_set_linked_stylesheets(large_project_html_report):
-    expected = {"gallery.html":["css/navigation.css", "css/general.css", "css/layout.css"],"index.html":None
+    expected = {"about.html":["css/navigation.css", "css/general.css", "css/layout.css"],"gallery.html":["css/navigation.css", "css/general.css", "css/layout.css"],"index.html":None
     }
     assert large_project_html_report.linked_stylesheets == expected
 
@@ -431,7 +431,7 @@ def test_about_me_dnm_css_report_for_validate_css_results_for_2_errors(about_me_
 def test_about_me_css_report_for_get_project_css_by_file(about_me_css_report):
     # should have been generated
     about_me_css_report.generate_report(["tests\\test_files\\projects\\about_me_does_not_meet\\index.html",])
-    num_css_tags = len(about_me_css_report.project_css_by_html_doc["index.html"])
+    num_css_tags = len(about_me_css_report.project_css_by_html_file["index.html"])
     assert num_css_tags == 1
 
 def test_about_me_css_report_for_get_children_head(about_me_css_report):
@@ -445,8 +445,32 @@ def test_large_project_css_report_for_get_children_head(large_project_css_report
 def test_large_project_css_report_for_get_project_css_by_file(large_project_css_report):
     large_project_html_docs = ['tests\\test_files\\projects\\large_project\\gallery.html', 'tests\\test_files\\projects\\large_project\\index.html']
     large_project_css_report.generate_report(large_project_html_docs)
-    num_css_files = len(large_project_css_report.project_css_by_html_doc["gallery.html"])
+    num_css_files = len(large_project_css_report.project_css_by_html_file["gallery.html"])
     assert num_css_files == 3
+
+def test_about_me_css_report_for_no_css_files(about_me_css_report):
+    expected = 0
+    results = len(about_me_css_report.css_files)
+    assert results == expected
+
+def test_large_project_css_report_for_4_css_files(large_project_css_report):
+    expected = 4
+    results = len(large_project_css_report.css_files)
+    assert results == expected
+
+def test_pages_contain_same_css_files_for_large_project_css_report_false(large_project_css_report):
+    results = large_project_css_report.pages_contain_same_css_files
+    assert results == False
+
+def test_extract_only_style_tags_from_css_files_for_large_project_css_report_index_page(large_project_css_report):
+    html_files = large_project_css_report.project_css_by_html_file
+    results = large_project_css_report.extract_only_style_tags_from_css_files(html_files)
+    assert len(results['index.html']) == 0
+
+def test_extract_only_style_tags_from_css_files_for_large_project_css_report_gallery_page(large_project_css_report):
+    html_files = large_project_css_report.project_css_by_html_file
+    results = large_project_css_report.extract_only_style_tags_from_css_files(html_files)
+    assert len(results['gallery.html']) == 3
 
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):

@@ -713,8 +713,10 @@ class HTMLReport:
                     except:
                         first_line = last_line
                     last_column = error['lastColumn']
-                    first_column = error['firstColumn']
-
+                    try:
+                        first_column = error['firstColumn']
+                    except:
+                        first_column = last_column
                     # render any HTML code viewable on the screen
                     extract = error['extract'].replace(
                         "<", "&lt;").replace(">", "&gt;")
@@ -774,7 +776,7 @@ class CSSReport:
         self.html_level = "0"
         self.__readme_list = readme_list
         self.html_files = []
-        self.project_css_by_html_doc = {}
+        self.project_css_by_html_file = {}
         self.font_families_used = []
         self.min_num_css_files = 0
         self.max_num_css_files = 0
@@ -783,6 +785,7 @@ class CSSReport:
         self.style_tag_contents = []
         self.num_style_tags = 0
         self.linked_stylesheets = {}
+        self.pages_contain_same_css_files = False
         self.report_details = {
             "css_level": "",
             "css_level_attained": False,
@@ -829,6 +832,7 @@ class CSSReport:
         self.get_num_css_files()
         self.get_style_tags()
         self.get_css_code()
+        self.check_pages_for_same_css_files()
         self.validate_css()
 
     def get_project_css_by_file(self, html_files):
@@ -843,8 +847,25 @@ class CSSReport:
             body_children = self.get_children(file, "body")
             styles += self.get_css_elements(body_children)
             file_dict[filename] = styles
-        self.project_css_by_html_doc = file_dict
+        self.project_css_by_html_file = file_dict
     
+    def check_pages_for_same_css_files(self):
+        if len(self.html_files) == 1:
+            return True
+        files = self.extract_only_style_tags_from_css_files(self.project_css_by_html_file)
+        files = list(files.values())
+        self.pages_contain_same_css_files = all(file == files[0] for file in files)
+        
+    def extract_only_style_tags_from_css_files(self, files_with_css):
+        results = {}
+        for page, styles in files_with_css.items():
+            results[page] = []
+            for style in styles:
+                if "style_tag=" not in style:
+                    results[page].append(style) 
+        return results
+
+
     def get_children(self, path, parent):
         code = html.get_html(path)
         try:
@@ -896,7 +917,6 @@ class CSSReport:
         self.css_files = clerk.get_all_files_of_type(self.__dir_path, "css")
         for file in self.css_files:
             # First check to make sure all pages have a link to the style sheet
-
             try:
                 self.style_tag_contents.append(
                     clerk.get_css_from_stylesheet(file))
@@ -995,9 +1015,9 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
-    # project = Report(about_me_dnn_readme_path)
-    # project.generate_report()
+    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    project = Report(about_me_dnn_readme_path)
+    project.generate_report()
     # project.css_report.get_css_code()
     # project.css_report.validate_css()
     # css_errors = project.css_report.report_details['css_validator_results']['styles.css']
