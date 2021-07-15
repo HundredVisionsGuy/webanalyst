@@ -472,6 +472,11 @@ def test_extract_only_style_tags_from_css_files_for_large_project_css_report_gal
     results = large_project_css_report.extract_only_style_tags_from_css_files(html_files)
     assert len(results['gallery.html']) == 3
 
+def test_extract_only_style_tags_from_css_files_for_large_project_css_report_about_page(large_project_css_report):
+    html_files = large_project_css_report.project_css_by_html_file
+    results = large_project_css_report.extract_only_style_tags_from_css_files(html_files)
+    assert len(results['about.html']) == 3
+
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
     report_contents = clerk.file_to_string(report_html_doc_path)
