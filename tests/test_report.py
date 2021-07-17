@@ -12,6 +12,7 @@ about_me_file_path = about_me_path + "index.html"
 large_project_path = "tests/test_files/projects/large_project/"
 about_me_dnm_path = "tests/test_files/projects/about_me_does_not_meet/"
 report_html_doc_path = "report/report.html"
+multipage_meets_path = "tests/test_files/projects/multi_page_meets/"
 
 @pytest.fixture
 def about_me_report():
@@ -31,6 +32,11 @@ def large_project_report():
     my_test_project.generate_report()
     return my_test_project
 
+@pytest.fixture
+def multipage_meets_report():
+    my_project = report.Report(multipage_meets_path)
+    my_project.generate_report()
+    yield my_project
 
 @pytest.fixture
 def about_me_readme_list():
@@ -88,6 +94,9 @@ def about_me_dnm_css_report(about_me_dnm_report):
 def large_project_css_report(large_project_report):
     yield large_project_report.css_report
 
+@pytest.fixture
+def multi_page_meets_css_report(multipage_meets_report):
+    yield multipage_meets_report.css_report
 
 @pytest.fixture
 def paragraph_tag():
@@ -476,6 +485,10 @@ def test_extract_only_style_tags_from_css_files_for_large_project_css_report_abo
     html_files = large_project_css_report.project_css_by_html_file
     results = large_project_css_report.extract_only_style_tags_from_css_files(html_files)
     assert len(results['about.html']) == 3
+
+def test_pages_contain_same_css_files_for_multipage_meets_project_true(multi_page_meets_css_report):
+    assert multi_page_meets_css_report.pages_contain_same_css_files
+
 
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):

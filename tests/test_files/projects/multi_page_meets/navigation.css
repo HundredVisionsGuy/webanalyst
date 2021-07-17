@@ -1,0 +1,25 @@
+/* style navbar (vertical on small screens &
+    horizontal on big screens) */
+nav {
+    background-color: rgba(192, 192, 192, 0.24);
+    position: absolute;
+    top: 6vh;
+    left: 6vw;
+}
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;        
+}
+nav a {
+    text-decoration: none;
+    display: block;
+    padding: 0.5em 1em;
+    color: #edf2f4;
+}
+nav a:hover {
+    background-color: #2b2d42;
+    color: #edf2f4;
+}
