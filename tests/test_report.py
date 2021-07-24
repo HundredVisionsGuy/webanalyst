@@ -489,6 +489,8 @@ def test_extract_only_style_tags_from_css_files_for_large_project_css_report_abo
 def test_pages_contain_same_css_files_for_multipage_meets_project_true(multi_page_meets_css_report):
     assert multi_page_meets_css_report.pages_contain_same_css_files
 
+def test_pages_contain_same_css_files_for_large_project_false(large_project_css_report):
+    assert not large_project_css_report.pages_contain_same_css_files
 
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
