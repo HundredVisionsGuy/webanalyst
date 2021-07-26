@@ -786,6 +786,7 @@ class CSSReport:
         self.num_style_tags = 0
         self.linked_stylesheets = {}
         self.pages_contain_same_css_files = False
+        self.stylesheet_objects = []
         self.report_details = {
             "css_level": "",
             "css_level_attained": False,
@@ -834,6 +835,7 @@ class CSSReport:
         self.get_css_code()
         self.check_pages_for_same_css_files()
         self.validate_css()
+        self.set_stylesheet_objects()
 
     def get_project_css_by_file(self, html_files):
         # create a dictionary of files in the project 
@@ -851,7 +853,12 @@ class CSSReport:
     
     def check_pages_for_same_css_files(self):
         if len(self.html_files) == 1:
-            return True
+            # Should we also check to make sure that one page is using css?
+            linked_stylesheets = list(self.linked_stylesheets.values())
+            for sheet in linked_stylesheets:
+                if sheet:
+                    return True
+            return False
         files = self.extract_only_style_tags_from_css_files(self.project_css_by_html_file)
         files = list(files.values())
         self.pages_contain_same_css_files = all(file == files[0] for file in files)
@@ -918,8 +925,10 @@ class CSSReport:
         for file in self.css_files:
             # First check to make sure all pages have a link to the style sheet
             try:
-                self.style_tag_contents.append(
-                    clerk.get_css_from_stylesheet(file))
+                css_code = clerk.get_css_from_stylesheet(file)
+                filename = clerk.get_file_name(file)
+                css = stylesheet(filename, css_code)
+                self.stylesheet_objects.append(css)
             except:
                 print("Something went wrong witht the stylesheet code")
 
@@ -1007,6 +1016,10 @@ class CSSReport:
         return rows
 
 
+    def set_stylesheet_objects(self):
+        # append each project css file
+        print("Yo")
+        # append all style tags (by page)
 
 if __name__ == "__main__":
     # How to run a report:

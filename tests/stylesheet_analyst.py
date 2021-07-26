@@ -1,4 +1,4 @@
-import stylesheet as styles
+from CSSinator import Stylesheet as styles
 
 # Purpose:
 # verify correct syntax using expanded syntax
