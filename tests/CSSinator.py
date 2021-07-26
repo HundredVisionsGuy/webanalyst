@@ -11,8 +11,8 @@ import clerk
 
 class Stylesheet:
     def __init__(self, href, text, stylesheet_type="file"):
-        self.__type = stylesheet_type
-        self.__href = href
+        self.type = stylesheet_type
+        self.href = href
         self.text = text
         self.nested_at_rules = []
         self.rulesets = []
@@ -415,13 +415,16 @@ if __name__ == "__main__":
     # is_valid = is_css_valid(valid_css)
     # print("Are results valid? {}".format(is_valid))
 
+    # my_stylesheet = Stylesheet()
+
     # Test out cssutils
 
-    css = split_css(css_with_errors)
-    big_css = split_css(css_code)
-    try:
-        sheet = cssutils.parseString(css_with_errors)
-    except Exception as ex:
-        print(ex)
+    # css = split_css(css_with_errors)
+    # big_css = split_css(css_code)
+    # try:
+    #     sheet = cssutils.parseString(css_with_errors)
+    # except Exception as ex:
+    #     print(ex)
 
-    split = separate_code(css_code)
+    # split = separate_code(css_code)
+

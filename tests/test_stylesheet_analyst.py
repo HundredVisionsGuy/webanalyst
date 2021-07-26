@@ -1,6 +1,6 @@
 import pytest
 import stylesheet_analyst as css_analyst
-import stylesheet
+import CSSinator as styles
 
 css_with_3_repeat_selectors = """
 body {
@@ -32,17 +32,17 @@ p { font-size: 1.1em;
 
 @pytest.fixture
 def stylesheet_with_3_repeat_selectors():
-    my_stylesheet = stylesheet.Stylesheet("local", css_with_3_repeat_selectors)
+    my_stylesheet = styles.Stylesheet("local", css_with_3_repeat_selectors)
     yield my_stylesheet
 
 
 def test_stylesheet_analyst_for_3_repeat_selectors(stylesheet_with_3_repeat_selectors):
-    results = repeat_selectors = css_analyst.get_repeat_selectors(stylesheet_with_3_repeat_selectors)
+    results = css_analyst.get_repeat_selectors(stylesheet_with_3_repeat_selectors)
     expected = ["body", 3]
     assert expected in results
 
 def test_stylesheet_analyst_for_no_repeat_selectors():
-    my_stylesheet = stylesheet.Stylesheet("local", css_with_no_repeat_selectors)
+    my_stylesheet = styles.Stylesheet("local", css_with_no_repeat_selectors)
     results = repeat_selectors = css_analyst.get_repeat_selectors(my_stylesheet)
     assert not results
 
