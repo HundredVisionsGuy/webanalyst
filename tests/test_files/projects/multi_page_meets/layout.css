@@ -1,0 +1,55 @@
+/* big photo layout for the header */
+header {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    background-color: #2b2d42;
+    color: #edf2f4;
+    background-image: url("images/strawberries.jpg");
+    background-repeat: no-repeat;
+    background-size: cover; 
+    background-position: left top;
+    position: relative;
+  }
+  div.header-text {
+    position: absolute;
+    margin:0;
+    padding:0;
+    bottom: 8vh;
+    right: 8vw;
+  }
+  div.header-text h1,
+  div.header-text h2,
+  div.header-text p {
+    margin:0;
+  }
+  div.header-text p {
+    padding-top: 0.5em;
+  }
+  main {
+    width: 90%;
+    max-width: 40em;
+    margin: 2em auto;
+    font-size: 160%;
+  }
+  @media only screen and (min-width: 450px) {
+    nav ul {
+      flex-direction: row;
+    }
+    figure {
+      float: left;
+    }
+    header {
+      font-size: 110%;
+    }
+  }
+  @media only screen and (min-width: 650px) {
+    header {
+      font-size: 130%;
+    }
+  }
+  @media only screen and (min-width: 970px) {
+    header {
+      font-size: 160%;
+    }
+  }

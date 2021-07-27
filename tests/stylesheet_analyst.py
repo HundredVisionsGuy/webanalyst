@@ -1,10 +1,13 @@
 # stylesheet_analyst.py
 # by Chris Winikka
+
+# Purpose:
 # verify correct syntax using expanded syntax
 # see [Use expanded syntax](https://developer.mozilla.org/en-US/docs/MDN/Contribute/Guidelines/Code_guidelines/CSS#Use_expanded_syntax)
 # to be used by report.py
 
-import stylesheet as styles
+from CSSinator import Stylesheet as styles
+
 
 def get_repeat_selectors(sheet):
     repeat_selectors = []

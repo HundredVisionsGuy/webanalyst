@@ -46,12 +46,13 @@ def test_file_to_string_in_working_directory():
 
 def test_file_to_string_in_project_directory():
     readme_text = clerk.file_to_string(project_readme_path)
-    expected = "# Project Name: _\n***NOTE: this README is just a template for future projects.***"
+    expected = "# Project Name: "
     assert expected in readme_text
 
 
 def test_get_all_project_files_from_large_project():
-    expected = ['tests\\test_files\\projects\\large_project\\gallery.html',
+    expected = ['tests\\test_files\\projects\\large_project\\about.html',
+                'tests\\test_files\\projects\\large_project\\gallery.html',
                 'tests\\test_files\\projects\\large_project\\index.html',
                 'tests\\test_files\\projects\\large_project\\css\\general.css',
                 'tests\\test_files\\projects\\large_project\\css\\grid-layout.css',
@@ -64,7 +65,8 @@ def test_get_all_project_files_from_large_project():
 
 
 def test_get_all_html_project_files_from_large_project():
-    expected = ['tests\\test_files\\projects\\large_project\\gallery.html',
+    expected = ['tests\\test_files\\projects\\large_project\\about.html',
+                'tests\\test_files\\projects\\large_project\\gallery.html',
                 'tests\\test_files\\projects\\large_project\\index.html']
     results = clerk.get_all_files_of_type(
         'tests/test_files/projects/large_project', 'html')
@@ -92,4 +94,21 @@ def test_get_file_name_for_html_file_path():
 def test_get_file_name_for_css_file_path():
     results = clerk.get_file_name(css_file_path)
     expected = "test.css"
+    assert results == expected
 
+def test_clear_extra_text():
+    sample = "\n             body has something       in here.    "
+    expected = "body has something in here."
+    results = clerk.clear_extra_text(sample)
+    assert results == expected
+
+
+def test_get_linked_css_for_one_filename():
+    test_code = '<!DOCTYPE html>\n<html lang="en">\n\n<head> \n    <meta charset="UTF-8">\n<link rel="stylesheet" href="mystyles.css">    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>About Me</title>\n    <style>\n        body {\n            color: #121212 background-fred: #f1f1f1;\n        }\n    </style>\n</head>\n\n<h1>About Me<h1>\n        <h2>Background</h2>\n        <p>I was born a young child in Phoenix, Arizona. I was the last of five children, but I had a good childhood.\n        </p>\n\n        <h2>Hobbies</h2>\n        <p>I love to play <strong>guitar and code. I have both an electric and acoustic guitar, but I prefer my\n                acoustic.</p>\n\n\n</html>'
+    results = clerk.get_linked_css(test_code)
+    assert "mystyles.css" in results
+
+def test_get_linked_css_for_two_filenames():
+    test_code = '<!DOCTYPE html>\n<html lang="en">\n\n<head> \n<link rel="stylesheet" href="styles.css">    <meta charset="UTF-8">\n<link rel="stylesheet" href="mystyles.css">    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>About Me</title>\n    <style>\n        body {\n            color: #121212 background-fred: #f1f1f1;\n        }\n    </style>\n</head>\n\n<h1>About Me<h1>\n        <h2>Background</h2>\n        <p>I was born a young child in Phoenix, Arizona. I was the last of five children, but I had a good childhood.\n        </p>\n\n        <h2>Hobbies</h2>\n        <p>I love to play <strong>guitar and code. I have both an electric and acoustic guitar, but I prefer my\n                acoustic.</p>\n\n\n</html>'
+    results = clerk.get_linked_css(test_code)
+    assert "mystyles.css" in results

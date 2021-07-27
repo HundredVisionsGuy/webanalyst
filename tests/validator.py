@@ -56,9 +56,6 @@ def get_markup_validity(filepath):
                    'Accept-Charset': 'UTF-8'}
         r = requests.post(w3cURL, data=payload, headers=headers)
         errors = r.json()['messages']
-        print("errors is a {}".format(type(errors)))
-        for error in errors:
-            print(error)
     return errors
 
 

@@ -4,6 +4,8 @@ import HTMLinator as html
 from bs4 import BeautifulSoup
 import logging
 import validator as val
+import os
+from CSSinator import Stylesheet as stylesheet
 
 logging.basicConfig(format='%(asctime)s - %(message)s',
                     datefmt='%d-%b-%y %H:%M:%S')
@@ -63,10 +65,15 @@ class Report:
         self.prep_report()
         self.general_report.generate_report()
         self.html_report.generate_report()
+        # send linked stylesheets to css report
+        self.css_report.linked_stylesheets = self.html_report.linked_stylesheets
         # Get CSS validation and send to css report
-        css_validation_results = self.html_report.validator_errors["CSS"]
+        try:
+            css_validation_results = self.html_report.validator_errors["CSS"]
+        except:
+            css_validation_results = {}
         self.css_report.set_css_validation(css_validation_results)
-        self.css_report.generate_report()
+        self.css_report.generate_report(self.html_report.html_files)
 
     def prep_report(self):
         # Create a report HTML file in the report folder
@@ -310,6 +317,8 @@ class HTMLReport:
         self.__readme_list = readme_list
         self.html_requirements_list = []
         self.html_files = []
+        self.linked_stylesheets = {}
+        self.style_tags = []
         self.validator_errors = {}
         self.validator_warnings = {}
         self.report_details = {
@@ -317,6 +326,7 @@ class HTMLReport:
             "can_attain_level": False,
             "html_level_attained": None,
             "validator_goals": 0,
+            "uses_inline_styles": False,
             "validator_results": {
                 "CSS Errors": 0,
                 "HTML Errors": 0
@@ -346,6 +356,7 @@ class HTMLReport:
         self.get_html_level()
         self.get_validator_goals()
         self.ammend_required_elements()
+        self.set_linked_stylesheets()
         self.analyze_results()
         self.publish_results()
 
@@ -517,9 +528,9 @@ class HTMLReport:
             # Get error objects
             errors_in_file = val.get_markup_validity(file_path)
             # Get number of errors
-            errors = len(errors_in_file)
+            num_errors = len(errors_in_file)
             page_name = clerk.get_file_name(file_path)
-            if errors > 0:
+            if num_errors > 0:
                 self.process_errors(page_name, errors_in_file)
 
     def process_errors(self, page_name, errors):
@@ -569,6 +580,8 @@ class HTMLReport:
         self.set_html5_required_elements_found()
         self.set_required_elements_found()
         self.meets_required_elements()
+        self.meets_html5_essential_requirements()
+        self.check_for_inline_styles()
 
     def publish_results(self):
         # Get report
@@ -700,8 +713,10 @@ class HTMLReport:
                     except:
                         first_line = last_line
                     last_column = error['lastColumn']
-                    first_column = error['firstColumn']
-
+                    try:
+                        first_column = error['firstColumn']
+                    except:
+                        first_column = last_column
                     # render any HTML code viewable on the screen
                     extract = error['extract'].replace(
                         "<", "&lt;").replace(">", "&gt;")
@@ -725,18 +740,53 @@ class HTMLReport:
             new_dict[t[1]] = i
         return new_dict
 
+    def meets_html5_essential_requirements(self):
+        required_elements = self.report_details["required_elements_found"]["HTML5_essential_elements_found"]
+        for element in required_elements.values():
+            if element[-1] == False:
+                return False
+        return True
+
+    def set_linked_stylesheets(self):
+        """ will generate a list of HTML docs and the CSS they link to """
+        linked = {}
+        # loop through html_files
+        # in each file get the href of any link if that href matches a file in the folder
+        for file in self.html_files:
+            contents = clerk.file_to_string(file)
+            link_hrefs = clerk.get_linked_css(contents)
+            filename = clerk.get_file_name(file)
+            linked[filename] = link_hrefs
+        self.linked_stylesheets = linked
+
+    def check_for_inline_styles(self):
+        files_with_inline_styles = []
+        for file in self.html_files:
+            markup = clerk.file_to_string(file)
+            has_inline_styles = html.uses_inline_styles(markup)
+            if has_inline_styles:
+                filename = clerk.get_file_name(file)
+                files_with_inline_styles.append(filename)
+
+        self.report_details["uses_inline_styles"] = files_with_inline_styles
 
 class CSSReport:
     def __init__(self, readme_list, dir_path):
         self.__dir_path = dir_path
         self.html_level = "0"
         self.__readme_list = readme_list
+        self.html_files = []
+        self.project_css_by_html_file = {}
         self.font_families_used = []
         self.min_num_css_files = 0
         self.max_num_css_files = 0
         self.css_errors = {}
         self.css_files = []
         self.style_tag_contents = []
+        self.num_style_tags = 0
+        self.linked_stylesheets = {}
+        self.pages_contain_same_css_files = False
+        self.stylesheet_objects = []
         self.report_details = {
             "css_level": "",
             "css_level_attained": False,
@@ -773,14 +823,79 @@ class CSSReport:
 
     def set_css_validation(self, css_validation_results):
         self.report_details['css_validator_results'] = css_validation_results
+        self.css_errors.update(css_validation_results)
         self.report_details['css_validator_errors'] = len(
             css_validation_results)
 
-    def generate_report(self):
+    def generate_report(self, html_files):
+        self.html_files = html_files
+        self.get_project_css_by_file(html_files)
         self.get_num_css_files()
         self.get_style_tags()
         self.get_css_code()
+        self.check_pages_for_same_css_files()
         self.validate_css()
+        self.set_stylesheet_objects()
+
+    def get_project_css_by_file(self, html_files):
+        # create a dictionary of files in the project 
+        # each with a list of CSS applied
+        file_dict = {}
+        for file in html_files:
+            filename = clerk.get_file_name(file)
+            file_dict[filename] = []
+            head_children = self.get_children(file, "head")
+            styles = self.get_css_elements(head_children)
+            body_children = self.get_children(file, "body")
+            styles += self.get_css_elements(body_children)
+            file_dict[filename] = styles
+        self.project_css_by_html_file = file_dict
+    
+    def check_pages_for_same_css_files(self):
+        if len(self.html_files) == 1:
+            # Should we also check to make sure that one page is using css?
+            linked_stylesheets = list(self.linked_stylesheets.values())
+            for sheet in linked_stylesheets:
+                if sheet:
+                    return True
+            return False
+        files = self.extract_only_style_tags_from_css_files(self.project_css_by_html_file)
+        files = list(files.values())
+        self.pages_contain_same_css_files = all(file == files[0] for file in files)
+        
+    def extract_only_style_tags_from_css_files(self, files_with_css):
+        results = {}
+        for page, styles in files_with_css.items():
+            results[page] = []
+            for style in styles:
+                if "style_tag=" not in style:
+                    results[page].append(style) 
+        return results
+
+
+    def get_children(self, path, parent):
+        code = html.get_html(path)
+        try:
+            head = code.find(parent)
+            children = head.findChildren()
+            return children
+        except:
+            return None
+
+    def get_css_elements(self, nodes):
+        styles=[]
+        if not nodes:
+            return styles
+        for el in nodes:
+            if el.name == 'link':
+                if el.attrs["href"] and el.attrs['href'][-4:] == '.css':
+                    styles.append(el.attrs['href'])
+            if el.name == 'style':
+                # append styles to file_dict
+                css_string = el.string
+                css_string = str(css_string)
+                styles.append("style_tag=" + css_string)
+        return styles
 
     def get_num_css_files(self):
         css_files = clerk.get_all_files_of_type(self.__dir_path, 'css')
@@ -791,21 +906,31 @@ class CSSReport:
     def get_style_tags(self):
         # get HTML files
         html_files = clerk.get_all_files_of_type(self.__dir_path, 'html')
+        # get the contents of any style tag in each html doc
         for file in html_files:
             style_tags = html.get_elements("style", file)
+            for tag in style_tags:
+                filename = os.path.basename(file)
+                self.style_tag_contents.append((filename, tag.string))
             self.report_details["style_tags"].append((file, len(style_tags)))
-        
-        # return count
+        return self.report_details["style_tags"]
+    
+    def get_num_style_tags(self):
+        self.num_style_tags = len(self.report_details['style_tags'])
+        return self.num_style_tags
 
     def get_css_code(self):
         # extract content from all CSS files
         self.css_files = clerk.get_all_files_of_type(self.__dir_path, "css")
         for file in self.css_files:
+            # First check to make sure all pages have a link to the style sheet
             try:
-                self.style_tag_contents.append(
-                    clerk.get_css_from_stylesheet(file))
+                css_code = clerk.get_css_from_stylesheet(file)
+                filename = clerk.get_file_name(file)
+                css = stylesheet(filename, css_code)
+                self.stylesheet_objects.append(css)
             except:
-                print("Something went wrong witht the stylesheet code")
+                print("Something went wrong with getting stylesheet objects")
 
         # extract CSS from all style tags
         html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
@@ -823,19 +948,12 @@ class CSSReport:
             # Get code (just run it all)
             css_code = clerk.file_to_string(file_path)
             # Get error objects
-            errors_in_file = val.validate_css(css_code)
-            # Get number of errors
+            errors_in_file = val.validate_css(file_path)
+            # Add to number of errors
             errors += len(errors_in_file)
             page_name = clerk.get_file_name(file_path)
-        # Validate style tag contents
-        self.validate_style_tag_contents(self.style_tag_contents)
-        if errors > 0:
-            self.process_errors(page_name, errors_in_file)
-
-    def validate_style_tag_contents(self, contents):
-        for item in contents:
-            css_errors = val.validate_css(item)
-            print(css_errors)
+            if errors > 0:
+                self.process_errors(page_name, errors_in_file)
 
     def process_errors(self, page_name, errors):
         """ receives errors and records warnings and errors """
@@ -848,21 +966,62 @@ class CSSReport:
         # because it will crash if we try and append it
         # to a non-existant list
         for item in errors:
-            if item["type"] == "error":
-                self.report_details["css_validator_errors"] += 1
-                try:
-                    errors_dict[page_name].append(item)
-                except:
-                    errors_dict[page_name] = [item, ]
-            elif item["type"] == "info":
-                try:
-                    warnings_dict[page_name].append(item)
-                except:
-                    warnings_dict[page_name] = [item, ]
+            # We need to grab all tr.error contents for errors
+            error_rows = self.get_error_rows(item)
+
+            # process errors
+            if error_rows:
+                errors_dict[page_name] = []
+                for row in error_rows:
+                    row_dict = self.get_results_details("error", row)
+                    errors_dict[page_name].append(row_dict)
+                
+
+            # process warnings
+            warning_rows = self.get_warning_rows(item)
+            if warning_rows:
+                warnings_dict[page_name] = []
+                for row in warning_rows:
+                    row_dict = self.get_results_details("warning", row)
+                    print(row)
 
         self.report_details["css_validator_results"][page_name] = errors_dict[page_name]
-        self.report_details["css_validator_results"][page_name] += warnings_dict[page_name]
+        if warnings_dict:
+            self.report_details["css_validator_results"][page_name] += warnings_dict[page_name]
 
+    def get_error_rows(self, item):
+        item_string = item.contents
+        item_string = "".join([str(elem) for elem in item_string])
+        error_soup = BeautifulSoup(item_string, 'html.parser')
+        error_rows = error_soup.find_all('tr', {'class':'error'})
+        return error_rows
+
+    def get_results_details(self, type, tag):
+        details = {}
+        details[type] = "error"
+        line_number = tag.contents[1]['title']
+        details["line_number"] = line_number
+        context = tag.contents[3].text
+        details["context"] = context
+        message = tag.contents[5].text
+        message = clerk.clear_extra_text(message)
+        details["error_msg"] = message
+        code = tag.contents[5].find('span')
+        details['extract'] = code
+        return details
+    
+    def get_warning_rows(self, item):
+        item_string = item.contents
+        item_string = "".join([str(elem) for elem in item_string])
+        error_soup = BeautifulSoup(item_string, 'html.parser')
+        rows = error_soup.find_all('tr', {'class':'warning'})
+        return rows
+
+
+    def set_stylesheet_objects(self):
+        # append each project css file
+        print("Yo")
+        # append all style tags (by page)
 
 if __name__ == "__main__":
     # How to run a report:
@@ -871,14 +1030,24 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
-    # project = Report(about_me_dnn_readme_path)
-    # project.generate_report()
-
-    # large_project_readme_path = "tests/test_files/projects/large_project/"
-    # # large_project = Report(large_project_readme_path)
-    # # large_project.generate_report()
-
-    readme_path = "project/"
-    project = Report(readme_path)
+    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    project = Report(about_me_dnn_readme_path)
     project.generate_report()
+    # project.css_report.get_css_code()
+    # project.css_report.validate_css()
+    # css_errors = project.css_report.report_details['css_validator_results']['styles.css']
+    # print(css_errors)
+    # results = len(css_errors)
+    # project.css_report.get_num_style_tags()
+
+    large_project_readme_path = "tests/test_files/projects/large_project/"
+    large_project = Report(large_project_readme_path)
+    large_project.generate_report()
+    large_project.css_report.get_css_code()
+    large_project.css_report.validate_css()
+    
+    # readme_path = "project/"
+    # project = Report(readme_path)
+    # project.generate_report()
+    # project.css_report.get_num_style_tags()
+    
