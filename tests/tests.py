@@ -6,7 +6,7 @@ import certifi
 import io
 import json
 
-import validator
+import webanalyst.validator
 response = validator.get_markup_validity('./project/sample.html')
 
 # Check validator

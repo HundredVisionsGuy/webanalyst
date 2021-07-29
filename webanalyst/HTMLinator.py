@@ -4,9 +4,9 @@
 
 from attr import attrs
 from bs4 import BeautifulSoup
-import validator as val
+import webanalyst.validator as val
 import os
-import clerk
+import webanalyst.clerk
 import re
 from lxml import html
 

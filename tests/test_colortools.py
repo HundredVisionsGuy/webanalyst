@@ -3,9 +3,7 @@
 """Tests for `webtools` package."""
 
 import pytest
-
-
-import colortools as color
+import webanalyst.colortools as color
 
 
 @pytest.fixture

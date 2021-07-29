@@ -1,15 +1,15 @@
-import clerk
+import webanalyst.clerk as clerk
 import re
-import HTMLinator as html
+import webanalyst.HTMLinator as html
 from bs4 import BeautifulSoup
 import logging
-import validator as val
+import webanalyst.validator as val
 import os
-from CSSinator import Stylesheet as stylesheet
+from webanalyst.CSSinator import Stylesheet as stylesheet
 
 logging.basicConfig(format='%(asctime)s - %(message)s',
                     datefmt='%d-%b-%y %H:%M:%S')
-report_template_path = "tests/report_template.html"
+report_template_path = "webanalyst/report_template.html"
 report_path = "report/report.html"
 
 

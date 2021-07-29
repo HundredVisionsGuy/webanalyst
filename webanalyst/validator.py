@@ -6,7 +6,7 @@ import certifi
 import io
 import json
 import os
-import clerk
+import webanalyst.clerk
 import cssutils
 import subprocess
 import sys

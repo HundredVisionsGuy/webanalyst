@@ -152,7 +152,7 @@ def clear_extra_text(str):
     return str.strip()
 
 if __name__ == "__main__":
-    html_with_css = "tests/test_files/html_with_css.html"
+    html_with_css = "./tests/test_files/html_with_css.html"
 
     # get full path of a relative link
     p_list = get_full_path_string(html_with_css)
@@ -175,7 +175,7 @@ if __name__ == "__main__":
         print(i)
 
     # test getting list of all files with .css extension
-    test_project_files = 'tests/test_files/project'
+    test_project_files = './tests/test_files/project'
     results = get_all_files_of_type(test_project_files, 'css')
     for i in results:
         print(i)

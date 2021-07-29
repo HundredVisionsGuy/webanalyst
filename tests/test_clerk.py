@@ -1,14 +1,14 @@
 import pytest
-import clerk
+import webanalyst.clerk as clerk
 
 # TODO - separate tests based on command-line flag
-css_file_path = 'tests/test_files/projects/large_project/test.css'
-html_file_path = 'tests/test_files/sample_no_errors.html'
-html_with_css = "tests/test_files/html_with_css.html"
+css_file_path = 'test_files/projects/large_project/test.css'
+html_file_path = 'test_files/sample_no_errors.html'
+html_with_css = 'tests/test_files/html_with_css.html'
 sample_txt_path = 'tests/test_files/sample.txt'
-working_dir_txt_path = 'README.md'
-project_readme_path = 'project/README.md'
-report_template_path = 'tests/report_template.html'
+working_dir_txt_path = './README.md'
+project_readme_path = './project/README.md'
+report_template_path = './webanalyst/report_template.html'
 
 def test_clerk_for_file_exists_for_report_template():
     results = clerk.file_exists(report_template_path)

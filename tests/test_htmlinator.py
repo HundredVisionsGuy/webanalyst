@@ -1,6 +1,6 @@
 import pytest
-import HTMLinator as html
-import clerk
+import webanalyst.HTMLinator as html
+import webanalyst.clerk as clerk
 from bs4 import BeautifulSoup
 file_with_inline_styles = "tests/test_files/sample_with_inline_styles.html"
 

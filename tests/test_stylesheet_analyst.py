@@ -1,6 +1,6 @@
 import pytest
-import stylesheet_analyst as css_analyst
-import CSSinator as styles
+import webanalyst.stylesheet_analyst as css_analyst
+import webanalyst.CSSinator as styles
 
 css_with_3_repeat_selectors = """
 body {

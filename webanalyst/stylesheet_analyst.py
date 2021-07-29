@@ -6,7 +6,7 @@
 # see [Use expanded syntax](https://developer.mozilla.org/en-US/docs/MDN/Contribute/Guidelines/Code_guidelines/CSS#Use_expanded_syntax)
 # to be used by report.py
 
-from CSSinator import Stylesheet as styles
+from webanalyst.CSSinator import Stylesheet as styles
 
 
 def get_repeat_selectors(sheet):
