@@ -121,7 +121,7 @@ Elements that students should be proficient at before moving on are as follows:
 * links
 * images
 #### CSS
-Students at this level only need to demonstrate basic CSS syntax and adjusting colors, background colors, and possibly fonts (although that is not necessary). 
+Students at this level only need to demonstrate basic CSS syntax and adjusting colors, background colors, and fonts (at a minimum a font applied to body (or html)). In addition, color and background color must be applied to body or html and meet color contrast analyzer
 
 ----------
 

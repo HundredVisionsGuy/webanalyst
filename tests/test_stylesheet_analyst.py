@@ -43,7 +43,8 @@ def test_stylesheet_analyst_for_3_repeat_selectors(stylesheet_with_3_repeat_sele
 
 def test_stylesheet_analyst_for_no_repeat_selectors():
     my_stylesheet = styles.Stylesheet("local", css_with_no_repeat_selectors)
-    results = repeat_selectors = css_analyst.get_repeat_selectors(my_stylesheet)
+    repeat_selectors = css_analyst.get_repeat_selectors(my_stylesheet)
+    results = repeat_selectors
     assert not results
 
 def test_stylesheet_analyst_for_has_type_selector_true(stylesheet_with_3_repeat_selectors):

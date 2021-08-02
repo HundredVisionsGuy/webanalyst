@@ -16,6 +16,27 @@ hex_map = {"0": 0,
            "e": 14,
            "f": 15}
 
+contrast_ratio_map = {
+    "normal AA": 4.5,
+    "normal AAA": 7,
+    "large AA": 3,
+    "large AAA": 4.5,
+    "graphics UI components": 3,
+}
+
+def passes_color_contrast(level, hex1, hex2):
+    ratio = contrast_ratio(hex1, hex2)
+    min_ratio = contrast_ratio_map[level]
+    return ratio >= min_ratio
+
+def get_color_contrast_report(hex1, hex2):
+    report = {}
+    for key, item in contrast_ratio_map.items():
+        contrast = contrast_ratio(hex1, hex2)
+        passes = "Pass" if contrast >= item else "Fail"
+        report[key] = passes
+    return report
+
 def rgb_to_hex(*args):
     # are there three separate values or 1 string
     if len(args) == 3:
@@ -133,3 +154,6 @@ def contrast_ratio(hex1, hex2):
 if __name__ == "__main__":
     valid_hex = is_hex("#336699")
     print(valid_hex)
+    ratio = contrast_ratio("#336699", "#ffffff")
+    print("Contrast ratio between #336699 and #ffffff is: {}".format(ratio))
+    get_color_contrast_report("#336699", "#ffffff")
