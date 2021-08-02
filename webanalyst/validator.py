@@ -1,17 +1,9 @@
 #import pytest
 #from html.parser import HTMLParser
 import requests
-import pycurl
-import certifi
-import io
-import json
 import os
-import webanalyst.clerk
-import cssutils
-import subprocess
-import sys
+from webanalyst import clerk
 import mechanicalsoup
-from pathlib import Path
 import bs4
 from bs4 import BeautifulSoup
 import re

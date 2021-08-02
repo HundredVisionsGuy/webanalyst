@@ -1,4 +1,4 @@
-import webanalyst.validator as val
+from webanalyst import validator as val
 import pytest
 
 html_files = val.get_html_file_names()

@@ -1,6 +1,4 @@
 """Main module."""
-import math
-import random
 hex_map = {"0": 0,
            "1": 1,
            "2": 2,

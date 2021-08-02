@@ -6,7 +6,9 @@
 # see [Use expanded syntax](https://developer.mozilla.org/en-US/docs/MDN/Contribute/Guidelines/Code_guidelines/CSS#Use_expanded_syntax)
 # to be used by report.py
 
-from webanalyst.CSSinator import Stylesheet as styles
+from webanalyst import CSSinator as cssinator
+styles = cssinator.Stylesheet
+from webanalyst import clerk
 
 
 def get_repeat_selectors(sheet):
@@ -46,13 +48,11 @@ def get_type_selectors():
     return type_selectors
 
 if __name__ == "__main__":
-    import clerk
-    
     # Test off of large project
     layout_css = clerk.file_to_string(
         "tests/test_files/projects/large_project/css/layout.css")
     
-    test_sheet = styles.Stylesheet("local", layout_css, "file")
+    test_sheet = cssinator.Stylesheet("local", layout_css, "file")
     repeat_selectors = get_repeat_selectors(test_sheet)
     print(repeat_selectors)
     has_type_selector(test_sheet)

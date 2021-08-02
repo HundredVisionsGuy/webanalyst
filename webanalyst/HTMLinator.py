@@ -2,12 +2,9 @@
 # by Hundredvisionsguy
 # A library to assess HTML levels and skills
 
-from attr import attrs
 from bs4 import BeautifulSoup
-import webanalyst.validator as val
 import os
-import webanalyst.clerk
-import re
+from webanalyst import clerk
 from lxml import html
 
 

@@ -1,12 +1,7 @@
 import pytest
 from html.parser import HTMLParser
-import requests
-import pycurl
-import certifi
-import io
-import json
 
-import webanalyst.validator
+import webanalyst.validator as validator
 response = validator.get_markup_validity('./project/sample.html')
 
 # Check validator

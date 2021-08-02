@@ -2,12 +2,7 @@
 # by Chris Winikka
 # a set of tools to analyze CSS
 
-import mechanicalsoup
-from pathlib import Path
-import bs4
 import re
-import cssutils
-import webanalyst.clerk
 
 class Stylesheet:
     def __init__(self, href, text, stylesheet_type="file"):

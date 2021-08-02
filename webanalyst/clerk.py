@@ -1,5 +1,4 @@
 # clerk.py
-import io
 import AdvancedHTMLParser as h_parser
 from pathlib import Path
 import collections

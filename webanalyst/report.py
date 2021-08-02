@@ -1,9 +1,9 @@
-import webanalyst.clerk as clerk
+from webanalyst import clerk
 import re
-import webanalyst.HTMLinator as html
+from webanalyst import HTMLinator as html
 from bs4 import BeautifulSoup
 import logging
-import webanalyst.validator as val
+from webanalyst import validator as val
 import os
 from webanalyst.CSSinator import Stylesheet as stylesheet
 
@@ -1020,9 +1020,10 @@ class CSSReport:
 
     def set_stylesheet_objects(self):
         # append each project css file
-        print("Yo")
+        
         # append all style tags (by page)
-
+        pass
+    
 if __name__ == "__main__":
     # How to run a report:
     # 1. Set the path to the folder:    path = "path/to/project/folder"

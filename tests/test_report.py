@@ -3,8 +3,8 @@
 # Will test the various classes and methods in the report package
 
 import pytest
-import webanalyst.report as report
-import webanalyst.clerk as clerk
+from webanalyst import report
+from webanalyst import clerk
 from bs4 import BeautifulSoup
 
 about_me_path = "tests/test_files/projects/about_me/"
