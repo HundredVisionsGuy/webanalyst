@@ -1,6 +1,7 @@
 import pytest
 import webanalyst.stylesheet_analyst as css_analyst
 import webanalyst.CSSinator as styles
+import webanalyst.clerk as clerk
 
 css_with_3_repeat_selectors = """
 body {
@@ -29,12 +30,51 @@ h2 { font-family: tahoma, sans-serif; }
 p { font-size: 1.1em;
 }
 """
+css_with_only_global_color = """
+body {
+    color: #336699;
+    font-family: tahoma, sans-serif;
+    font-size: 110%;
+}
+"""
 
 @pytest.fixture
 def stylesheet_with_3_repeat_selectors():
     my_stylesheet = styles.Stylesheet("local", css_with_3_repeat_selectors)
     yield my_stylesheet
 
+@pytest.fixture
+def large_project_general_css():
+    css = clerk.file_to_string(
+        "tests/test_files/projects/large_project/css/general.css")
+    
+    test_sheet = styles.Stylesheet("local", css, "file")
+    yield test_sheet
+
+@pytest.fixture
+def large_project_layout_css():
+    css = clerk.file_to_string(
+        "tests/test_files/projects/large_project/css/layout.css")
+    
+    test_sheet = styles.Stylesheet("local", css, "file")
+    yield test_sheet
+
+@pytest.fixture 
+def css_with_only_color_applied():
+    sheet = styles.Stylesheet("local", css_with_only_global_color, "file")
+    return sheet
+
+def test_applies_global_colors_for_large_project_general(large_project_general_css):
+    results = css_analyst.applies_global_colors(large_project_general_css)
+    assert results == True
+
+def test_applies_global_colors_for_large_project_layout(large_project_layout_css):
+    results = css_analyst.applies_global_colors(large_project_layout_css)
+    assert results == False
+
+def test_applies_global_colors_for_just_color_should_fail(css_with_only_color_applied):
+    results = css_analyst.applies_global_colors(css_with_only_color_applied)
+    assert results == False
 
 def test_stylesheet_analyst_for_3_repeat_selectors(stylesheet_with_3_repeat_selectors):
     results = css_analyst.get_repeat_selectors(stylesheet_with_3_repeat_selectors)
@@ -49,3 +89,4 @@ def test_stylesheet_analyst_for_no_repeat_selectors():
 
 def test_stylesheet_analyst_for_has_type_selector_true(stylesheet_with_3_repeat_selectors):
     assert css_analyst.has_type_selector(stylesheet_with_3_repeat_selectors)
+

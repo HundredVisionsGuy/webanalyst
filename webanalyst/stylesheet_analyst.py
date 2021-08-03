@@ -9,6 +9,7 @@
 from webanalyst import CSSinator as cssinator
 styles = cssinator.Stylesheet
 from webanalyst import clerk
+from webanalyst import colortools
 
 
 def get_repeat_selectors(sheet):
@@ -47,12 +48,32 @@ def get_type_selectors():
     type_selectors.sort()
     return type_selectors
 
+def applies_global_colors(sheet):
+    """ checks to see if a stylesheet sets color and bg color globally """
+    results = False
+    color_properties = []
+    for rule in sheet.rulesets:
+        if rule.selector not in ('body','html','*'):
+            continue
+        for declaration in rule.declaration_block.declarations:
+            if declaration.property not in ('color', 'background-color', 'background'):
+                continue
+            color_properties.append((declaration.property, declaration.value))
+    if len(color_properties) >= 2:
+        if color_properties[0][0] == 'color' or color_properties[1][0] == 'color':
+            if color_properties[0][0] == 'background-color' or color_properties[1][0] == 'background-color':
+                results = True
+    return results
+    
+
+
 if __name__ == "__main__":
     # Test off of large project
     layout_css = clerk.file_to_string(
-        "tests/test_files/projects/large_project/css/layout.css")
+        "tests/test_files/projects/large_project/css/general.css")
     
     test_sheet = cssinator.Stylesheet("local", layout_css, "file")
     repeat_selectors = get_repeat_selectors(test_sheet)
     print(repeat_selectors)
     has_type_selector(test_sheet)
+    print(applies_global_colors(test_sheet))
