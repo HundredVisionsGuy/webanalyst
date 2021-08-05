@@ -90,3 +90,10 @@ def test_stylesheet_analyst_for_no_repeat_selectors():
 def test_stylesheet_analyst_for_has_type_selector_true(stylesheet_with_3_repeat_selectors):
     assert css_analyst.has_type_selector(stylesheet_with_3_repeat_selectors)
 
+def test_applies_global_font_with_no_global_font_applied(large_project_layout_css):
+    results = css_analyst.applies_global_font(large_project_layout_css)
+    assert results == False
+
+def test_applies_global_font_with_global_font_applied(large_project_general_css):
+    results = css_analyst.applies_global_font(large_project_general_css)
+    assert results == True

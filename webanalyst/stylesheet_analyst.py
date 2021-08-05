@@ -11,6 +11,7 @@ styles = cssinator.Stylesheet
 from webanalyst import clerk
 from webanalyst import colortools
 
+global_selectors = ('body','html','*')
 
 def get_repeat_selectors(sheet):
     repeat_selectors = []
@@ -53,7 +54,7 @@ def applies_global_colors(sheet):
     results = False
     color_properties = []
     for rule in sheet.rulesets:
-        if rule.selector not in ('body','html','*'):
+        if rule.selector not in global_selectors:
             continue
         for declaration in rule.declaration_block.declarations:
             if declaration.property not in ('color', 'background-color', 'background'):
@@ -65,6 +66,18 @@ def applies_global_colors(sheet):
                 results = True
     return results
     
+def applies_global_font(sheet):
+    """ checks to see if a stylesheet sets color and bg color globally """
+    font_properties = []
+    for rule in sheet.rulesets:
+        if rule.selector not in global_selectors:
+            continue
+        for declaration in rule.declaration_block.declarations:
+            if declaration.property not in ('font', 'font-family'):
+                continue
+            font_properties.append(declaration)
+        
+    return bool(font_properties)
 
 
 if __name__ == "__main__":
