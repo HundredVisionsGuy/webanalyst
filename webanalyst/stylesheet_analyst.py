@@ -10,8 +10,10 @@ from webanalyst import CSSinator as cssinator
 styles = cssinator.Stylesheet
 from webanalyst import clerk
 from webanalyst import colortools
+import re
 
 global_selectors = ('body','html','*')
+descendant_re = r'([^/s,;]+\s){2}[{]'
 
 def get_repeat_selectors(sheet):
     repeat_selectors = []
@@ -79,6 +81,16 @@ def applies_global_font(sheet):
         
     return bool(font_properties)
 
+def applies_selector(sheet, selector):
+    """ determines whether a stylesheet uses a particular selector or not """
+    pass
+
+def is_descendant_selector(sheet):
+    """ return true if regex has a match with descendant selector pattern """
+    match = re.search(descendant_re, sheet.text)
+    if match:
+        return True
+    return False
 
 if __name__ == "__main__":
     # Test off of large project
@@ -90,3 +102,4 @@ if __name__ == "__main__":
     print(repeat_selectors)
     has_type_selector(test_sheet)
     print(applies_global_colors(test_sheet))
+    is_descendant_selector(test_sheet)

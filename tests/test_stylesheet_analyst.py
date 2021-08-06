@@ -97,3 +97,17 @@ def test_applies_global_font_with_no_global_font_applied(large_project_layout_cs
 def test_applies_global_font_with_global_font_applied(large_project_general_css):
     results = css_analyst.applies_global_font(large_project_general_css)
     assert results == True
+
+def test_is_descendant_selector_for_false(large_project_general_css):
+    results = css_analyst.is_descendant_selector(large_project_general_css)
+    assert results == False
+
+def test_is_descendant_selector_for_true(large_project_layout_css):
+    results = css_analyst.is_descendant_selector(large_project_layout_css)
+    assert results
+
+def test_is_descendant_selector_against_multiple_selectors():
+    multiple = "h1, h2, h3, h4 { font-size: xx-large; }"
+    multiple_sheet = styles.Stylesheet("local", multiple, "text")
+    results = css_analyst.is_descendant_selector(multiple_sheet)
+    assert not results
