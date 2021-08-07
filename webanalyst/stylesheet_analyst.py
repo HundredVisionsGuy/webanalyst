@@ -14,6 +14,8 @@ import re
 
 global_selectors = ('body','html','*')
 descendant_re = r'([^/s,;]+\s){2}[{]'
+multiple_selectors_re = r'\S+,\s{1}' # note this only works when looking at selectors
+direct_child_selector_re = r'(\S+\s?>\s?\S+){1}'
 
 def get_repeat_selectors(sheet):
     repeat_selectors = []
@@ -85,12 +87,35 @@ def applies_selector(sheet, selector):
     """ determines whether a stylesheet uses a particular selector or not """
     pass
 
-def is_descendant_selector(sheet):
+def has_descendant_selector(sheet):
     """ return true if regex has a match with descendant selector pattern """
     match = re.search(descendant_re, sheet.text)
     if match:
         return True
     return False
+
+def has_multiple_selector(sheet):
+    """ returns True if separates selectors with commas (e.g. h1, h2, h3 {...})"""
+    # We can only sift through selectors (not the entire text for this)
+    for selector in sheet.selectors:
+        match = re.search(multiple_selectors_re, selector)
+        if match:
+            return True
+    return False
+
+def has_direct_child_selector(sheet):
+    """ returns True if separates selectors with > (e.g. rticle > p {...})"""
+    
+    return False
+
+def has_psuedoselector(sheet):
+    """ returns True if has a psuedoselector """
+    return False 
+
+def get_psuedoselectors(sheet):
+    """ returns a list of all psuedoselectors from a stylesheet """
+    selectors = []
+    return selectors 
 
 if __name__ == "__main__":
     # Test off of large project
@@ -102,4 +127,6 @@ if __name__ == "__main__":
     print(repeat_selectors)
     has_type_selector(test_sheet)
     print(applies_global_colors(test_sheet))
-    is_descendant_selector(test_sheet)
+    has_descendant_selector(test_sheet)
+    has_multiple_selector(test_sheet)
+    has_direct_child_selector(test_sheet)

@@ -97,7 +97,7 @@ nav li a:hover {
     flex-direction: row;
     justify-content: flex-end;
   }
-  nav li a {
+  nav li > a {
     font-size: 1.3rem;
   }
 }

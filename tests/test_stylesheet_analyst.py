@@ -59,6 +59,14 @@ def large_project_layout_css():
     test_sheet = styles.Stylesheet("local", css, "file")
     yield test_sheet
 
+@pytest.fixture
+def large_project_navigation_css():
+    css = clerk.file_to_string(
+        "tests/test_files/projects/large_project/css/navigation.css")
+    
+    test_sheet = styles.Stylesheet("local", css, "file")
+    yield test_sheet
+
 @pytest.fixture 
 def css_with_only_color_applied():
     sheet = styles.Stylesheet("local", css_with_only_global_color, "file")
@@ -98,16 +106,26 @@ def test_applies_global_font_with_global_font_applied(large_project_general_css)
     results = css_analyst.applies_global_font(large_project_general_css)
     assert results == True
 
-def test_is_descendant_selector_for_false(large_project_general_css):
-    results = css_analyst.is_descendant_selector(large_project_general_css)
+def test_has_descendant_selector_for_false(large_project_general_css):
+    results = css_analyst.has_descendant_selector(large_project_general_css)
     assert results == False
 
-def test_is_descendant_selector_for_true(large_project_layout_css):
-    results = css_analyst.is_descendant_selector(large_project_layout_css)
+def test_has_descendant_selector_for_true(large_project_layout_css):
+    results = css_analyst.has_descendant_selector(large_project_layout_css)
     assert results
 
-def test_is_descendant_selector_against_multiple_selectors():
+def test_has_descendant_selector_against_multiple_selectors():
     multiple = "h1, h2, h3, h4 { font-size: xx-large; }"
     multiple_sheet = styles.Stylesheet("local", multiple, "text")
-    results = css_analyst.is_descendant_selector(multiple_sheet)
+    results = css_analyst.has_descendant_selector(multiple_sheet)
+    assert not results
+
+def test_has_multiple_selector_for_true():
+    multiple = "h1, h2, h3, h4 { font-size: xx-large; }"
+    multiple_sheet = styles.Stylesheet("local", multiple, "text")
+    results = css_analyst.has_multiple_selector(multiple_sheet)
+    assert results
+
+def test_has_mutliple_selector_for_false(large_project_navigation_css):
+    results = css_analyst.has_multiple_selector(large_project_navigation_css)
     assert not results

@@ -65,8 +65,10 @@ class Report:
         self.prep_report()
         self.general_report.generate_report()
         self.html_report.generate_report()
+
         # send linked stylesheets to css report
         self.css_report.linked_stylesheets = self.html_report.linked_stylesheets
+        
         # Get CSS validation and send to css report
         try:
             css_validation_results = self.html_report.validator_errors["CSS"]
@@ -287,14 +289,18 @@ class GeneralReport:
 
         # Min CSS files & Actual CSS files
         css_results_string = Report.get_report_results_string(
-            "general-css-files-results", "CSS",  goals_details['CSS'], self.num_css_files, goals_results['Meets CSS'])
+            "general-css-files-results", "CSS",  
+            goals_details['CSS'], self.num_css_files, 
+            goals_results['Meets CSS'])
 
         css_results_tag = BeautifulSoup(css_results_string, "html.parser")
         report_content.find(
             id="general-css-files-results").replace_with(css_results_tag)
 
-        spp_results_string = Report.get_report_results_string("general-spp-results", "Avg. Sentences / Paragraph", str(
-            writing_goals["average_SPP"]), writing_results["actual_SPP"], writing_results["meets_SPP"])
+        spp_results_string = Report.get_report_results_string("general-spp-results", 
+            "Avg. Sentences / Paragraph", str(writing_goals["average_SPP"]), 
+            writing_results["actual_SPP"], writing_results["meets_SPP"])
+        
         spp_results_tag = BeautifulSoup(spp_results_string, "html.parser")
         report_content.find(
             id="general-spp-results").replace_with(spp_results_tag)
@@ -570,6 +576,9 @@ class HTMLReport:
                         warnings_dict["HTML"][page_name].append(item)
                     except:
                         warnings_dict["HTML"][page_name] = [item, ]
+            elif "Alert!" in item["type"]:
+                # there must be no internet connection
+                warnings_dict["HTML"][page_name].append("Alert! No Internet Connection")
 
         self.validator_errors = errors_dict
         self.validator_warnings = warnings_dict

@@ -46,8 +46,11 @@ def get_markup_validity(filepath):
     with open(filepath, 'rb') as payload:
         headers = {'content-type': 'text/html; charset=utf-8',
                    'Accept-Charset': 'UTF-8'}
-        r = requests.post(w3cURL, data=payload, headers=headers)
-        errors = r.json()['messages']
+        try:
+            r = requests.post(w3cURL, data=payload, headers=headers)
+            errors = r.json()['messages']
+        except:
+            errors = {"type": "Alert! No internet connection available"}
     return errors
 
 
