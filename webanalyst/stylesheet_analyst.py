@@ -6,6 +6,7 @@
 # see [Use expanded syntax](https://developer.mozilla.org/en-US/docs/MDN/Contribute/Guidelines/Code_guidelines/CSS#Use_expanded_syntax)
 # to be used by report.py
 
+from _pytest.outcomes import xfail
 from webanalyst import CSSinator as cssinator
 styles = cssinator.Stylesheet
 from webanalyst import clerk
@@ -101,11 +102,23 @@ def has_multiple_selector(sheet):
         match = re.search(multiple_selectors_re, selector)
         if match:
             return True
+    for rule in sheet.rulesets:
+        match = re.search(multiple_selectors_re, rule.selector)
+        if match:
+            return True
     return False
 
 def has_direct_child_selector(sheet):
-    """ returns True if separates selectors with > (e.g. rticle > p {...})"""
-    
+    """ returns True if separates selectors with > (e.g. article > p {...})"""
+    print(sheet.text)
+    for selector in sheet.selectors:
+        match = re.search(direct_child_selector_re, selector)
+        if match:
+            return True
+    for ruleset in sheet.nested_at_rules:
+        match = re.search(direct_child_selector_re, ruleset)
+        if match:
+            return True
     return False
 
 def has_psuedoselector(sheet):
@@ -120,7 +133,7 @@ def get_psuedoselectors(sheet):
 if __name__ == "__main__":
     # Test off of large project
     layout_css = clerk.file_to_string(
-        "tests/test_files/projects/large_project/css/general.css")
+        "tests/test_files/projects/large_project/css/navigation.css")
     
     test_sheet = cssinator.Stylesheet("local", layout_css, "file")
     repeat_selectors = get_repeat_selectors(test_sheet)

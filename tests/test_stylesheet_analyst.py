@@ -126,6 +126,14 @@ def test_has_multiple_selector_for_true():
     results = css_analyst.has_multiple_selector(multiple_sheet)
     assert results
 
-def test_has_mutliple_selector_for_false(large_project_navigation_css):
+def test_has_multiple_selector_for_false(large_project_navigation_css):
     results = css_analyst.has_multiple_selector(large_project_navigation_css)
+    assert not results
+
+def test_has_direct_child_selector_for_true(large_project_navigation_css):
+    results = css_analyst.has_direct_child_selector(large_project_navigation_css)
+    assert results
+
+def test_has_direct_child_selector_for_false(large_project_general_css):
+    results = css_analyst.has_direct_child_selector(large_project_general_css)
     assert not results
