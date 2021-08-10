@@ -3,18 +3,42 @@
 # a set of tools to analyze CSS
 
 import re
+from webanalyst import clerk
+
+def get_nested_at_rule(code, rule):
+    at_rule = []
+    at_split = code.split(rule)
+    if len(at_split) > 1:
+        if at_split[0] == "":
+            # rule was at the beginning
+            at_rule.append(rule + " " + at_split[1])
+        else:
+            at_rule.append(rule + " " + at_split[0])
+    return at_rule
+
+def restore_braces(split):
+    result = []
+    if len(split) <= 1:
+        return split
+    for item in split:
+        if len(item) > 0:
+            item = item + "}}"
+            result.append(item)
+    return result
 
 class Stylesheet:
     def __init__(self, href, text, stylesheet_type="file"):
         self.type = stylesheet_type
         self.href = href
         self.text = text
+        self.original_text = text
         self.nested_at_rules = []
         self.rulesets = []
         self.comments = []
         self.minify()
         self.extract_comments()
         self.extract_nested_at_rules()
+        self.extract_rulesets_from_at_rules()
         self.extract_rulesets()
         self.selectors = []
         self.get_selectors()
@@ -50,8 +74,11 @@ class Stylesheet:
         # Search through nested at rules
         at_rules = []
         non_at_rules_css = []
+        
         # split at the double }} (end of a nested at rule)
-        css_split = self.text.split("}}")
+        css_split = self.text.split("}}", 3)
+        css_split = restore_braces(css_split)
+
         if len(css_split) == 1:
             return
         for code in css_split:
@@ -66,32 +93,19 @@ class Stylesheet:
                     split_code = code.split(rule)
                     if len(split_code) == 2:
                         if split_code[0]:
-                            # it began with an @rule (hence the split)
+                            # an @rule was NOT at the beginning or else, there would
+                            # be an empty string
                             non_at_rules_css.append(split_code[0])
-                            at_rules.append(rule + split_code[1] + "}}")
+                            at_rules.append(rule + split_code[1])
                         else:
-                            at_rules.append(rule + split_code[1] + "}}")
+                            at_rules.append(rule + split_code[1])
                     else:
                         # it's only an @rule
-                        at_rules.append(rule + split_code + "}}")
+                        # at_rules.append(rule + split_code + "}}")
+                        print("skip")
 
         self.text = ''.join(non_at_rules_css)
         self.nested_at_rules = at_rules
-
-    def separate_nested_atrule_and_css(self, rule, text):
-        if rule in text:
-            start = len(rule)
-            text = text[start:]
-        at_rule_and_css = text.split("}}")
-        if len(at_rule_and_css) > 1:
-            if rule in at_rule_and_css[0]:
-                nested_at_rule = at_rule_and_css[0]
-            else:
-                nested_at_rule = rule + at_rule_and_css[0]
-            css = at_rule_and_css[1]
-            return [nested_at_rule, css]
-        else:
-            return [None, css]
 
     def extract_rulesets(self):
         # split rulesets by closing of rulesets: }
@@ -100,6 +114,23 @@ class Stylesheet:
             if ruleset:
                 ruleset = Ruleset(ruleset + "}")
                 self.rulesets.append(ruleset)
+
+    def extract_rulesets_from_at_rules(self):
+        nested_at_rule_dict = {}
+        nested_rules = self.nested_at_rules
+        for nested_rule in nested_rules:
+            nested_rule_split = nested_rule.split("{", 1)
+            key = nested_rule_split.pop(0)
+            rule_split = nested_rule_split[0].split("}")
+            rulesets = []
+            for rule in rule_split:
+                if len(rule) > 1:
+                    if rule[-1] != "}":
+                        rule = rule + "}"
+                    ruleset = Ruleset(rule)
+                    rulesets.append(ruleset)
+            nested_at_rule_dict[key] = rulesets
+        self.nested_at_rules = nested_at_rule_dict
 
     def get_selectors(self):
         for rule in self.rulesets:
@@ -399,27 +430,14 @@ def separate_code(code):
 
 if __name__ == "__main__":
     print("hello, I'm CSSinator.")
-    # resp = browser.open("https://jigsaw.w3.org/css-validator")
-    # print(resp)
-    # valid_css = "p { color: #336699; }"
-    # invalid_css = "p { display: phred; } em { stoiky-lob"
-
-    # # validate valid CSS
-    # results = validate_css(valid_css)
-    # print(results)
-    # is_valid = is_css_valid(valid_css)
-    # print("Are results valid? {}".format(is_valid))
-
-    # my_stylesheet = Stylesheet()
-
-    # Test out cssutils
-
-    # css = split_css(css_with_errors)
-    # big_css = split_css(css_code)
-    # try:
-    #     sheet = cssutils.parseString(css_with_errors)
-    # except Exception as ex:
-    #     print(ex)
-
-    # split = separate_code(css_code)
+    general_css = clerk.file_to_string(
+        "tests/test_files/projects/large_project/css/general.css")
+    
+    general = Stylesheet("local", general_css, "file")
+    
+    navigation_css = clerk.file_to_string(
+        "tests/test_files/projects/large_project/css/navigation.css")
+    
+    navigation = Stylesheet("local", navigation_css, "file")
+    
 

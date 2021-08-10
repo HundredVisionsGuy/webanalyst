@@ -102,10 +102,11 @@ def has_multiple_selector(sheet):
         match = re.search(multiple_selectors_re, selector)
         if match:
             return True
-    for rule in sheet.rulesets:
-        match = re.search(multiple_selectors_re, rule.selector)
-        if match:
-            return True
+    for nested_rulesets in sheet.nested_at_rules.values():
+        for rule in nested_rulesets:
+            match = re.search(multiple_selectors_re, rule.selector)
+            if match:
+                return True
     return False
 
 def has_direct_child_selector(sheet):
@@ -115,10 +116,11 @@ def has_direct_child_selector(sheet):
         match = re.search(direct_child_selector_re, selector)
         if match:
             return True
-    for ruleset in sheet.nested_at_rules:
-        match = re.search(direct_child_selector_re, ruleset)
-        if match:
-            return True
+    for ruleset in sheet.nested_at_rules.values():
+        for rule in ruleset:
+            match = re.search(direct_child_selector_re, rule.selector)
+            if match:
+                return True
     return False
 
 def has_psuedoselector(sheet):
