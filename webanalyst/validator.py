@@ -49,8 +49,10 @@ def get_markup_validity(filepath):
         try:
             r = requests.post(w3cURL, data=payload, headers=headers)
             errors = r.json()['messages']
+            print(errors[-1])
         except:
-            errors = {"type": "Alert! No internet connection available"}
+            errors = [{'type': 'alert', 'lastLine': 'NA', 'lastColumn': 'NA', 'firstColumn': 'NA', 
+            'message': 'Problems connecting with the validator - probably no connection', 'extract': 'NA', 'hiliteStart': 'NA', 'hiliteLength': 'NA'}]
     return errors
 
 
@@ -92,14 +94,22 @@ def is_css_valid(validator_results):
     return bool(soup.find(id="congrats"))
     
 
-
 def validate_css(css_code):
-    browser.open("https://jigsaw.w3.org/css-validator")
-    # Fill-in the search form
-    browser.select_form('#validate-by-input form')
-    browser["text"] = css_code
-    browser.submit_selected()
-    results = browser.get_current_page().select('#results_container')
+    try:
+        browser.open("https://jigsaw.w3.org/css-validator")
+        # Fill-in the search form
+        browser.select_form('#validate-by-input form')
+        browser["text"] = css_code
+        browser.submit_selected()
+        results = browser.get_current_page().select('#results_container')
+        print("\nCSS Validator:\n")
+        print(results)
+    except Exception:
+        # Convert the file "no_css_connection.html" into a soup tag object
+        no_connection_code = clerk.file_to_string("webanalyst/no_css_connection.html")
+        soup = BeautifulSoup(no_connection_code, 'lxml')
+        # Convert string to result set
+        results = soup.select('#results_container')
     return results
 
 

@@ -576,9 +576,11 @@ class HTMLReport:
                         warnings_dict["HTML"][page_name].append(item)
                     except:
                         warnings_dict["HTML"][page_name] = [item, ]
-            elif "Alert!" in item["type"]:
-                # there must be no internet connection
-                warnings_dict["HTML"][page_name].append("Alert! No Internet Connection")
+            elif item["type"] == 'alert':
+                try:
+                    warnings_dict["HTML"][page_name].append(item)
+                except:
+                    warnings_dict["HTML"][page_name] = [item, ]
 
         self.validator_errors = errors_dict
         self.validator_warnings = warnings_dict
@@ -954,8 +956,6 @@ class CSSReport:
         # Get CSS validation on CSS files
         errors = 0
         for file_path in self.css_files:
-            # Get code (just run it all)
-            css_code = clerk.file_to_string(file_path)
             # Get error objects
             errors_in_file = val.validate_css(file_path)
             # Add to number of errors
@@ -1050,11 +1050,11 @@ if __name__ == "__main__":
     # results = len(css_errors)
     # project.css_report.get_num_style_tags()
 
-    large_project_readme_path = "tests/test_files/projects/large_project/"
-    large_project = Report(large_project_readme_path)
-    large_project.generate_report()
-    large_project.css_report.get_css_code()
-    large_project.css_report.validate_css()
+    # large_project_readme_path = "tests/test_files/projects/large_project/"
+    # large_project = Report(large_project_readme_path)
+    # large_project.generate_report()
+    # large_project.css_report.get_css_code()
+    # large_project.css_report.validate_css()
     
     # readme_path = "project/"
     # project = Report(readme_path)
