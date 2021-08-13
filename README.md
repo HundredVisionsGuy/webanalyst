@@ -99,6 +99,8 @@ Students will be given a pre-test, a series of tasks to complete that will progr
       * mark the file and whether it had errors or not
 5. Check each CSS file for validity
 6. Compile and send report
+### Notes on regex expressions (for stylesheet_analyst.py)
+For a sample of the regex expressions I'm using, try https://regex101.com/r/5uaYPq/1
 
 ***TODO***
 ### Pre-assessment

@@ -17,6 +17,31 @@ global_selectors = ('body','html','*')
 descendant_re = r'([^/s,;]+\s){2}[{]'
 multiple_selectors_re = r'\S+,\s{1}' # note this only works when looking at selectors
 direct_child_selector_re = r'(\S+\s?>\s?\S+){1}'
+general_sibling_selector_re = r'(\S+\s?~\s?\S+){1}'
+adjacent_sibling_selector_re = r'(\S+\s?\+\s?\S+){1}'
+class_selector_re = r'(\.\S+){1}\s?\S?\s?{'
+id_selector_re = r'(\#\S+){1}\s?\S?\s?{'
+
+pseudoselectors = (':active', ':any-link', ':autofill', 
+    ':blank', ':checked', ':current', ':default', ':defined', 
+    ':dir(', ':disabled', ':empty', ':enabled', ':first', 
+    ':first-child', ':first-of-type', ':fullscreen', ':future', 
+    ':focus', ':focus-visible', ':focus-within', ':has(', 
+    ':host', ':host(', ':host-context(', ':hover', ':indeterminate', 
+    ':in-range', ':invalid', ':is(', ':lang(', ':last-child', 
+    ':last-of-type', ':left', ':link', ':local-link', ':not(', 
+    ':nth-child(', ':nth-col(', ':nth-last-child(', ':nth-last-col(', 
+    ':nth-last-of-type(', ':nth-of-type(', ':only-child', 
+    ':only-of-type', ':optional', ':out-of-range', ':past', 
+    ':picture-in-picture', ':placeholder-shown', ':paused', 
+    ':playing', ':read-only', ':read-write', ':required', ':right', 
+    ':root', ':scope', ':state(', ':target', ':target-within', 
+    ':user-invalid', ':valid', ':visited', ':where(')
+
+pseudoelements = ('::after', '::backdrop', '::before',
+    '::cue', '::cue-region', '::first-letter', '::first-line', '::file-selector-button',
+    '::grammar-error', '::marker', '::part(', '::placeholde', '::selection', '::slotted(', '::spelling-error', '::target-text' )
+
 
 def get_repeat_selectors(sheet):
     repeat_selectors = []
@@ -98,34 +123,33 @@ def has_descendant_selector(sheet):
 def has_multiple_selector(sheet):
     """ returns True if separates selectors with commas (e.g. h1, h2, h3 {...})"""
     # We can only sift through selectors (not the entire text for this)
-    for selector in sheet.selectors:
-        match = re.search(multiple_selectors_re, selector)
-        if match:
-            return True
-    for nested_rulesets in sheet.nested_at_rules.values():
-        for rule in nested_rulesets:
-            match = re.search(multiple_selectors_re, rule.selector)
-            if match:
-                return True
-    return False
+    return check_selectors_with_regex(sheet, multiple_selectors_re)
 
 def has_direct_child_selector(sheet):
     """ returns True if separates selectors with > (e.g. article > p {...})"""
-    print(sheet.text)
+    return check_selectors_with_regex(sheet, direct_child_selector_re)
+
+def check_selectors_with_regex(sheet, regex):
     for selector in sheet.selectors:
-        match = re.search(direct_child_selector_re, selector)
+        match = re.search(regex, selector)
         if match:
             return True
     for ruleset in sheet.nested_at_rules.values():
         for rule in ruleset:
-            match = re.search(direct_child_selector_re, rule.selector)
+            match = re.search(regex, rule.selector)
             if match:
                 return True
     return False
 
 def has_psuedoselector(sheet):
     """ returns True if has a psuedoselector """
-    return False 
+    results = False
+    for selector in sheet.selectors:
+        if ":" in selector:
+            for pseudoselector in pseudoselectors:
+                if pseudoselector in selector:
+                    return True
+    return results
 
 def get_psuedoselectors(sheet):
     """ returns a list of all psuedoselectors from a stylesheet """
@@ -135,7 +159,7 @@ def get_psuedoselectors(sheet):
 if __name__ == "__main__":
     # Test off of large project
     layout_css = clerk.file_to_string(
-        "tests/test_files/projects/large_project/css/navigation.css")
+        "tests/test_files/projects/large_project/css/general.css")
     
     test_sheet = cssinator.Stylesheet("local", layout_css, "file")
     repeat_selectors = get_repeat_selectors(test_sheet)
@@ -145,3 +169,4 @@ if __name__ == "__main__":
     has_descendant_selector(test_sheet)
     has_multiple_selector(test_sheet)
     has_direct_child_selector(test_sheet)
+    has_psuedoselector(test_sheet)
