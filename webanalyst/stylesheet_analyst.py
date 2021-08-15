@@ -156,12 +156,24 @@ def get_psuedoselectors(sheet):
     selectors = []
     return selectors 
 
+def has_repeat_selectors(sheet):
+    selectors = sheet.selectors[:]
+    selectors.sort()
+    for selector in selectors:
+        num_selector = selectors.count(selector)
+        if num_selector > 1:
+            return True
+    return False
+
 if __name__ == "__main__":
     # Test off of large project
     layout_css = clerk.file_to_string(
-        "tests/test_files/projects/large_project/css/general.css")
+        "tests/test_files/css_for_testing.css")
     
     test_sheet = cssinator.Stylesheet("local", layout_css, "file")
+    
+    # testing_css = clerk.file_to_string("tests/test_files/css_for_testing.css")
+    
     repeat_selectors = get_repeat_selectors(test_sheet)
     print(repeat_selectors)
     has_type_selector(test_sheet)
@@ -170,3 +182,4 @@ if __name__ == "__main__":
     has_multiple_selector(test_sheet)
     has_direct_child_selector(test_sheet)
     has_psuedoselector(test_sheet)
+    has_repeat_selectors(test_sheet)

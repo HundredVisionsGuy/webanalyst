@@ -72,6 +72,12 @@ def css_with_only_color_applied():
     sheet = styles.Stylesheet("local", css_with_only_global_color, "file")
     return sheet
 
+@pytest.fixture
+def css_for_testing():
+    css = clerk.file_to_string("tests/test_files/css_for_testing.css")
+    sheet = styles.Stylesheet("local", css, "file")
+    return sheet
+
 def test_applies_global_colors_for_large_project_general(large_project_general_css):
     results = css_analyst.applies_global_colors(large_project_general_css)
     assert results == True
@@ -145,3 +151,11 @@ def test_has_pseudo_selector_for_true(large_project_navigation_css):
 def test_has_pseudo_selector_for_false(large_project_general_css):
     results = css_analyst.has_psuedoselector(large_project_general_css)
     assert not results
+
+def test_has_repeat_selectors_for_false(large_project_general_css):
+    results = css_analyst.has_repeat_selectors(large_project_general_css)
+    assert results == False
+
+def test_has_repeat_selectors_for_true(css_for_testing):
+    results = css_analyst.has_repeat_selectors(css_for_testing)
+    assert results

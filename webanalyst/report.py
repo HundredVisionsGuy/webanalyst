@@ -6,6 +6,7 @@ import logging
 from webanalyst import validator as val
 import os
 from webanalyst.CSSinator import Stylesheet as stylesheet
+from webanalyst import stylesheet_analyst as css_analyst
 
 logging.basicConfig(format='%(asctime)s - %(message)s',
                     datefmt='%d-%b-%y %H:%M:%S')
@@ -25,9 +26,6 @@ class Report:
 
     def get_readme_text(self):
         return self.__readme_text
-
-    def get_readme_list(self):
-        return self.__readme_list
 
     @staticmethod
     def get_report_results_string(tr_class, type_column, target, results, results_key):
@@ -65,6 +63,7 @@ class Report:
         self.prep_report()
         self.general_report.generate_report()
         self.html_report.generate_report()
+        # self.css_report.generate_report(self.html_report.html_files)
 
         # send linked stylesheets to css report
         self.css_report.linked_stylesheets = self.html_report.linked_stylesheets
@@ -785,7 +784,7 @@ class CSSReport:
     def __init__(self, readme_list, dir_path):
         self.__dir_path = dir_path
         self.html_level = "0"
-        self.__readme_list = readme_list
+        self.readme_list = readme_list
         self.html_files = []
         self.project_css_by_html_file = {}
         self.font_families_used = []
@@ -797,6 +796,8 @@ class CSSReport:
         self.num_style_tags = 0
         self.linked_stylesheets = {}
         self.pages_contain_same_css_files = False
+        self.repeat_selectors = []
+        self.set_readme_list()
         self.stylesheet_objects = []
         self.report_details = {
             "css_level": "",
@@ -845,8 +846,18 @@ class CSSReport:
         self.get_style_tags()
         self.get_css_code()
         self.check_pages_for_same_css_files()
+        self.set_repeat_selectors()
         self.validate_css()
-        self.set_stylesheet_objects()
+
+    def set_repeat_selectors(self):
+        pass
+
+    def set_readme_list(self):
+        readme_list = self.readme_list[:]
+        for i in range(len(self.readme_list)):
+            if self.readme_list[i] == "### CSS":
+                break
+        self.readme_list = readme_list[i:] 
 
     def get_project_css_by_file(self, html_files):
         # create a dictionary of files in the project 
@@ -922,7 +933,8 @@ class CSSReport:
             style_tags = html.get_elements("style", file)
             for tag in style_tags:
                 filename = os.path.basename(file)
-                self.style_tag_contents.append((filename, tag.string))
+                css_object = stylesheet(filename, tag.string)
+                self.style_tag_contents.append(css_object)
             self.report_details["style_tags"].append((file, len(style_tags)))
         return self.report_details["style_tags"]
     
@@ -942,15 +954,6 @@ class CSSReport:
                 self.stylesheet_objects.append(css)
             except:
                 print("Something went wrong with getting stylesheet objects")
-
-        # extract CSS from all style tags
-        html_files = clerk.get_all_files_of_type(self.__dir_path, "html")
-        for file in html_files:
-            try:
-                self.style_tag_contents.append(
-                    clerk.get_css_from_style_tag(file))
-            except:
-                print("No style tag in this file")
 
     def validate_css(self):
         # Get CSS validation on CSS files
@@ -1026,12 +1029,6 @@ class CSSReport:
         rows = error_soup.find_all('tr', {'class':'warning'})
         return rows
 
-
-    def set_stylesheet_objects(self):
-        # append each project css file
-        
-        # append all style tags (by page)
-        pass
     
 if __name__ == "__main__":
     # How to run a report:

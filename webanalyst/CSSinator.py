@@ -214,13 +214,17 @@ class DeclarationBlock:
         declarations = declarations.split(";")
 
         # remove all spaces and line returns
-        for i in range(len(declarations)):
+        for i in range(len(declarations)): 
+            # make sure i is not out of range (after popping i)
+            if i > len(declarations) - 1:
+                break
             declarations[i] = declarations[i].replace("\n", "")
             declarations[i] = declarations[i].strip()
             if not declarations[i]:
                 declarations.pop(i)
-            else:
-                declarations[i] = Declaration(declarations[i])
+        # create our declaration objects
+        for i in range(len(declarations)):
+            declarations[i] = Declaration(declarations[i])
 
         self.declarations = declarations
 

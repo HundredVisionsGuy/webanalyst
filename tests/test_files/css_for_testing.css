@@ -1,0 +1,47 @@
+/* css_for_testing.css
+    contains a variety of implementation
+    errors (like violating DRY)
+*/
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: rgb(206, 208, 198);
+    color: rgb(10, 2, 0);
+    font-size: 120%;
+    margin: 0;
+  }
+ul {
+    list-style:none; /* removes the bullet points*/
+    display:inline-flex; /* allows the links to be next to each other*/
+}
+
+ul {
+    background-color:#58aa88;
+}
+
+body{
+    background-color:#92aa58;
+    text-align:center; /* centers all of the elements in the body */
+    color:#aa6458;
+}
+
+/** Styles for the "buttons" **/
+a {
+    border: 7px groove #baaf5d; /* sets the border to make it look like a button */
+    text-decoration:none; /* removes the underline from the link */
+    color:#aa6458;
+    background-color:#58aa88;
+}
+
+li {
+    margin:10px; /* adds space between links */
+    background-color:#58aa88;
+    font-size: 24px;
+    color:#aa6458;
+}
+
+.featured {
+    color:#aa6458;;
+    font-size:64px;
+    background-color:#58aa88;;
+}
