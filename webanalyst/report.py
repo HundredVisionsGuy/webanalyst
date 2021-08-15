@@ -27,6 +27,9 @@ class Report:
     def get_readme_text(self):
         return self.__readme_text
 
+    def get_readme_list(self):
+        return self.__readme_list
+
     @staticmethod
     def get_report_results_string(tr_class, type_column, target, results, results_key):
         results_key = str(results_key)
