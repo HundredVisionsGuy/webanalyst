@@ -223,9 +223,11 @@ class DeclarationBlock:
             if not declarations[i]:
                 declarations.pop(i)
         # create our declaration objects
+        # we separated the cleaning from the separating due 
+        # to the potential of popping i resulting in index error 
+        # or missing a declaration (it happened)
         for i in range(len(declarations)):
             declarations[i] = Declaration(declarations[i])
-
         self.declarations = declarations
 
 

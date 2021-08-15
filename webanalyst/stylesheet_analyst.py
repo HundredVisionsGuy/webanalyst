@@ -19,8 +19,8 @@ multiple_selectors_re = r'\S+,\s{1}' # note this only works when looking at sele
 direct_child_selector_re = r'(\S+\s?>\s?\S+){1}'
 general_sibling_selector_re = r'(\S+\s?~\s?\S+){1}'
 adjacent_sibling_selector_re = r'(\S+\s?\+\s?\S+){1}'
-class_selector_re = r'(\.\S+){1}\s?\S?\s?{'
-id_selector_re = r'(\#\S+){1}\s?\S?\s?{'
+class_selector_re = r'(\.\S+){1}\s?\S?\s?'
+id_selector_re = r'(\#\S+){1}\s?\S?\s?'
 
 pseudoselectors = (':active', ':any-link', ':autofill', 
     ':blank', ':checked', ':current', ':default', ':defined', 
@@ -165,11 +165,18 @@ def has_repeat_selectors(sheet):
             return True
     return False
 
+def has_class_selector(sheet):
+    return check_selectors_with_regex(sheet, class_selector_re)
+
+def has_id_selector(sheet):
+    return check_selectors_with_regex(sheet, id_selector_re)
+
 if __name__ == "__main__":
     # Test off of large project
-    layout_css = clerk.file_to_string(
-        "tests/test_files/css_for_testing.css")
     
+    # layout_css = clerk.file_to_string("tests/test_files/css_for_testing.css")
+    # layout_css = clerk.file_to_string("tests/test_files/projects/large_project/css/general.css")
+    layout_css = clerk.file_to_string("tests/test_files/projects/large_project/css/navigation.css")
     test_sheet = cssinator.Stylesheet("local", layout_css, "file")
     
     # testing_css = clerk.file_to_string("tests/test_files/css_for_testing.css")
@@ -183,3 +190,4 @@ if __name__ == "__main__":
     has_direct_child_selector(test_sheet)
     has_psuedoselector(test_sheet)
     has_repeat_selectors(test_sheet)
+    has_class_selector(test_sheet)

@@ -159,3 +159,19 @@ def test_has_repeat_selectors_for_false(large_project_general_css):
 def test_has_repeat_selectors_for_true(css_for_testing):
     results = css_analyst.has_repeat_selectors(css_for_testing)
     assert results
+
+def test_has_class_selector_for_false(large_project_general_css):
+    results = css_analyst.has_class_selector(large_project_general_css)
+    assert results == False
+
+def test_has_class_selector_for_true(large_project_navigation_css):
+    results = css_analyst.has_class_selector(large_project_navigation_css)
+    assert results == True
+
+def test_has_id_selector_for_false(large_project_general_css):
+    results = css_analyst.has_id_selector(large_project_general_css)
+    assert results == False
+
+def test_has_id_selector_for_true(large_project_navigation_css):
+    results = css_analyst.has_id_selector(large_project_navigation_css)
+    assert results == True
