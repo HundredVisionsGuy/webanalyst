@@ -1,3 +1,4 @@
+from typing import Type
 from webanalyst import clerk
 import re
 from webanalyst import HTMLinator as html
@@ -585,7 +586,15 @@ class HTMLReport:
                     warnings_dict["HTML"][page_name] = [item, ]
 
         self.validator_errors = errors_dict
-        self.validator_warnings = warnings_dict
+        self.add_warnings(warnings_dict)
+
+    def add_warnings(self, warnings):
+        for page, warning in warnings['HTML'].items():
+            self.validator_warnings[page] = warning
+
+    def add_errors(self, errors):
+        for page, error in errors['HTML'].items():
+            self.validator_errors[page] = error
 
     def analyze_results(self):
         self.can_attain_level()
@@ -799,7 +808,7 @@ class CSSReport:
         self.num_style_tags = 0
         self.linked_stylesheets = {}
         self.pages_contain_same_css_files = False
-        self.repeat_selectors = []
+        self.repeat_selectors = {}
         self.set_readme_list()
         self.stylesheet_objects = []
         self.report_details = {
@@ -853,7 +862,62 @@ class CSSReport:
         self.validate_css()
 
     def set_repeat_selectors(self):
-        pass
+        all_selectors = []
+
+        # get the names of all linked stylesheets
+        linked_stylesheets = self.get_linked_stylesheets()
+        filenames = []
+        for filename in linked_stylesheets:
+            filename = clerk.get_file_name(filename)
+            filenames.append(filename)
+        implemented_selectors = {}
+        for stylesheet_object in self.stylesheet_objects:
+            if stylesheet_object.href in filenames:
+                for selector in stylesheet_object.selectors:
+                    if (selector, stylesheet_object.href) not in all_selectors:
+                        all_selectors.append(selector)
+                        try:
+                            implemented_selectors[stylesheet_object.href].append(selector)
+                        except KeyError:
+                            implemented_selectors[stylesheet_object.href] = [selector,]
+
+        # sort then get repeated selectors (if any)
+        all_selectors.sort()
+        for selector in all_selectors:
+            count = all_selectors.count(selector)
+            if count > 1:
+                # get the stylesheets that "own" the selector
+                # repeated_selector = {}
+                for page in implemented_selectors.keys():
+                    if selector in implemented_selectors[page]:
+                        appearances = implemented_selectors[page].count(selector)
+                        pages = self.repeat_selectors.get(selector)
+                        if not pages:
+                            self.repeat_selectors[selector] = [page, ]
+                        elif page not in pages:
+                             self.repeat_selectors[selector].append(page) 
+                        else:
+                            # At this point, only append if we have not yet matched the number of pages to the count
+                            if len(self.repeat_selectors[selector]) < count:    
+                                self.repeat_selectors[selector].append(page)
+                        # while appearances > 1:
+                        #     appearances -= 1
+                        #     self.repeat_selectors[selector].append(page)
+                            
+                # sort the pages
+                self.repeat_selectors[selector].sort()
+
+    def get_linked_stylesheets(self):
+        stylesheets = []
+        try:
+            for file, sheets in self.linked_stylesheets.items():
+                for sheet in sheets:
+                    if sheet not in stylesheets:
+                        stylesheets.append(sheet)
+        except TypeError:
+            print("no stylesheet found in {}".format(file))
+        return stylesheets
+
 
     def set_readme_list(self):
         readme_list = self.readme_list[:]
@@ -896,7 +960,6 @@ class CSSReport:
                 if "style_tag=" not in style:
                     results[page].append(style) 
         return results
-
 
     def get_children(self, path, parent):
         code = html.get_html(path)
@@ -1040,9 +1103,9 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
-    project = Report(about_me_dnn_readme_path)
-    project.generate_report()
+    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    # project = Report(about_me_dnn_readme_path)
+    # project.generate_report()
     # project.css_report.get_css_code()
     # project.css_report.validate_css()
     # css_errors = project.css_report.report_details['css_validator_results']['styles.css']
@@ -1050,9 +1113,9 @@ if __name__ == "__main__":
     # results = len(css_errors)
     # project.css_report.get_num_style_tags()
 
-    # large_project_readme_path = "tests/test_files/projects/large_project/"
-    # large_project = Report(large_project_readme_path)
-    # large_project.generate_report()
+    large_project_readme_path = "tests/test_files/projects/large_project/"
+    large_project = Report(large_project_readme_path)
+    large_project.generate_report()
     # large_project.css_report.get_css_code()
     # large_project.css_report.validate_css()
     
@@ -1061,3 +1124,4 @@ if __name__ == "__main__":
     # project.generate_report()
     # project.css_report.get_num_style_tags()
     
+    print("done")
