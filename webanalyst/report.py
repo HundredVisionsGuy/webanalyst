@@ -864,33 +864,16 @@ class CSSReport:
 
     def set_repeat_selectors(self):
         all_selectors = []
-
         # get the names of all linked stylesheets
         linked_stylesheets = self.get_linked_stylesheets()
-        filenames = []
-        for filename in linked_stylesheets:
-            filename = clerk.get_file_name(filename)
-            filenames.append(filename)
-        implemented_selectors = {}
-        for stylesheet_object in self.stylesheet_objects:
-            if stylesheet_object.href in filenames:
-                for selector in stylesheet_object.selectors:
-                    if (selector, stylesheet_object.href) not in all_selectors:
-                        all_selectors.append(selector)
-                        try:
-                            implemented_selectors[stylesheet_object.href].append(selector)
-                        except KeyError:
-                            implemented_selectors[stylesheet_object.href] = [selector,]
-        # get selectors from style_tag_contents
-        for stylesheet in self.style_tag_contents:
-            for selector in stylesheet.selectors:
-                all_selectors.append(selector)
-                try:
-                    implemented_selectors[stylesheet.href].append(selector)
-                except KeyError:
-                    implemented_selectors[stylesheet.href] = [selector,]
+        filenames = self.get_filenames_from_paths(linked_stylesheets)
+        implemented_selectors = self.get_implemented_selectors(all_selectors, filenames)
         # sort then get repeated selectors (if any)
         all_selectors.sort()
+        print(all_selectors)
+        self.get_repeated_selectors(all_selectors, implemented_selectors)
+
+    def get_repeated_selectors(self, all_selectors, implemented_selectors):
         for selector in all_selectors:
             count = all_selectors.count(selector)
             if count > 1:
@@ -909,6 +892,41 @@ class CSSReport:
                        
                 # sort the pages
                 self.repeat_selectors[selector].sort()
+
+    def get_implemented_selectors(self, all_selectors, filenames):
+        implemented_selectors = self.get_selectors_from_implemented_stylesheets(all_selectors, filenames)
+        # get selectors from style_tag_contents
+        self.get_selectors_from_style_tags(all_selectors, implemented_selectors)
+        return implemented_selectors
+
+    def get_selectors_from_style_tags(self, all_selectors, implemented_selectors):
+        for stylesheet in self.style_tag_contents:
+            for selector in stylesheet.selectors:
+                all_selectors.append(selector)
+                try:
+                    implemented_selectors[stylesheet.href].append(selector)
+                except KeyError:
+                    implemented_selectors[stylesheet.href] = [selector,]
+
+    def get_selectors_from_implemented_stylesheets(self, all_selectors, filenames):
+        implemented_selectors = {}
+        for stylesheet_object in self.stylesheet_objects:
+            if stylesheet_object.href in filenames:
+                for selector in stylesheet_object.selectors:
+                    if (selector, stylesheet_object.href) not in all_selectors:
+                        all_selectors.append(selector)
+                        try:
+                            implemented_selectors[stylesheet_object.href].append(selector)
+                        except KeyError:
+                            implemented_selectors[stylesheet_object.href] = [selector,]
+        return implemented_selectors
+
+    def get_filenames_from_paths(self, linked_stylesheets):
+        filenames = []
+        for filename in linked_stylesheets:
+            filename = clerk.get_file_name(filename)
+            filenames.append(filename)
+        return filenames
 
     def set_repeat_declaration_blocks(self):
         print("here we go.")

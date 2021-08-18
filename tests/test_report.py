@@ -499,6 +499,25 @@ def test_set_repeat_selectors_for_large_report_body_selector_in_about_html(large
     results = large_project_css_report.repeat_selectors["body"]
     assert 'about.html' in results
 
+def test_get_filenames_from_path(large_project_css_report):
+    full_paths = ['css/navigation.css', 'css/general.css', 'css/layout.css']
+    expected = ['navigation.css', 'general.css', 'layout.css']
+    results = large_project_css_report.get_filenames_from_paths(full_paths)
+    assert expected == results
+
+def test_get_implemented_selectors(large_project_css_report):
+    selectors = []
+    filenames = ['navigation.css', 'general.css', 'layout.css']
+    implemented_selectors = large_project_css_report.get_implemented_selectors(selectors, filenames)
+    results = implemented_selectors.get('general.css')
+    expected = ['body', 'h1, h2, h3, h4, h5, h6', 'p']
+    assert results == expected
+
+def test_get_repeated_selectors(large_project_css_report):
+    expected = {'.container': ['layout.css', 'layout.css'], '.image-gallery .display-box': ['layout.css', 'layout.css'], 'body': ['about.html', 'general.css', 'layout.css'], 'header': ['layout.css', 'navigation.css'], 'header h1': ['layout.css', 'navigation.css']}
+    results = large_project_css_report.repeat_selectors
+    assert expected == results
+
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
     report_contents = clerk.file_to_string(report_html_doc_path)
