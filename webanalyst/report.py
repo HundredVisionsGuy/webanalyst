@@ -870,7 +870,6 @@ class CSSReport:
         implemented_selectors = self.get_implemented_selectors(all_selectors, filenames)
         # sort then get repeated selectors (if any)
         all_selectors.sort()
-        print(all_selectors)
         self.get_repeated_selectors(all_selectors, implemented_selectors)
 
     def get_repeated_selectors(self, all_selectors, implemented_selectors):
@@ -1036,15 +1035,25 @@ class CSSReport:
         # extract content from all CSS files
         self.css_files = clerk.get_all_files_of_type(self.__dir_path, "css")
         for file in self.css_files:
-            # First check to make sure all pages have a link to the style sheet
+            # First check to make sure the file was actually used in the project
+            filename = clerk.get_file_name(file)
+            is_linked = self.file_is_linked(filename)
+            if not is_linked:
+                continue
             try:
                 css_code = clerk.get_css_from_stylesheet(file)
-                filename = clerk.get_file_name(file)
+                
                 css = stylesheet(filename, css_code)
                 self.stylesheet_objects.append(css)
             except:
                 print("Something went wrong with getting stylesheet objects")
-
+    def file_is_linked(self, filename):
+        for sheets in self.linked_stylesheets.values():
+            if sheets:
+                for sheet in sheets:
+                    if filename in sheet:
+                        return True
+        return False
     def validate_css(self):
         # Get CSS validation on CSS files
         errors = 0

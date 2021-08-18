@@ -518,6 +518,14 @@ def test_get_repeated_selectors(large_project_css_report):
     results = large_project_css_report.repeat_selectors
     assert expected == results
 
+def test_file_is_linked_for_true(large_project_css_report):
+    results = large_project_css_report.file_is_linked('navigation.css')
+    assert results 
+
+def test_file_is_linked_for_false(large_project_css_report):
+    results = large_project_css_report.file_is_linked('grid-layout.css')
+    assert results == False
+
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
     report_contents = clerk.file_to_string(report_html_doc_path)

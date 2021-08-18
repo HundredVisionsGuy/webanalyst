@@ -196,15 +196,15 @@ class Ruleset:
 
 class DeclarationBlock:
     def __init__(self, text):
-        self.__text = text
+        self.text = text
         self.declarations = []
         self.__set_declarations()
 
     def __set_declarations(self):
-        declarations = self.__text
+        declarations = self.text
 
         # remove selectors and braces if present
-        if "{" in self.__text:
+        if "{" in self.text:
             declarations = declarations.split("{")
             declarations = declarations[1]
         if "}" in declarations:
