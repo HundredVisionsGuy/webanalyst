@@ -398,7 +398,6 @@ def test_large_project_html_report_for_set_linked_stylesheets(large_project_html
 
 # CSSReport tests
 
-
 def test_about_me_css_report_for_num_of_files(about_me_css_report):
     results = about_me_css_report.get_num_css_files()
     expected = 0
@@ -492,6 +491,14 @@ def test_pages_contain_same_css_files_for_multipage_meets_project_true(multi_pag
 def test_pages_contain_same_css_files_for_large_project_false(large_project_css_report):
     assert not large_project_css_report.pages_contain_same_css_files
 
+def test_set_repeat_selectors_for_large_report_body_selector(large_project_css_report):
+    results = large_project_css_report.repeat_selectors["body"]
+    assert 'general.css' in results
+
+def test_set_repeat_selectors_for_large_report_body_selector_in_about_html(large_project_css_report):
+    results = large_project_css_report.repeat_selectors["body"]
+    assert 'about.html' in results
+
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
     report_contents = clerk.file_to_string(report_html_doc_path)
@@ -508,4 +515,3 @@ def test_about_me_html_report_for_html_results_in_report_html_doc_html_results_c
     report_tr = '<tr><td>H2</td><td>2</td><td>2</td><td>Meets</td></tr>'
     assert report_tr in report_contents
 
-# def test_

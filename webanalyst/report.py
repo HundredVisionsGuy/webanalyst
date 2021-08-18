@@ -859,6 +859,7 @@ class CSSReport:
         self.get_css_code()
         self.check_pages_for_same_css_files()
         self.set_repeat_selectors()
+        self.set_repeat_declaration_blocks()
         self.validate_css()
 
     def set_repeat_selectors(self):
@@ -880,17 +881,22 @@ class CSSReport:
                             implemented_selectors[stylesheet_object.href].append(selector)
                         except KeyError:
                             implemented_selectors[stylesheet_object.href] = [selector,]
-
+        # get selectors from style_tag_contents
+        for stylesheet in self.style_tag_contents:
+            for selector in stylesheet.selectors:
+                all_selectors.append(selector)
+                try:
+                    implemented_selectors[stylesheet.href].append(selector)
+                except KeyError:
+                    implemented_selectors[stylesheet.href] = [selector,]
         # sort then get repeated selectors (if any)
         all_selectors.sort()
         for selector in all_selectors:
             count = all_selectors.count(selector)
             if count > 1:
                 # get the stylesheets that "own" the selector
-                # repeated_selector = {}
                 for page in implemented_selectors.keys():
                     if selector in implemented_selectors[page]:
-                        appearances = implemented_selectors[page].count(selector)
                         pages = self.repeat_selectors.get(selector)
                         if not pages:
                             self.repeat_selectors[selector] = [page, ]
@@ -900,12 +906,12 @@ class CSSReport:
                             # At this point, only append if we have not yet matched the number of pages to the count
                             if len(self.repeat_selectors[selector]) < count:    
                                 self.repeat_selectors[selector].append(page)
-                        # while appearances > 1:
-                        #     appearances -= 1
-                        #     self.repeat_selectors[selector].append(page)
-                            
+                       
                 # sort the pages
                 self.repeat_selectors[selector].sort()
+
+    def set_repeat_declaration_blocks(self):
+        print("here we go.")
 
     def get_linked_stylesheets(self):
         stylesheets = []
