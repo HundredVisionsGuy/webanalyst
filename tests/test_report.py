@@ -526,6 +526,11 @@ def test_file_is_linked_for_false(large_project_css_report):
     results = large_project_css_report.file_is_linked('grid-layout.css')
     assert results == False
 
+def test_set_repeat_declaration_blocks(large_project_css_report):
+    expected = ['layout.css', 'layout.css']
+    results = large_project_css_report.repeat_declarations_blocks['{margin: 0;padding: 0;}']
+    assert results == expected
+
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
     report_contents = clerk.file_to_string(report_html_doc_path)

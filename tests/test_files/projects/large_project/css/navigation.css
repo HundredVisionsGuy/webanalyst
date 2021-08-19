@@ -28,7 +28,7 @@ header h1 {
   transform: rotate(45deg);
 }
 #menu-toggle.closed {
-  transform: rotate(0deg);
+  transform: rotate(45deg);
 }
 nav.primary-nav {
   background-color: rgb(228, 202, 174);

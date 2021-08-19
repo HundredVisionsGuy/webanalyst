@@ -809,6 +809,7 @@ class CSSReport:
         self.linked_stylesheets = {}
         self.pages_contain_same_css_files = False
         self.repeat_selectors = {}
+        self.repeat_declarations_blocks = {}
         self.set_readme_list()
         self.stylesheet_objects = []
         self.report_details = {
@@ -928,7 +929,40 @@ class CSSReport:
         return filenames
 
     def set_repeat_declaration_blocks(self):
-        print("here we go.")
+        # no repeat blocks (per page)
+        # any repeat blocks from a style tag?
+        declaration_blocks = self.get_all_declaration_blocks()
+        just_blocks = list(declaration_blocks.keys())
+        for block, sheets in declaration_blocks.items():
+            count = len(sheets)
+            if count > 1:
+                self.repeat_declarations_blocks[block]= sheets
+
+    def get_all_declaration_blocks(self):
+        declaration_blocks = {}
+        for sheet in self.style_tag_contents:
+            for ruleset in sheet.rulesets:
+                declaration_block = "{" + ruleset.declaration_block.text
+                source = sheet.href
+                try:
+                    if declaration_blocks[declaration_block]:
+                        declaration_blocks[declaration_block].append(source)
+                    else:
+                        declaration_blocks[declaration_block] = [source, ]
+                except KeyError:
+                    declaration_blocks[declaration_block] = [source, ]
+        for sheet in self.stylesheet_objects:
+            for ruleset in sheet.rulesets:
+                declaration_block = "{" + ruleset.declaration_block.text
+                source = sheet.href
+                try:
+                    if declaration_blocks[declaration_block]:
+                        declaration_blocks[declaration_block].append(source)
+                    else:
+                        declaration_blocks[declaration_block] = [source, ]
+                except KeyError:
+                    declaration_blocks[declaration_block] = [source, ]
+        return declaration_blocks
 
     def get_linked_stylesheets(self):
         stylesheets = []
