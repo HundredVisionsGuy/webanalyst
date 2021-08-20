@@ -1,4 +1,3 @@
-from typing import Type
 from webanalyst import clerk
 import re
 from webanalyst import HTMLinator as html
@@ -862,6 +861,10 @@ class CSSReport:
         self.set_repeat_selectors()
         self.set_repeat_declaration_blocks()
         self.validate_css()
+        self.get_standard_requirements()
+
+    def get_standard_requirements(self):
+        pass
 
     def set_repeat_selectors(self):
         all_selectors = []
@@ -975,7 +978,6 @@ class CSSReport:
             print("no stylesheet found in {}".format(file))
         return stylesheets
 
-
     def set_readme_list(self):
         readme_list = self.readme_list[:]
         for i in range(len(self.readme_list)):
@@ -1081,6 +1083,7 @@ class CSSReport:
                 self.stylesheet_objects.append(css)
             except:
                 print("Something went wrong with getting stylesheet objects")
+    
     def file_is_linked(self, filename):
         for sheets in self.linked_stylesheets.values():
             if sheets:
@@ -1088,6 +1091,7 @@ class CSSReport:
                     if filename in sheet:
                         return True
         return False
+    
     def validate_css(self):
         # Get CSS validation on CSS files
         errors = 0
