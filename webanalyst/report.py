@@ -860,11 +860,32 @@ class CSSReport:
         self.check_pages_for_same_css_files()
         self.set_repeat_selectors()
         self.set_repeat_declaration_blocks()
-        self.validate_css()
         self.get_standard_requirements()
-
+        self.validate_css()
+        
     def get_standard_requirements(self):
-        pass
+        # get index position of Standard Req and General Styles headers
+        start = self.readme_list.index("* Standard Requirements:") + 1
+        stop = self.readme_list.index("* General Styles:")
+
+        # take a slice in between for reqs
+        requirements = self.readme_list[start:stop]
+
+        # get each req and put into standard reqs dictionary
+        for req in requirements:
+            req = req.strip()
+            split_req = req.split(":", 1)
+            description = split_req[0][2:]
+            goal_raw = split_req[1]
+            min = 0
+            if '0' in goal_raw or 'None' in goal_raw:
+                max = 0
+            else:
+                max = re.findall(r'\d+', split_req[1])
+                max = int(max[0])
+
+            # add requirements to dictionary
+            self.report_details['project_specific_goals'][description]={"min": min, "max": max}
 
     def set_repeat_selectors(self):
         all_selectors = []

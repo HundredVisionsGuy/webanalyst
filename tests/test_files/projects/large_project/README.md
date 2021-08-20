@@ -34,9 +34,9 @@ This project does meet the requirements for attaining the next level in CSS.
         + `EM`: 3 - 5
 ### CSS
 * Standard Requirements:
-    * No CSS errors (total)
-    * No repeat selectors (per page)
-    * No repeat declaration blocks (per page)
+    * CSS Errors: None (total)
+    * Repeat selectors: None (per page)
+    * Repeat declaration blocks: None (per page)
 * General Styles:
     * Font Families: number of font families to be set
         + Minimum: 1
