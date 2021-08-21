@@ -32,8 +32,19 @@ This project does not meet the requirements for attaining the next level in CSS.
         + `EM`: 2 or more
 ### CSS
 * Standard Requirements:
-    * No CSS errors
-    * No repeat selectors
+    * CSS Errors: 2 maximum (total)
+    * Repeat selectors: None (per page)
+    * Repeat declaration blocks: None (per page)
+* General Styles:
+    * Font Families: number of font families to be set
+        + Minimum: 1
+        + Maximum: 2
+    * Color Settings:
+        + Entire Page colors set: background and foreground
+        + Headers: background and foreground
+        + Color Contrast (readability): must pass the [color contrast analyzer tool](https://webaim.org/resources/contrastchecker/) at the following levels
+            - Normal: AAA
+            - Large: AA
 * Project-specific Requirements:
     * Fonts: required font changes are as follows:
         + 1 font family must be set

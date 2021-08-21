@@ -531,6 +531,16 @@ def test_set_repeat_declaration_blocks(large_project_css_report):
     results = large_project_css_report.repeat_declarations_blocks['{margin: 0;padding: 0;}']
     assert results == expected
 
+def test_get_standard_requirements_large_project(large_project_css_report):
+    expected = {'CSS Errors': {'min': 0, 'max': 0}, 'Repeat selectors': {'min': 0, 'max': 0}, 'Repeat declaration blocks': {'min': 0, 'max': 0}}
+    results = large_project_css_report.report_details['project_specific_goals']
+    assert expected == results
+
+def test_get_standard_requirements_about_me_project(about_me_css_report):
+    expected = {'CSS Errors': {'min': 0, 'max': 2}, 'Repeat selectors': {'min': 0, 'max': 0}, 'Repeat declaration blocks': {'min': 0, 'max': 0}}
+    results = about_me_css_report.report_details['project_specific_goals']
+    assert expected == results
+
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
     report_contents = clerk.file_to_string(report_html_doc_path)

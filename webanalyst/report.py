@@ -865,9 +865,18 @@ class CSSReport:
         
     def get_standard_requirements(self):
         # get index position of Standard Req and General Styles headers
-        start = self.readme_list.index("* Standard Requirements:") + 1
-        stop = self.readme_list.index("* General Styles:")
-
+        try:
+            start = self.readme_list.index("* Standard Requirements:") + 1
+        except ValueError:
+            # there's no Standard Requirements
+            logging.warn("There's no Standard Requirements in README? Is that intentional? Typo?")
+            return
+        if "* General Styles:" in self.readme_list:
+            stop = self.readme_list.index("* General Styles:")
+        elif "* Project-specific Requirements:" in self.readme_list:
+            stop = self.readme_list.index("* Project-specific Requirements:")
+        else:
+            stop = len(self.readme_list)
         # take a slice in between for reqs
         requirements = self.readme_list[start:stop]
 
@@ -1195,9 +1204,9 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
-    # project = Report(about_me_dnn_readme_path)
-    # project.generate_report()
+    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    project = Report(about_me_dnn_readme_path)
+    project.generate_report()
     # project.css_report.get_css_code()
     # project.css_report.validate_css()
     # css_errors = project.css_report.report_details['css_validator_results']['styles.css']
