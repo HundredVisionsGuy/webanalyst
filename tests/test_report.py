@@ -540,6 +540,12 @@ def test_get_standard_requirements_about_me_project(about_me_css_report):
     results = about_me_css_report.report_details['standard_requirements_goals']
     assert expected == results
 
+def test_get_header_details_for_font_families_details(about_me_report):
+    input_string = '    * Font Families: number of font families to be set'
+    results = about_me_report.get_header_details(input_string)
+    expected = {"title": "Font Families", "description": "number of font families to be set"}
+    assert expected == results
+    
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
     report_contents = clerk.file_to_string(report_html_doc_path)

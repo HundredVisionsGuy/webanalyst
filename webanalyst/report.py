@@ -50,6 +50,16 @@ class Report:
         results_string += "</tr>"
         return results_string
 
+    @staticmethod
+    def get_header_details(header_string):
+        header_list = header_string.split(":")
+        title = header_list[0]
+        title = title.strip()
+        if "* " in title[:]:
+            title = title[2:]
+        description = header_list[1]
+        return {"title": title, "description": description.strip()}
+
     def generate_report(self):
         # pull readme text
         self.get_readme_text()
@@ -883,7 +893,8 @@ class CSSReport:
         # take a slice in between for reqs
         requirements = self.readme_list[start:stop]
         for req in requirements:
-            print(req)
+            if '    * ' in req:
+                response = Report.get_header_details(req)
 
     def get_general_styles_results(self):
         pass
