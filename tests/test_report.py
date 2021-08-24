@@ -79,10 +79,9 @@ def about_me_dnm_html_report(about_me_dnm_report):
 def large_project_html_report(large_project_report):
     return large_project_report.html_report
 
-
 @pytest.fixture
-def about_me_css_report(about_me_readme_list):
-    css_report = report.CSSReport(about_me_readme_list, about_me_path)
+def about_me_css_report(about_me_report):
+    css_report = about_me_report.css_report
     return css_report
 
 @pytest.fixture
@@ -533,12 +532,12 @@ def test_set_repeat_declaration_blocks(large_project_css_report):
 
 def test_get_standard_requirements_large_project(large_project_css_report):
     expected = {'CSS Errors': {'min': 0, 'max': 0}, 'Repeat selectors': {'min': 0, 'max': 0}, 'Repeat declaration blocks': {'min': 0, 'max': 0}}
-    results = large_project_css_report.report_details['project_specific_goals']
+    results = large_project_css_report.report_details['standard_requirements_goals']
     assert expected == results
 
 def test_get_standard_requirements_about_me_project(about_me_css_report):
     expected = {'CSS Errors': {'min': 0, 'max': 2}, 'Repeat selectors': {'min': 0, 'max': 0}, 'Repeat declaration blocks': {'min': 0, 'max': 0}}
-    results = about_me_css_report.report_details['project_specific_goals']
+    results = about_me_css_report.report_details['standard_requirements_goals']
     assert expected == results
 
 # report.html relatd tests

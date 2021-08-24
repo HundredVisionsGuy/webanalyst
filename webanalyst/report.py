@@ -840,6 +840,8 @@ class CSSReport:
                     "headers_contrast_rating": "Fail"
                 }
             },
+            "standard_requirements_goals": {},
+            "standard_requirements_results": {},
             "project_specific_goals": {},
             "project_specific_results": {},
             "meets_requirements": False
@@ -861,8 +863,31 @@ class CSSReport:
         self.set_repeat_selectors()
         self.set_repeat_declaration_blocks()
         self.get_standard_requirements()
+        self.get_standard_requirements_results()
         self.validate_css()
+        self.get_general_styles_goals()
+        self.get_general_styles_results()
         
+    def get_general_styles_goals(self):
+        try:
+            start = self.readme_list.index("* General Styles:") + 1
+        except ValueError:
+            # There's no general styles goals
+            logging.warn("There's no General Styles Goals in README. Look into it.")
+            return
+        if "* Project-specific Requirements:" in self.readme_list:
+            stop = self.readme_list.index("* Project-specific Requirements:")
+        else:
+            stop = len(self.readme_list)
+
+        # take a slice in between for reqs
+        requirements = self.readme_list[start:stop]
+        for req in requirements:
+            print(req)
+
+    def get_general_styles_results(self):
+        pass
+
     def get_standard_requirements(self):
         # get index position of Standard Req and General Styles headers
         try:
@@ -894,7 +919,11 @@ class CSSReport:
                 max = int(max[0])
 
             # add requirements to dictionary
-            self.report_details['project_specific_goals'][description]={"min": min, "max": max}
+            self.report_details['standard_requirements_goals'][description]={"min": min, "max": max}
+
+    def get_standard_requirements_results(self):
+        print("what to do")
+        pass
 
     def set_repeat_selectors(self):
         all_selectors = []
@@ -1133,6 +1162,17 @@ class CSSReport:
             page_name = clerk.get_file_name(file_path)
             if errors > 0:
                 self.process_errors(page_name, errors_in_file)
+        # Get CSS validation from style tag
+        for page in self.project_css_by_html_file.keys():
+            for doc in self.html_files:
+                if page in doc:
+                    tag_errors = val.validate_css(doc)
+                    errors += len(tag_errors)
+                    if len(tag_errors) > 0:
+                        self.process_errors(page, tag_errors)
+
+        # add any errors to css_errors
+        self.css_errors = self.report_details["css_validator_results"]
 
     def process_errors(self, page_name, errors):
         """ receives errors and records warnings and errors """
@@ -1204,7 +1244,7 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    about_me_dnn_readme_path = "tests/test_files/projects/about_me/"
     project = Report(about_me_dnn_readme_path)
     project.generate_report()
     # project.css_report.get_css_code()
