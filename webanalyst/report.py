@@ -1213,7 +1213,7 @@ class CSSReport:
                 warnings_dict[page_name] = []
                 for row in warning_rows:
                     row_dict = self.get_results_details("warning", row)
-                    print(row)
+                    warnings_dict[page_name].append(row_dict)
 
         if errors_dict:
             self.report_details["css_validator_results"][page_name] = errors_dict[page_name]
