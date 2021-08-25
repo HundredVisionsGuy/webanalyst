@@ -58,7 +58,7 @@ class Report:
         if "* " in title[:]:
             title = title[2:]
         description = header_list[1]
-        return {"title": title, "description": description.strip()}
+        return {"title": title, "details": {"description": description.strip()}}
 
     def generate_report(self):
         # pull readme text
@@ -830,26 +830,7 @@ class CSSReport:
             "style_tags": [],
             "repeat_selectors": 0,
             "repeat_declaration_blocks": 0,
-            "general_css_styles": {
-                "font_families": {
-                    "min": 0,
-                    "max": 0,
-                    "actual": 0,
-                },
-                "color_goals": {
-                    "entire_page": False,
-                    "headers": False,
-                    "color_contrast": False
-                },
-                "color_settings": {
-                    "page_background_set": False,
-                    "page_color_set": False,
-                    "headers_background_set": False,
-                    "headers_color_set": False,
-                    "page_contrast_rating": "Fail",
-                    "headers_contrast_rating": "Fail"
-                }
-            },
+            "general_styles_goals": {},
             "standard_requirements_goals": {},
             "standard_requirements_results": {},
             "project_specific_goals": {},
@@ -868,6 +849,7 @@ class CSSReport:
         self.get_project_css_by_file(html_files)
         self.get_num_css_files()
         self.get_style_tags()
+        self.get_num_style_tags()
         self.get_css_code()
         self.check_pages_for_same_css_files()
         self.set_repeat_selectors()
@@ -892,9 +874,24 @@ class CSSReport:
 
         # take a slice in between for reqs
         requirements = self.readme_list[start:stop]
+        details = {}
         for req in requirements:
             if '    * ' in req:
+                # If we had already gathered requirements,
+                # Let's add them before clearing them out for the next round
+                if details:
+                    # add details to report_details
+
+                    # reset details
+                    details = {}
                 response = Report.get_header_details(req)
+                details = response
+            elif '+ minimum' in req.lower() or '+ min' in req.lower():
+                min = req.split(":")[1].strip()
+                details["details"]["minimum"] = min
+            elif '+ maximum' in req.lower() or '+ max' in req.lower():
+                max = req.split(":")[1].strip()
+                details["details"]["maximum"] = max
 
     def get_general_styles_results(self):
         pass
@@ -1005,7 +1002,7 @@ class CSSReport:
         # no repeat blocks (per page)
         # any repeat blocks from a style tag?
         declaration_blocks = self.get_all_declaration_blocks()
-        just_blocks = list(declaration_blocks.keys())
+        # just_blocks = list(declaration_blocks.keys())
         for block, sheets in declaration_blocks.items():
             count = len(sheets)
             if count > 1:
@@ -1166,21 +1163,24 @@ class CSSReport:
         # Get CSS validation on CSS files
         errors = 0
         for file_path in self.css_files:
-            # Get error objects
-            errors_in_file = val.validate_css(file_path)
+            # Run css code through validator
+            # Get code
+            code = clerk.file_to_string(file_path)
+            errors_in_file = val.validate_css(code)
             # Add to number of errors
             errors += len(errors_in_file)
             page_name = clerk.get_file_name(file_path)
             if errors > 0:
                 self.process_errors(page_name, errors_in_file)
         # Get CSS validation from style tag
-        for page in self.project_css_by_html_file.keys():
-            for doc in self.html_files:
-                if page in doc:
-                    tag_errors = val.validate_css(doc)
-                    errors += len(tag_errors)
-                    if len(tag_errors) > 0:
-                        self.process_errors(page, tag_errors)
+        for tag in self.style_tag_contents:
+            tag_errors = val.validate_css(tag.text)
+            # No need to process an error if we have none
+            if "Congratulations!" in tag_errors[0].text:
+                continue
+            errors += len(tag_errors)
+            if len(tag_errors) > 0:
+                self.process_errors(tag.href, tag_errors)
 
         # add any errors to css_errors
         self.css_errors = self.report_details["css_validator_results"]
@@ -1215,9 +1215,12 @@ class CSSReport:
                     row_dict = self.get_results_details("warning", row)
                     print(row)
 
-        self.report_details["css_validator_results"][page_name] = errors_dict[page_name]
+        if errors_dict:
+            self.report_details["css_validator_results"][page_name] = errors_dict[page_name]
+        else:
+            self.report_details["css_validator_results"][page_name] = "No errors"
         if warnings_dict:
-            self.report_details["css_validator_results"][page_name] += warnings_dict[page_name]
+            self.report_details["css_validator_results"][page_name] = warnings_dict[page_name]
 
     def get_error_rows(self, item):
         item_string = item.contents
@@ -1228,7 +1231,8 @@ class CSSReport:
 
     def get_results_details(self, type, tag):
         details = {}
-        details[type] = "error"
+        # check for warning or error
+        details[type] = type
         line_number = tag.contents[1]['title']
         details["line_number"] = line_number
         context = tag.contents[3].text
@@ -1255,25 +1259,20 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    about_me_dnn_readme_path = "tests/test_files/projects/about_me/"
-    project = Report(about_me_dnn_readme_path)
-    project.generate_report()
-    # project.css_report.get_css_code()
-    # project.css_report.validate_css()
-    # css_errors = project.css_report.report_details['css_validator_results']['styles.css']
-    # print(css_errors)
-    # results = len(css_errors)
-    # project.css_report.get_num_style_tags()
+    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    # project = Report(about_me_dnn_readme_path)
+    # project.generate_report()
 
     large_project_readme_path = "tests/test_files/projects/large_project/"
     large_project = Report(large_project_readme_path)
     large_project.generate_report()
-    # large_project.css_report.get_css_code()
-    # large_project.css_report.validate_css()
     
-    # readme_path = "project/"
-    # project = Report(readme_path)
-    # project.generate_report()
-    # project.css_report.get_num_style_tags()
+    multi_meets_path = "tests/test_files/projects/multi_page_meets/"
+    project = Report(multi_meets_path)
+    project.generate_report()
+
+    about_meets_path = "tests/test_files/projects/about_me/"
+    project = Report(about_meets_path)
+    project.generate_report()
     
     print("done")

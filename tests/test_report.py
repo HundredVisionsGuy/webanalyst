@@ -24,13 +24,13 @@ def about_me_report():
 def about_me_dnm_report():
     my_report = report.Report(about_me_dnm_path)
     my_report.generate_report()
-    return my_report
+    yield my_report
 
 @pytest.fixture
 def large_project_report():
     my_test_project = report.Report(large_project_path)
     my_test_project.generate_report()
-    return my_test_project
+    yield my_test_project
 
 @pytest.fixture
 def multipage_meets_report():
@@ -42,52 +42,50 @@ def multipage_meets_report():
 def about_me_readme_list():
     my_report = report.Report(about_me_path)
     my_list = my_report.get_readme_list()
-    return my_list
+    yield my_list
 
 @pytest.fixture
 def about_me_dnn_readme_list():
     my_report = report.Report(about_me_dnm_path)
     my_list = my_report.get_readme_list()
-    return my_list
+    yield my_list
 
 @pytest.fixture
 def large_project_readme_list():
     my_report = report.Report(large_project_path)
     my_list = my_report.get_readme_list()
-    return my_list
+    yield my_list
 
 
 @pytest.fixture
 def about_me_general_report(about_me_report):
-    # about_me_report.general_report.generate_report()
-    return about_me_report.general_report
+    yield about_me_report.general_report
 
 @pytest.fixture
 def large_project_general_report(large_project_report):
-    return large_project_report.general_report
+    yield large_project_report.general_report
 
 
 @pytest.fixture
 def about_me_html_report(about_me_report):
-    return about_me_report.html_report
+    yield about_me_report.html_report
 
 @pytest.fixture
 def about_me_dnm_html_report(about_me_dnm_report):
-    return about_me_dnm_report.html_report
+    yield about_me_dnm_report.html_report
 
 @pytest.fixture
 def large_project_html_report(large_project_report):
-    return large_project_report.html_report
+    yield large_project_report.html_report
 
 @pytest.fixture
 def about_me_css_report(about_me_report):
-    css_report = about_me_report.css_report
-    return css_report
+    yield about_me_report.css_report
 
 @pytest.fixture
 def about_me_dnm_css_report(about_me_dnm_report):
     # css_report = report.CSSReport(about_me_dnn_readme_list, about_me_dnm_path)
-    return about_me_dnm_report.css_report
+    yield about_me_dnm_report.css_report
 
 @pytest.fixture
 def large_project_css_report(large_project_report):
@@ -362,7 +360,7 @@ def test_html_report_for_extract_el_from_dict_key_tuple(about_me_html_report):
     dictionary = {(0, 'H1'): 1, (1, 'H2'): 2, (2, 'P'): 3}
     expected = {'H1': 1, 'H2': 2, 'P': 3}
     results = about_me_html_report.extract_el_from_dict_key_tuple(dictionary)
-    assert expected == results
+    assert results == expected
 
 def test_html_report_for_get_validator_goals_return_value(about_me_html_report):
     results = about_me_html_report.get_validator_goals()
@@ -387,7 +385,7 @@ def test_large_project_html_report_for_get_validator_goals_to_set_details(large_
 def test_set_linked_stylesheets_for_no_CSS_files(about_me_html_report):
     expected = {'index.html': None}
     results = about_me_html_report.linked_stylesheets
-    assert expected == results
+    assert results == expected
 
 def test_large_project_html_report_for_set_linked_stylesheets(large_project_html_report):
     expected = {"about.html":["css/navigation.css", "css/general.css", "css/layout.css"],"gallery.html":["css/navigation.css", "css/general.css", "css/layout.css"],"index.html":None
@@ -415,14 +413,11 @@ def test_large_project_css_report_for_report_details_num_css_files(large_project
     assert results == expected
 
 def test_about_me_css_report_for_num_style_tags(about_me_css_report):
-    about_me_css_report.get_style_tags()
     results = about_me_css_report.get_num_style_tags()
     expected = 1
     assert results == expected
 
 def test_about_me_css_report_validate_css_for_0_errors(about_me_css_report):
-    about_me_css_report.get_css_code()
-    about_me_css_report.validate_css()
     css_errors = about_me_css_report.report_details['css_validator_results']
     results = len(css_errors)
     expected = 0
@@ -502,7 +497,7 @@ def test_get_filenames_from_path(large_project_css_report):
     full_paths = ['css/navigation.css', 'css/general.css', 'css/layout.css']
     expected = ['navigation.css', 'general.css', 'layout.css']
     results = large_project_css_report.get_filenames_from_paths(full_paths)
-    assert expected == results
+    assert results == expected
 
 def test_get_implemented_selectors(large_project_css_report):
     selectors = []
@@ -515,7 +510,7 @@ def test_get_implemented_selectors(large_project_css_report):
 def test_get_repeated_selectors(large_project_css_report):
     expected = {'.container': ['layout.css', 'layout.css'], '.image-gallery .display-box': ['layout.css', 'layout.css'], 'body': ['about.html', 'general.css', 'layout.css'], 'header': ['layout.css', 'navigation.css'], 'header h1': ['layout.css', 'navigation.css']}
     results = large_project_css_report.repeat_selectors
-    assert expected == results
+    assert results == expected
 
 def test_file_is_linked_for_true(large_project_css_report):
     results = large_project_css_report.file_is_linked('navigation.css')
@@ -533,19 +528,19 @@ def test_set_repeat_declaration_blocks(large_project_css_report):
 def test_get_standard_requirements_large_project(large_project_css_report):
     expected = {'CSS Errors': {'min': 0, 'max': 0}, 'Repeat selectors': {'min': 0, 'max': 0}, 'Repeat declaration blocks': {'min': 0, 'max': 0}}
     results = large_project_css_report.report_details['standard_requirements_goals']
-    assert expected == results
+    assert results == expected
 
 def test_get_standard_requirements_about_me_project(about_me_css_report):
     expected = {'CSS Errors': {'min': 0, 'max': 2}, 'Repeat selectors': {'min': 0, 'max': 0}, 'Repeat declaration blocks': {'min': 0, 'max': 0}}
     results = about_me_css_report.report_details['standard_requirements_goals']
-    assert expected == results
+    assert results == expected
 
 def test_get_header_details_for_font_families_details(about_me_report):
     input_string = '    * Font Families: number of font families to be set'
     results = about_me_report.get_header_details(input_string)
-    expected = {"title": "Font Families", "description": "number of font families to be set"}
-    assert expected == results
-    
+    expected = {'title': 'Font Families', 'details': {'description': 'number of font families to be set'}}
+    assert results == expected
+
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
     report_contents = clerk.file_to_string(report_html_doc_path)

@@ -97,13 +97,13 @@ def is_css_valid(validator_results):
 def validate_css(css_code):
     try:
         browser.open("https://jigsaw.w3.org/css-validator")
-        # Fill-in the search form
+        # Fill-in the search form based on css_code
         browser.select_form('#validate-by-input form')
         browser["text"] = css_code
-        browser.submit_selected()
+        browser.submit_selected() 
         results = browser.get_current_page().select('#results_container')
-        print("\nCSS Validator:\n")
-        print(results)
+        # print("\nCSS Validator:\n")
+        # print(results)
     except Exception:
         # Convert the file "no_css_connection.html" into a soup tag object
         no_connection_code = clerk.file_to_string("webanalyst/no_css_connection.html")
