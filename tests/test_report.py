@@ -541,6 +541,16 @@ def test_get_header_details_for_font_families_details(about_me_report):
     expected = {'title': 'Font Families', 'details': {'description': 'number of font families to be set'}}
     assert results == expected
 
+def test_get_css_errors_for_does_not_meet(about_me_dnm_css_report):
+    results = about_me_dnm_css_report.get_css_errors()
+    expected = 4
+    assert results == expected
+
+def test_get_css_errors_for_0_errors(about_me_css_report):
+    results = about_me_css_report.get_css_errors()
+    expected = 0
+    assert results == expected
+
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
     report_contents = clerk.file_to_string(report_html_doc_path)

@@ -1,3 +1,4 @@
+from bs4.element import ResultSet
 from webanalyst import clerk
 import re
 from webanalyst import HTMLinator as html
@@ -853,10 +854,10 @@ class CSSReport:
         self.get_css_code()
         self.check_pages_for_same_css_files()
         self.set_repeat_selectors()
+        self.validate_css()
         self.set_repeat_declaration_blocks()
         self.get_standard_requirements()
         self.get_standard_requirements_results()
-        self.validate_css()
         self.get_general_styles_goals()
         self.get_general_styles_results()
         
@@ -930,8 +931,34 @@ class CSSReport:
             self.report_details['standard_requirements_goals'][description]={"min": min, "max": max}
 
     def get_standard_requirements_results(self):
-        print("what to do")
-        pass
+        errors = self.get_css_errors()
+        self.get_standard_requirements_results_by_key(errors, "CSS Errors")
+
+        repeats = len(list(self.repeat_selectors.keys()))
+        self.get_standard_requirements_results_by_key(repeats, "Repeat selectors")
+         
+        repeats = len(list(self.repeat_declarations_blocks.keys()))
+        self.get_standard_requirements_results_by_key(repeats, "Repeat declaration blocks")
+
+        
+    def get_standard_requirements_results_by_key(self, results, key):
+        range = self.report_details["standard_requirements_goals"][key]
+        min = range["min"]
+        max = range["max"]
+        passed = results >= min and results <= max
+        if passed:
+            results = "Passed"
+        else:
+            results = "Failed"
+        
+        self.report_details["standard_requirements_results"][key] = results
+
+    def get_css_errors(self):
+        number = 0
+        for errors in self.css_errors.values():
+            if errors != "No errors":
+                number += len(errors)
+        return number
 
     def set_repeat_selectors(self):
         all_selectors = []
