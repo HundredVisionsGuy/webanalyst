@@ -882,17 +882,34 @@ class CSSReport:
                 # Let's add them before clearing them out for the next round
                 if details:
                     # add details to report_details
+                    item = details.pop("title")
+                    self.report_details["general_styles_goals"][item]=details
 
                     # reset details
-                    details = {}
-                response = Report.get_header_details(req)
-                details = response
+                    details = Report.get_header_details(req)
+                else:
+                    response = Report.get_header_details(req)
+                    details = response
             elif '+ minimum' in req.lower() or '+ min' in req.lower():
                 min = req.split(":")[1].strip()
                 details["details"]["minimum"] = min
             elif '+ maximum' in req.lower() or '+ max' in req.lower():
                 max = req.split(":")[1].strip()
                 details["details"]["maximum"] = max
+            elif '+ entire page colors set' in req.lower():
+                if 'background and foreground' in req.lower():
+                    details["details"]["global colors"] = "Both background and foreground colors must be set on each page."
+                else:
+                    description = req.split(":")[1].strip()
+                    details["details"]["global colors"] = description
+            elif '+ headers' in req.lower():
+                if 'background and foreground' in req:
+                    details["details"]["headers"] = "Any headers must have a color and background color set."
+                else:
+                    description = req.split(":")[1].strip()
+                    details["details"]["headers"] = description
+            elif '+ color contrast' in req.lower():
+                print("Next stop: color contrast")
 
     def get_general_styles_results(self):
         pass
