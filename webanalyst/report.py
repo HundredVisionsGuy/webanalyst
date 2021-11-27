@@ -877,7 +877,16 @@ class CSSReport:
         requirements = self.readme_list[start:stop]
         details = {}
         for req in requirements:
-            if '    * ' in req:
+            if '    * Font Families' in req:
+                response = Report.get_header_details(req)
+                details = response
+            elif '+ minimum' in req.lower() or '+ min' in req.lower():
+                min = req.split(":")[1].strip()
+                details["details"]["minimum"] = min
+            elif '+ maximum' in req.lower() or '+ max' in req.lower():
+                max = req.split(":")[1].strip()
+                details["details"]["maximum"] = max
+            elif '* color settings' in req.lower():
                 # If we had already gathered requirements,
                 # Let's add them before clearing them out for the next round
                 if details:
@@ -886,30 +895,31 @@ class CSSReport:
                     self.report_details["general_styles_goals"][item]=details
 
                     # reset details
-                    details = Report.get_header_details(req)
-                else:
-                    response = Report.get_header_details(req)
-                    details = response
-            elif '+ minimum' in req.lower() or '+ min' in req.lower():
-                min = req.split(":")[1].strip()
-                details["details"]["minimum"] = min
-            elif '+ maximum' in req.lower() or '+ max' in req.lower():
-                max = req.split(":")[1].strip()
-                details["details"]["maximum"] = max
+                    details = {"Color Settings":{}}
+                    
             elif '+ entire page colors set' in req.lower():
-                if 'background and foreground' in req.lower():
-                    details["details"]["global colors"] = "Both background and foreground colors must be set on each page."
-                else:
-                    description = req.split(":")[1].strip()
-                    details["details"]["global colors"] = description
+                description, title = self.get_title_and_description(req)
+                details["Color Settings"][title] = description
             elif '+ headers' in req.lower():
-                if 'background and foreground' in req:
-                    details["details"]["headers"] = "Any headers must have a color and background color set."
-                else:
-                    description = req.split(":")[1].strip()
-                    details["details"]["headers"] = description
+                description, title = self.get_title_and_description(req)
+                details["Color Settings"][title] = description
             elif '+ color contrast' in req.lower():
-                print("Next stop: color contrast")
+                description, title = self.get_title_and_description(req)
+                details["Color Settings"][title] = {"description": description}
+            elif '- normal' in req.lower():
+                description, title = self.get_title_and_description(req)
+                details["Color Settings"]['Color Contrast (readability)'][title] = description
+            elif '- large' in req.lower():
+                description, title = self.get_title_and_description(req)
+                details["Color Settings"]['Color Contrast (readability)'][title] = description
+        # settings = details.values()[0]
+        self.report_details["general_styles_goals"]["Color Settings"]=details["Color Settings"]
+
+    def get_title_and_description(self, req):
+        full_details = req.split(": ")
+        title = full_details[0].strip()[2:]
+        description = full_details[1].strip()
+        return description,title
 
     def get_general_styles_results(self):
         pass
