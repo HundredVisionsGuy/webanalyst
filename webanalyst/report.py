@@ -912,7 +912,7 @@ class CSSReport:
             elif '- large' in req.lower():
                 description, title = self.get_title_and_description(req)
                 details["Color Settings"]['Color Contrast (readability)'][title] = description
-        # settings = details.values()[0]
+        
         self.report_details["general_styles_goals"]["Color Settings"]=details["Color Settings"]
 
     def get_title_and_description(self, req):
@@ -922,7 +922,47 @@ class CSSReport:
         return description,title
 
     def get_general_styles_results(self):
-        pass
+        results = {}
+        goals = list(self.report_details['general_styles_goals'].items())
+        for goal, details in goals:
+            if goal == "Font Families":
+                # get actual # of font families and compare to range (min max)
+                font_families = self.get_font_families()
+                font_count = self.get_font_count(font_families)
+                print(font_count)
+
+    def get_font_count(self, font_families):
+        # Make sure there are no duplicates
+        for font in font_families:
+            num = font_families.count(font)
+            if num > 1:
+                font_families.pop(font)
+        return len(font_families)
+
+    def get_font_families(self):
+        font_families = []
+        rulesets = []
+        for declaration in self.style_tag_contents:
+            families = self.get_families(declaration)
+            if families:
+                for fam in families:
+                    font_families.append(fam)
+        for declaration in self.stylesheet_objects:
+            families = self.get_families(declaration)
+            if families:
+                for fam in families:
+                    font_families.append(fam)
+        return font_families
+
+    def get_families(self, declaration):
+        families = []
+        for ruleset in declaration.rulesets:
+            for declaration in ruleset.declaration_block.declarations:
+                if declaration.property in ("font", "font-family"):
+                    families.append(declaration.value)
+        return families
+
+
 
     def get_standard_requirements(self):
         # get index position of Standard Req and General Styles headers
@@ -1008,7 +1048,7 @@ class CSSReport:
                         if not pages:
                             self.repeat_selectors[selector] = [page, ]
                         elif page not in pages:
-                             self.repeat_selectors[selector].append(page) 
+                            self.repeat_selectors[selector].append(page) 
                         else:
                             # At this point, only append if we have not yet matched the number of pages to the count
                             if len(self.repeat_selectors[selector]) < count:    
