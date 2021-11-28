@@ -35,6 +35,7 @@ class Stylesheet:
         self.nested_at_rules = []
         self.rulesets = []
         self.comments = []
+        self.color_rulesets = []
         self.minify()
         self.extract_comments()
         self.extract_nested_at_rules()
@@ -114,6 +115,7 @@ class Stylesheet:
             if ruleset:
                 ruleset = Ruleset(ruleset + "}")
                 self.rulesets.append(ruleset)
+                self.get_color_ruleset(ruleset)
 
     def extract_rulesets_from_at_rules(self):
         nested_at_rule_dict = {}
@@ -129,8 +131,13 @@ class Stylesheet:
                         rule = rule + "}"
                     ruleset = Ruleset(rule)
                     rulesets.append(ruleset)
+                    self.get_color_ruleset(ruleset)
             nested_at_rule_dict[key] = rulesets
         self.nested_at_rules = nested_at_rule_dict
+
+    def get_color_ruleset(self, ruleset):
+        if 'color:' in ruleset.declaration_block.text:
+            self.color_rulesets.append(ruleset)
 
     def get_selectors(self):
         for rule in self.rulesets:

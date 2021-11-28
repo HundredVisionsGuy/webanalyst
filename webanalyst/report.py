@@ -929,7 +929,10 @@ class CSSReport:
                 # get actual # of font families and compare to range (min max)
                 font_families = self.get_font_families()
                 font_count = self.get_font_count(font_families)
-                print(font_count)
+                min = int(details['details']['minimum'])
+                max = int(details['details']['maximum'])
+                meets = font_count >= min and font_count <= max
+                print(meets)
 
     def get_font_count(self, font_families):
         # Make sure there are no duplicates
