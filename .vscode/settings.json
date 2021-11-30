@@ -1,10 +1,12 @@
 {
-    "python.linting.pylintEnabled": true,
+    "python.linting.pylintEnabled": false,
     "python.linting.enabled": true,
     "python.linting.lintOnSave": true,
     "python.pythonPath": "C:\\Users\\winikkc\\.virtualenvs\\webanalyst-lIJnSHWg\\Scripts\\python.exe",
     "python.linting.pylintPath": "C:\\Users\\winikkc\\.virtualenvs\\webanalyst-lIJnSHWg\\Scripts\\pylint.exe",
     "python.analysis.extraPaths": [
         "./webanalyst"
-    ]
+    ],
+    "python.linting.flake8Enabled": true,
+    "python.linting.pycodestyleEnabled": false
 }
