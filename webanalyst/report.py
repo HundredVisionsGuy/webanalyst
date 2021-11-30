@@ -877,7 +877,16 @@ class CSSReport:
         requirements = self.readme_list[start:stop]
         details = {}
         for req in requirements:
-            if '    * ' in req:
+            if '    * Font Families' in req:
+                response = Report.get_header_details(req)
+                details = response
+            elif '+ minimum' in req.lower() or '+ min' in req.lower():
+                min = req.split(":")[1].strip()
+                details["details"]["minimum"] = min
+            elif '+ maximum' in req.lower() or '+ max' in req.lower():
+                max = req.split(":")[1].strip()
+                details["details"]["maximum"] = max
+            elif '* color settings' in req.lower():
                 # If we had already gathered requirements,
                 # Let's add them before clearing them out for the next round
                 if details:
@@ -886,33 +895,77 @@ class CSSReport:
                     self.report_details["general_styles_goals"][item]=details
 
                     # reset details
-                    details = Report.get_header_details(req)
-                else:
-                    response = Report.get_header_details(req)
-                    details = response
-            elif '+ minimum' in req.lower() or '+ min' in req.lower():
-                min = req.split(":")[1].strip()
-                details["details"]["minimum"] = min
-            elif '+ maximum' in req.lower() or '+ max' in req.lower():
-                max = req.split(":")[1].strip()
-                details["details"]["maximum"] = max
+                    details = {"Color Settings":{}}
+                    
             elif '+ entire page colors set' in req.lower():
-                if 'background and foreground' in req.lower():
-                    details["details"]["global colors"] = "Both background and foreground colors must be set on each page."
-                else:
-                    description = req.split(":")[1].strip()
-                    details["details"]["global colors"] = description
+                description, title = self.get_title_and_description(req)
+                details["Color Settings"][title] = description
             elif '+ headers' in req.lower():
-                if 'background and foreground' in req:
-                    details["details"]["headers"] = "Any headers must have a color and background color set."
-                else:
-                    description = req.split(":")[1].strip()
-                    details["details"]["headers"] = description
+                description, title = self.get_title_and_description(req)
+                details["Color Settings"][title] = description
             elif '+ color contrast' in req.lower():
-                print("Next stop: color contrast")
+                description, title = self.get_title_and_description(req)
+                details["Color Settings"][title] = {"description": description}
+            elif '- normal' in req.lower():
+                description, title = self.get_title_and_description(req)
+                details["Color Settings"]['Color Contrast (readability)'][title] = description
+            elif '- large' in req.lower():
+                description, title = self.get_title_and_description(req)
+                details["Color Settings"]['Color Contrast (readability)'][title] = description
+        
+        self.report_details["general_styles_goals"]["Color Settings"]=details["Color Settings"]
+
+    def get_title_and_description(self, req):
+        full_details = req.split(": ")
+        title = full_details[0].strip()[2:]
+        description = full_details[1].strip()
+        return description,title
 
     def get_general_styles_results(self):
-        pass
+        results = {}
+        goals = list(self.report_details['general_styles_goals'].items())
+        for goal, details in goals:
+            if goal == "Font Families":
+                # get actual # of font families and compare to range (min max)
+                font_families = self.get_font_families()
+                font_count = self.get_font_count(font_families)
+                min = int(details['details']['minimum'])
+                max = int(details['details']['maximum'])
+                meets = font_count >= min and font_count <= max
+                print(meets)
+
+    def get_font_count(self, font_families):
+        # Make sure there are no duplicates
+        for font in font_families:
+            num = font_families.count(font)
+            if num > 1:
+                font_families.pop(font)
+        return len(font_families)
+
+    def get_font_families(self):
+        font_families = []
+        rulesets = []
+        for declaration in self.style_tag_contents:
+            families = self.get_families(declaration)
+            if families:
+                for fam in families:
+                    font_families.append(fam)
+        for declaration in self.stylesheet_objects:
+            families = self.get_families(declaration)
+            if families:
+                for fam in families:
+                    font_families.append(fam)
+        return font_families
+
+    def get_families(self, declaration):
+        families = []
+        for ruleset in declaration.rulesets:
+            for declaration in ruleset.declaration_block.declarations:
+                if declaration.property in ("font", "font-family"):
+                    families.append(declaration.value)
+        return families
+
+
 
     def get_standard_requirements(self):
         # get index position of Standard Req and General Styles headers
@@ -998,7 +1051,7 @@ class CSSReport:
                         if not pages:
                             self.repeat_selectors[selector] = [page, ]
                         elif page not in pages:
-                             self.repeat_selectors[selector].append(page) 
+                            self.repeat_selectors[selector].append(page) 
                         else:
                             # At this point, only append if we have not yet matched the number of pages to the count
                             if len(self.repeat_selectors[selector]) < count:    
