@@ -932,8 +932,37 @@ class CSSReport:
                 min = int(details['details']['minimum'])
                 max = int(details['details']['maximum'])
                 meets = font_count >= min and font_count <= max
-                print(meets)
+                self.report_details['general_styles_goals']['Font Families']['details']['actual']=str(font_count)
+                self.report_details['general_styles_goals']['Font Families']['details']['meets']=meets
+            elif goal == "Color Settings":
+                passes_page_colors = self.check_page_colors(details)
 
+    def check_page_colors(self, goals):
+        try:
+            if goals['Entire Page colors set'] == "background and foreground":
+                return self.meets_page_colors()
+        except:
+            print("We have an exception most likely with the key for goals.")
+
+    def meets_page_colors(self):
+        meets = False
+        for sheet in self.style_tag_contents:
+            if sheet.color_rulesets:
+                if self.are_background_and_foreground_set(sheet):
+                    return True
+        for sheet in self.stylesheet_objects:
+            if sheet.color_rulesets:
+                if self.are_background_and_foreground_set(sheet):
+                    return True
+        return meets
+        
+    def are_background_and_foreground_set(self, sheet):
+        for rule in sheet.color_rulesets:
+            if rule.selector in ('body', 'html'):
+                if "background-color:" in rule.declaration_block.text and rule.declaration_block.text.count("color") > 1:
+                            # both are set
+                    print(rule.declaration_block.text)
+                    return True
     def get_font_count(self, font_families):
         # Make sure there are no duplicates
         for font in font_families:
