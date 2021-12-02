@@ -935,26 +935,26 @@ class CSSReport:
                 self.report_details['general_styles_goals']['Font Families']['details']['actual']=str(font_count)
                 self.report_details['general_styles_goals']['Font Families']['details']['meets']=meets
             elif goal == "Color Settings":
-                passes_page_colors = self.check_page_colors(details)
+                passes_page_colors = self.meets_page_colors(details)
+                
 
-    def check_page_colors(self, goals):
+    def meets_page_colors(self, goals):
+        meets = False
         try:
             if goals['Entire Page colors set'] == "background and foreground":
-                return self.meets_page_colors()
+                for sheet in self.style_tag_contents:
+                    if sheet.color_rulesets:
+                        if self.are_background_and_foreground_set(sheet):
+                            return True
+                for sheet in self.stylesheet_objects:
+                    if sheet.color_rulesets:
+                        if self.are_background_and_foreground_set(sheet):
+                            return True
+            return meets
         except:
             print("We have an exception most likely with the key for goals.")
-
-    def meets_page_colors(self):
-        meets = False
-        for sheet in self.style_tag_contents:
-            if sheet.color_rulesets:
-                if self.are_background_and_foreground_set(sheet):
-                    return True
-        for sheet in self.stylesheet_objects:
-            if sheet.color_rulesets:
-                if self.are_background_and_foreground_set(sheet):
-                    return True
-        return meets
+            return False
+        
         
     def are_background_and_foreground_set(self, sheet):
         for rule in sheet.color_rulesets:
