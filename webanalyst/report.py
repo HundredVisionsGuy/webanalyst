@@ -935,8 +935,50 @@ class CSSReport:
                 self.report_details['general_styles_goals']['Font Families']['details']['actual']=str(font_count)
                 self.report_details['general_styles_goals']['Font Families']['details']['meets']=meets
             elif goal == "Color Settings":
+                color_rulesets = self.get_color_data()
                 passes_page_colors = self.meets_page_colors(details)
-                
+                print(passes_page_colors)
+
+    def get_color_data(self):
+        """ Initialize background & foreground to white & black
+            Get background & foreground colors for:
+            * global styles
+            * headers
+            * anchors (default is blue and purple for hover)
+            * any other selectors
+            If any declarations leave out color or background-color, use the global setting
+            
+            NOTE: we will NOT worry about the context (like applying inheritance of an li from ul). That's beyond my paygrade
+        """
+        color_data = self.set_color_data_defaults()
+        print(color_data)
+        # TODO:
+        # get all properties, values, specificity, cascade
+        print("Here we go")
+
+    def set_color_data_defaults(self):
+        default_colors = {"color": "#000000",
+                       "background": "#ffffff"}
+        general_data = {
+                       "specificity": 1,
+                       "colors": {},
+                       "contrast": ""}
+        global_colors = {"name": "global",
+                         "selector": "body"}
+        anchor_defaults = {"color": "#0000ff",
+                           "background": "#ffffff"}
+        color_data = {
+            "global": {},
+            "headers": {},
+            "anchors": {},
+            "others": {}
+        }
+        general_data["colors"] = default_colors
+        color_data["global"] = general_data.copy()
+        color_data["headers"] = general_data.copy()
+        color_data["anchors"] = general_data.copy()
+        color_data["anchors"]["colors"] = anchor_defaults
+        return color_data
 
     def meets_page_colors(self, goals):
         meets = False
