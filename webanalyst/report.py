@@ -338,8 +338,14 @@ class HTMLReport:
         self.html_files = []
         self.linked_stylesheets = {}
         self.style_tags = []
-        self.validator_errors = {}
-        self.validator_warnings = {}
+        self.validator_errors = { 
+                                 "HTML": {},
+                                 "CSS": {}
+                                 }
+        self.validator_warnings = {
+                                 "HTML": {},
+                                 "CSS": {}
+                                 }
         self.report_details = {
             "html_level": "",
             "can_attain_level": False,
@@ -595,12 +601,17 @@ class HTMLReport:
                 except:
                     warnings_dict["HTML"][page_name] = [item, ]
 
-        self.validator_errors = errors_dict
+        self.augment_errors(errors_dict) # we might need to change to a function
         self.add_warnings(warnings_dict)
 
+    def augment_errors(self, new_dict):
+        """ appends any errors from a dict to validator errors """
+        for page, errors in new_dict['HTML'].items():
+            self.validator_errors['HTML'][page] = errors
+    
     def add_warnings(self, warnings):
         for page, warning in warnings['HTML'].items():
-            self.validator_warnings[page] = warning
+            self.validator_warnings['HTML'][page] = warning
 
     def add_errors(self, errors):
         for page, error in errors['HTML'].items():
@@ -705,8 +716,10 @@ class HTMLReport:
         if not self.validator_errors:
             return '<tr><td rowspan="4">Congratulations! No Errors Found</td></tr>'
         else:
-            validation_report = self.validator_errors[validation_type].copy()
-
+            try:
+                validation_report = self.validator_errors[validation_type].copy()
+            except:
+                print("Whoah Nelly")
             cumulative_errors = 0
             for page, errors in validation_report.items():
                 num_errors = len(errors)

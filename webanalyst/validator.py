@@ -48,7 +48,8 @@ def get_markup_validity(filepath):
                    'Accept-Charset': 'UTF-8'}
         try:
             r = requests.post(w3cURL, data=payload, headers=headers)
-            errors = r.json()['messages']
+            errors = r.json()
+            errors = errors["messages"]
             print(errors[-1])
         except:
             errors = [{'type': 'alert', 'lastLine': 'NA', 'lastColumn': 'NA', 'firstColumn': 'NA', 
