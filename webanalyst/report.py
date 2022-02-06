@@ -1448,9 +1448,14 @@ class CSSReport:
             # write 1 column entry indicating there are no errors
             congrats = "Congratulations, no errors were found."
             general_results = '<tr><td colspan="4">' + congrats + '</td></tr>'
+            pages = self.css_errors.keys()
+            for page in pages:
+                specific_results += '<tr><td>' + page + '</td>'
+                specific_results += '<td>No errors found</td>'
+                specific_results += '<td>NA</td>' * 2 + '</tr>\n'
         else:
             cumulative_errors = 0
-            specific_results = '<tr>'
+            specific_results = ''
             for page, errors in self.css_errors.items():
                 # Process general results
                 num_errors = len(errors) 
@@ -1464,19 +1469,27 @@ class CSSReport:
                     # get page, message, location, and extract
                     message = error['error_msg']
                     location = error['line_number']
-                    extract = error['extract'].contents[0]
-                    specific_results += '<td>' + page + '</td>'
+                    has_extract = error.get('extract')
+                    if has_extract:
+                        extract = error['extract'].contents[0]
+                    specific_results += '<tr><td>' + page + '</td>'
                     specific_results += '<td>' + message + '</td>'
                     specific_results += '<td>' + location + '</td>'
-                    specific_results += '<td><pre>' + extract.strip() + '</pre></td></tr>'
-                
-        # create our tbody contents
+                    if has_extract:
+                        specific_results += '<td><pre>' + extract.strip() + '</pre></td></tr>'
+                    else:
+                        specific_results += '<td>No extract</td></tr>'
+        # create our tbody contents for general validation
         tbody_contents = BeautifulSoup(
-            results, "html.parser")
-        tbody_id = 'html-validation'
+            general_results, "html.parser")
+        tbody_id = 'css-validation-general'
         report_content.find(id=tbody_id).replace_with(tbody_contents)
         
-        # Generate Validator Errors Table
+        # create our tbody contents for css validation errors
+        tbody_contents = BeautifulSoup(
+            specific_results, "html.parser")
+        tbody_id = 'css-validation-specifics'
+        report_content.find(id=tbody_id).replace_with(tbody_contents)
         
         # Generate CSS Goals Report 
         
@@ -1537,13 +1550,13 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
-    # project = Report(about_me_dnn_readme_path)
-    # project.generate_report()
+    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    project = Report(about_me_dnn_readme_path)
+    project.generate_report()
 
-    # large_project_readme_path = "tests/test_files/projects/large_project/"
-    # large_project = Report(large_project_readme_path)
-    # large_project.generate_report()
+    large_project_readme_path = "tests/test_files/projects/large_project/"
+    large_project = Report(large_project_readme_path)
+    large_project.generate_report()
     
     multi_meets_path = "tests/test_files/projects/multi_page_meets/"
     project = Report(multi_meets_path)
