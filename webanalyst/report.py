@@ -32,7 +32,8 @@ class Report:
         return self.__readme_list
 
     @staticmethod
-    def get_report_results_string(tr_class, type_column, target, results, results_key):
+    def get_report_results_string(tr_class, type_column, target, 
+                                  results, results_key):
         results_key = str(results_key)
         if tr_class:
             results_string = '<tr class="' + tr_class + '">'
@@ -60,6 +61,10 @@ class Report:
             title = title[2:]
         description = header_list[1]
         return {"title": title, "details": {"description": description.strip()}}
+
+    @staticmethod 
+    def foo():
+        pass
 
     def generate_report(self):
         # pull readme text
@@ -873,6 +878,7 @@ class CSSReport:
         self.get_standard_requirements_results()
         self.get_general_styles_goals()
         self.get_general_styles_results()
+        self.publish_results()
         
     def get_general_styles_goals(self):
         try:
@@ -1009,8 +1015,7 @@ class CSSReport:
         except:
             print("We have an exception most likely with the key for goals.")
             return False
-        
-        
+           
     def are_background_and_foreground_set(self, sheet):
         for rule in sheet.color_rulesets:
             if rule.selector in ('body', 'html'):
@@ -1018,6 +1023,7 @@ class CSSReport:
                             # both are set
                     print(rule.declaration_block.text)
                     return True
+    
     def get_font_count(self, font_families):
         # Make sure there are no duplicates
         for font in font_families:
@@ -1048,8 +1054,6 @@ class CSSReport:
                 if declaration.property in ("font", "font-family"):
                     families.append(declaration.value)
         return families
-
-
 
     def get_standard_requirements(self):
         # get index position of Standard Req and General Styles headers
@@ -1093,8 +1097,7 @@ class CSSReport:
          
         repeats = len(list(self.repeat_declarations_blocks.keys()))
         self.get_standard_requirements_results_by_key(repeats, "Repeat declaration blocks")
-
-        
+   
     def get_standard_requirements_results_by_key(self, results, key):
         range = self.report_details["standard_requirements_goals"][key]
         min = range["min"]
@@ -1432,7 +1435,53 @@ class CSSReport:
         rows = error_soup.find_all('tr', {'class':'warning'})
         return rows
 
+    def publish_results(self):
+        # Get report	
+        report_content = html.get_html(report_path)
+        # TODO Process all the CSS info into our CSS tables
+        
+        # Generate Validator Reports
+        css_validation_results = self.get_css_validation_results()
+
+        # Generate Validator Errors Table
+        
+        # Generate CSS Goals Report 
+        
+        # Save new HTML as report/report.html
+        with open(report_path, 'w') as f:
+            f.write(str(report_content.contents[0]))
     
+    def get_css_validation_results(self):
+        results = ""
+        errors = 0
+        for page in self.report_details['css_validator_results'].values():
+            if page != 'No errors':
+                for item in page:
+                    if 'error' in item.keys():
+                        errors += 1
+                        
+        print(errors)
+        if not self.validator_errors:
+            return '<tr><td rowspan="4">Congratulations! No Errors Found</td></tr>'
+        else:
+            try:
+                validation_report = self.validator_errors[validation_type].copy()
+            except:
+                print("Whoah Nelly")
+            cumulative_errors = 0
+            for page, errors in validation_report.items():
+                num_errors = len(errors)
+                error_str = str(num_errors) + " error"
+                if num_errors != 1:
+                    error_str += 's'
+                cumulative_errors += num_errors
+                cumulative_errors_string = str(
+                    cumulative_errors) + " total errors"
+                meets = str(cumulative_errors <=
+                            self.report_details["validator_goals"])
+                results += Report.get_report_results_string(
+                    "", page, error_str, cumulative_errors_string, meets)
+            return results
 if __name__ == "__main__":
     # How to run a report:
     # 1. Set the path to the folder:    path = "path/to/project/folder"
@@ -1440,9 +1489,9 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
-    # project = Report(about_me_dnn_readme_path)
-    # project.generate_report()
+    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    project = Report(about_me_dnn_readme_path)
+    project.generate_report()
 
     large_project_readme_path = "tests/test_files/projects/large_project/"
     large_project = Report(large_project_readme_path)
