@@ -1492,6 +1492,14 @@ class CSSReport:
         report_content.find(id=tbody_id).replace_with(tbody_contents)
         
         # Generate CSS Goals Report 
+        # did it meet CSS validator goals?
+        
+        # What about general styles goals?
+        
+        # Check standard requirements goals
+        
+        # Any project specific goals?
+        
         
         # Save new HTML as report/report.html
         with open(report_path, 'w') as f:
