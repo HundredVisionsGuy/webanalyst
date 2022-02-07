@@ -304,7 +304,7 @@
                 "sha256:ffd65cfa33fed01735c82aca640fde4cc63f0414775cba11e06f84fae2085a6e"
             ],
             "index": "pypi",
-            "version": "==4.6.4"
+            "version": ">=4.6.5"
         },
         "mccabe": {
             "hashes": [
