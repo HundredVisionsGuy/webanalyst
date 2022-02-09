@@ -820,6 +820,7 @@ class HTMLReport:
 
         self.report_details["uses_inline_styles"] = files_with_inline_styles
 
+
 class CSSReport:
     def __init__(self, readme_list, dir_path):
         self.__dir_path = dir_path
@@ -1492,9 +1493,20 @@ class CSSReport:
         report_content.find(id=tbody_id).replace_with(tbody_contents)
         
         # Generate CSS Goals Report 
-        # did it meet CSS validator goals?
-        
+        # did it meet CSS validator goals? [goal | actual | results]
+        css_errors_goal = self.report_details['standard_requirements_goals']['CSS Errors']
+        min = css_errors_goal['min']
+        max = css_errors_goal['max']
+        css_errors_goal = "<td>CSS Errors - Min: {} Max: {}</td>".format(min, max)
+        css_validator_errors = "<td>Total CSS Errors: {}</td></tr>".format(cumulative_errors)
+        css_validator_results = str(bool(cumulative_errors < max))
+        css_validator_results = "<td>" + css_validator_results + "</td>"
+        css_goals_tbody = "<tr>" + css_validator_errors + "</tr>" 
+
         # What about general styles goals?
+        # Loop through general Styles Goals and get all goals and results
+        for goal, details in self.report_details["general_styles_goals"].items():
+            print(goal)
         
         # Check standard requirements goals
         
@@ -1551,6 +1563,8 @@ class CSSReport:
                 results += Report.get_report_results_string(
                     "", page, error_str, cumulative_errors_string, meets)
             return results
+
+
 if __name__ == "__main__":
     # How to run a report:
     # 1. Set the path to the folder:    path = "path/to/project/folder"
@@ -1562,16 +1576,16 @@ if __name__ == "__main__":
     project = Report(about_me_dnn_readme_path)
     project.generate_report()
 
-    large_project_readme_path = "tests/test_files/projects/large_project/"
-    large_project = Report(large_project_readme_path)
-    large_project.generate_report()
+    # large_project_readme_path = "tests/test_files/projects/large_project/"
+    # large_project = Report(large_project_readme_path)
+    # large_project.generate_report()
     
-    multi_meets_path = "tests/test_files/projects/multi_page_meets/"
-    project = Report(multi_meets_path)
-    project.generate_report()
+    # multi_meets_path = "tests/test_files/projects/multi_page_meets/"
+    # project = Report(multi_meets_path)
+    # project.generate_report()
 
-    about_meets_path = "tests/test_files/projects/about_me/"
-    project = Report(about_meets_path)
-    project.generate_report()
+    # about_meets_path = "tests/test_files/projects/about_me/"
+    # project = Report(about_meets_path)
+    # project.generate_report()
     
-    print("done")
+    # print("done")
