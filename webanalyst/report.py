@@ -919,7 +919,8 @@ class CSSReport:
                     
             elif '+ entire page colors set' in req.lower():
                 description, title = self.get_title_and_description(req)
-                details["Color Settings"][title] = description
+                details['Color Settings']['details'] = {'description': req.strip()}
+                self.report_details["general_styles_goals"]['Color Settings'] = details['Color Settings']
             elif '+ headers' in req.lower():
                 description, title = self.get_title_and_description(req)
                 details["Color Settings"][title] = description
@@ -957,6 +958,12 @@ class CSSReport:
             elif goal == "Color Settings":
                 color_rulesets = self.get_color_data()
                 passes_page_colors = self.meets_page_colors(details)
+                if not color_rulesets:
+                    actual = "We still need this piece of functionality"
+                else:
+                    actual = str(color_rulesets)
+                self.report_details['general_styles_goals']['Color Settings']['details']['actual']=actual
+                self.report_details['general_styles_goals']['Color Settings']['details']['meets']=passes_page_colors
                 print(passes_page_colors)
 
     def get_color_data(self):
@@ -1505,8 +1512,23 @@ class CSSReport:
 
         # What about general styles goals?
         # Loop through general Styles Goals and get all goals and results
+        general_styles_goals = ""
         for goal, details in self.report_details["general_styles_goals"].items():
-            print(goal)
+            # Build out the table row
+            goal_details = details['details']
+            goal_description = goal_details.get('description')
+            goal_str = "<strong>{}</strong>: {}".format(goal, goal_description)
+            has_min_max = goal_details.get('minimum')
+            if has_min_max:
+                min = goal_details['minimum']
+                max = goal_details['maximum']
+                actual = goal_details['actual']
+                actual_string = "Minimum: {} Maximum: {} Actual: {}".format(min, max, actual)
+            else:
+                actual_string = "Hmmm...."
+                print("What now? No min or max")
+            results = str(goal_details['meets'])
+            general_styles_goals += "<tr><td>{}</td><td>{}</td><td>{}</td></tr>".format( goal, actual_string, results)
         
         # Check standard requirements goals
         
