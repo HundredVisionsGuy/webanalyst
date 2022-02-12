@@ -440,7 +440,18 @@ def separate_code(code):
     splitzky["comments"] = comments
     return splitzky
 
-
+def get_color_rulesets(objects):
+    color_rulesets = []
+    if objects:
+        for style_tag in objects:
+            if style_tag.color_rulesets:
+                for ruleset in style_tag.color_rulesets:
+                    for declaration in ruleset.declaration_block.declarations:
+                        if declaration.is_valid:
+                            if "color" in declaration.property.lower():
+                                if ruleset not in color_rulesets:
+                                    color_rulesets.append(ruleset)
+    return color_rulesets
 if __name__ == "__main__":
     print("hello, I'm CSSinator.")
     general_css = clerk.file_to_string(

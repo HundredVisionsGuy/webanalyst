@@ -1,4 +1,5 @@
 from bs4.element import ResultSet
+from webanalyst import CSSinator
 from webanalyst import clerk
 import re
 from webanalyst import HTMLinator as html
@@ -980,9 +981,20 @@ class CSSReport:
         color_data = self.set_color_data_defaults()
         print(color_data)
         # TODO:
-        # get all properties, values, specificity, cascade
-        print("Here we go")
-
+        # Check all stylesheet objects for color_rulesets
+        color_rulesets_set = False 
+        color_rulesets = []
+        if self.stylesheet_objects:
+            color_rulesets += CSSinator.get_color_rulesets(self.stylesheet_objects)
+        # Check all style tag objects for color_rulesets - they will override stylesheets (if same)
+        
+        if self.style_tag_contents:
+            styletag_color_rulesets = CSSinator.get_color_rulesets(self.style_tag_contents)
+        
+        # Override any stylesheet rulesets with matching styletag rulesets
+        # we may also have to check specificity
+        print("NExt...")
+                              
     def set_color_data_defaults(self):
         default_colors = {"color": "#000000",
                        "background": "#ffffff"}
@@ -1594,13 +1606,13 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
-    project = Report(about_me_dnn_readme_path)
-    project.generate_report()
+    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    # project = Report(about_me_dnn_readme_path)
+    # project.generate_report()
 
-    # large_project_readme_path = "tests/test_files/projects/large_project/"
-    # large_project = Report(large_project_readme_path)
-    # large_project.generate_report()
+    large_project_readme_path = "tests/test_files/projects/large_project/"
+    large_project = Report(large_project_readme_path)
+    large_project.generate_report()
     
     # multi_meets_path = "tests/test_files/projects/multi_page_meets/"
     # project = Report(multi_meets_path)
