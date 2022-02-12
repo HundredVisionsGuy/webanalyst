@@ -59,6 +59,9 @@ body { font-size: 120%; }
 h1 { font-family: serif;}
 """
 
+selectors_with_3_ids = "body #nav div#phred, p#red"
+selectors_with_no_ids = "h1, h2, h3, a:active"
+
 @pytest.fixture
 def css_code_1_split():
     code_split = css.separate_code(css_code_1_with_comments)
@@ -211,3 +214,11 @@ def test_stylesheet_for_selectors_with_one(stylesheet_with_one_declaration_block
 
 def test_layout_css_stylesheet_for_multiple_selectors(layout_css_stylesheet):
     assert len(layout_css_stylesheet.selectors) == 22
+    
+def test_get_id_score_for_3_ids():
+    results = css.get_id_score(selectors_with_3_ids)
+    assert results == 3
+    
+def test_get_id_score_for_no_ids():
+    results = css.get_id_score(selectors_with_no_ids)
+    assert not results

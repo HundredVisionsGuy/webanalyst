@@ -452,6 +452,19 @@ def get_color_rulesets(objects):
                                 if ruleset not in color_rulesets:
                                     color_rulesets.append(ruleset)
     return color_rulesets
+
+def get_specificity(selector):
+    specificity = "000"
+    id_selector = get_id_score(selector)
+    class_selector = 0
+    type_selector = 0
+    
+def get_id_score(selector):
+    """ receives a selector and returns # of id selectors """
+    re_pattern = "#\w+"
+    id_selectors = re.split(re_pattern, selector)
+    return len(id_selectors)
+
 if __name__ == "__main__":
     print("hello, I'm CSSinator.")
     general_css = clerk.file_to_string(
