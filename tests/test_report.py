@@ -109,10 +109,8 @@ def test_report_for_general_report_pre_generate_report():
     about_report = report.Report(about_me_path)
     assert not about_report.general_report
 
-def test_report_for_general_report_post_generate_report():
-    about_report = report.Report(about_me_path)
-    about_report.generate_report()
-    assert about_report.general_report
+def test_report_for_general_report_post_generate_report(about_me_report):
+    assert about_me_report.general_report
 
 def test_about_me_report_for_report_object(about_me_report):
     assert about_me_report

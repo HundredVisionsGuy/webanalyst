@@ -222,3 +222,20 @@ def test_get_id_score_for_3_ids():
 def test_get_id_score_for_no_ids():
     results = css.get_id_score(selectors_with_no_ids)
     assert not results
+    
+def test_get_type_score_for_3_type_selectors():
+    results = css.get_type_score(selectors_with_3_ids)
+    assert results == 3
+    
+def test_get_type_score_for_4_type_selectors():
+    results = css.get_type_score(selectors_with_no_ids)
+    assert results == 4
+    
+def test_get_class_score_for_0_results():
+    results = css.get_class_score(selectors_with_3_ids)
+    assert results == 0
+    
+def test_get_class_score_for_3_results():
+    selector = "a:hover, a:link, input[type=text]"
+    results = css.get_class_score(selector)
+    assert results == 3

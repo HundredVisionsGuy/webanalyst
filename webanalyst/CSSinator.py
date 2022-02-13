@@ -462,11 +462,25 @@ def get_specificity(selector):
 def get_id_score(selector):
     """ receives a selector and returns # of id selectors """
     re_pattern = "#\w+"
-    id_selectors = re.split(re_pattern, selector)
+    id_selectors = re.findall(re_pattern, selector)
     return len(id_selectors)
+
+def get_class_score(selector):
+    """ receives a selector and returns # of class and psuedo-class selectors """
+    re_pattern = "\.\w+|:\w+|\[\w+=\w+]"
+    selectors = re.findall(re_pattern, selector)
+    return len(selectors)
+
+def get_type_score(selector):
+    """ receives a selector and returns # of type selectors """
+    re_pattern = "([^#:\+.a-zA-Z][a-zA-Z$][a-zA-Z1-6]*|^\w*)"
+    selectors = re.findall(re_pattern, selector)
+    return len(selectors)
 
 if __name__ == "__main__":
     print("hello, I'm CSSinator.")
+    selector = "h1, h2, h3, h4#header"
+    score = get_class_score(selector)
     general_css = clerk.file_to_string(
         "tests/test_files/projects/large_project/css/general.css")
     

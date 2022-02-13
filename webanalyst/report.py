@@ -1463,6 +1463,7 @@ class CSSReport:
         # Generate Validator Reports
         general_results = ""
         specific_results = ""
+        cumulative_errors = 0
         has_errors = self.has_css_errors(self.css_errors)
         if not has_errors:
             # write 1 column entry indicating there are no errors
@@ -1474,7 +1475,7 @@ class CSSReport:
                 specific_results += '<td>No errors found</td>'
                 specific_results += '<td>NA</td>' * 2 + '</tr>\n'
         else:
-            cumulative_errors = 0
+            # cumulative_errors = 0
             specific_results = ''
             for page, errors in self.css_errors.items():
                 # Process general results
