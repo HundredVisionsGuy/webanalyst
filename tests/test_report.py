@@ -430,7 +430,7 @@ def test_about_me_dnm_css_report_for_validate_css_results_for_2_errors(about_me_
 
 def test_about_me_css_report_for_get_project_css_by_file(about_me_css_report):
     # should have been generated
-    about_me_css_report.generate_report(["tests\\test_files\\projects\\about_me_does_not_meet\\index.html",])
+    # about_me_css_report
     num_css_tags = len(about_me_css_report.project_css_by_html_file["index.html"])
     assert num_css_tags == 1
 
@@ -443,8 +443,6 @@ def test_large_project_css_report_for_get_children_head(large_project_css_report
     assert len(children) == 8
 
 def test_large_project_css_report_for_get_project_css_by_file(large_project_css_report):
-    large_project_html_docs = ['tests\\test_files\\projects\\large_project\\gallery.html', 'tests\\test_files\\projects\\large_project\\index.html']
-    large_project_css_report.generate_report(large_project_html_docs)
     num_css_files = len(large_project_css_report.project_css_by_html_file["gallery.html"])
     assert num_css_files == 3
 
