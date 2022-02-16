@@ -5,6 +5,7 @@
 import re
 from webanalyst import clerk
 
+
 def get_nested_at_rule(code, rule):
     at_rule = []
     at_split = code.split(rule)
@@ -94,8 +95,8 @@ class Stylesheet:
                     split_code = code.split(rule)
                     if len(split_code) == 2:
                         if split_code[0]:
-                            # an @rule was NOT at the beginning or else, there would
-                            # be an empty string
+                            # an @rule was NOT at the beginning or else, 
+                            # there would be an empty string
                             non_at_rules_css.append(split_code[0])
                             at_rules.append(rule + split_code[1])
                         else:
@@ -194,7 +195,7 @@ class Ruleset:
             if open_brace_pos > close_brace_pos:
                 # { needs to come before }
                 self.is_valid = False
-        except:
+        except Exception:
             self.is_valid = False
 
         if "{" not in self.__text or "}" not in self.__text:
@@ -456,8 +457,9 @@ def get_color_rulesets(objects):
 def get_specificity(selector):
     specificity = "000"
     id_selector = get_id_score(selector)
-    class_selector = 0
-    type_selector = 0
+    class_selector = get_class_score(selector)
+    type_selector = get_type_score(selector)
+    return "{}{}{}".format(id_selector, class_selector, type_selector)
     
 def get_id_score(selector):
     """ receives a selector and returns # of id selectors """
@@ -466,14 +468,14 @@ def get_id_score(selector):
     return len(id_selectors)
 
 def get_class_score(selector):
-    """ receives a selector and returns # of class and psuedo-class selectors """
+    """ receives a selector and returns # of class & psuedo-class selectors """
     re_pattern = "\.\w+|:\w+|\[\w+=\w+]"
     selectors = re.findall(re_pattern, selector)
     return len(selectors)
 
 def get_type_score(selector):
     """ receives a selector and returns # of type selectors """
-    re_pattern = "([^#:\+.a-zA-Z][a-zA-Z$][a-zA-Z1-6]*|^\w*)"
+    re_pattern = "([^#:\+.\[=a-zA-Z][a-zA-Z$][a-zA-Z1-6]*|^\w*)"
     selectors = re.findall(re_pattern, selector)
     return len(selectors)
 

@@ -1607,13 +1607,13 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
-    project = Report(about_me_dnn_readme_path)
-    project.generate_report()
+    # about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
+    # project = Report(about_me_dnn_readme_path)
+    # project.generate_report()
 
-    # large_project_readme_path = "tests/test_files/projects/large_project/"
-    # large_project = Report(large_project_readme_path)
-    # large_project.generate_report()
+    large_project_readme_path = "tests/test_files/projects/large_project/"
+    large_project = Report(large_project_readme_path)
+    large_project.generate_report()
     
     # multi_meets_path = "tests/test_files/projects/multi_page_meets/"
     # project = Report(multi_meets_path)

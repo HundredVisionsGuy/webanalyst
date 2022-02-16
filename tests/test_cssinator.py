@@ -33,9 +33,10 @@ article#gallery {
     flex-wrap: wrap;
     width: 96vw;
     margin: 0 auto;
-}
-"""
-minified_declaration_block_with_selector = "article#gallery {display: flex;flex-wrap: wrap;width: 96vw;margin: 0 auto;}"
+}"""
+
+minified_declaration_block_with_selector = """
+article#gallery {display: flex;flex-wrap: wrap; width: 96vw;margin: 0 auto;}"""
 
 invalid_css = """
 body }
@@ -59,8 +60,10 @@ body { font-size: 120%; }
 h1 { font-family: serif;}
 """
 
-selectors_with_3_ids = "body #nav div#phred, p#red"
-selectors_with_no_ids = "h1, h2, h3, a:active"
+selectors_with_3_ids = "body #nav div#phred, p#red"     # specificity of 303
+selectors_with_no_ids = "h1, h2, h3, a:active"          # specificity of 014
+specificity303 = selectors_with_3_ids
+specificity014 = selectors_with_no_ids
 
 @pytest.fixture
 def css_code_1_split():
@@ -193,11 +196,13 @@ def test_style_sheet_object_extract_comments(layout_css_stylesheet):
     assert len(layout_css_stylesheet.comments) == 6
 
 
-def test_style_sheet_object_extract_comments_for_first_comment(layout_css_stylesheet):
+def test_style_sheet_object_extract_comments_for_first_comment(
+        layout_css_stylesheet):
     assert layout_css_stylesheet.comments[0] == "/* layout.css */"
 
 
-def test_stylesheet_extract_comments_for_code_after_extraction(layout_css_stylesheet):
+def test_stylesheet_extract_comments_for_code_after_extraction(
+        layout_css_stylesheet):
     assert len(layout_css_stylesheet.comments) == 6
 
 
@@ -209,7 +214,8 @@ def test_stylesheet_for_extracted_nested_at_rules(layout_css_stylesheet):
     assert len(layout_css_stylesheet.nested_at_rules) == 4
 
 # Test properties of Stylesheet
-def test_stylesheet_for_selectors_with_one(stylesheet_with_one_declaration_block):
+def test_stylesheet_for_selectors_with_one(
+        stylesheet_with_one_declaration_block):
     assert len(stylesheet_with_one_declaration_block.selectors) == 1
 
 def test_layout_css_stylesheet_for_multiple_selectors(layout_css_stylesheet):
@@ -239,3 +245,17 @@ def test_get_class_score_for_3_results():
     selector = "a:hover, a:link, input[type=text]"
     results = css.get_class_score(selector)
     assert results == 3
+
+def test_get_specificity_for_303():
+    results = css.get_specificity(specificity303)
+    assert results == "303"
+
+def test_get_specificity_for_014():
+    results = css.get_specificity(specificity014)
+    assert results == "014"
+
+
+def test_get_specificity_for_033():
+    selector = "a:hover, a:link, input[type=text]"
+    results = css.get_specificity(selector)
+    assert results == "033"
