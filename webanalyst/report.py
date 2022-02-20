@@ -993,8 +993,15 @@ class CSSReport:
         
         # Override any stylesheet rulesets with matching styletag rulesets
         # we may also have to check specificity
-        print("NExt...")
-                              
+        global_colors_set = CSSinator.get_global_color_details(color_rulesets)
+        if global_colors_set:
+            print("we have our global colors")
+            for colors in global_colors_set:
+                # are both background and foreground present?
+                bg_and_color_set = bool(colors.get('background-color')) and bool(colors.get('color'))
+                
+                # do they meet color contrast requirements?
+                print("Let's check")               
     def set_color_data_defaults(self):
         default_colors = {"color": "#000000",
                        "background": "#ffffff"}
