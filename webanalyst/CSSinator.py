@@ -17,6 +17,7 @@ def get_nested_at_rule(code, rule):
             at_rule.append(rule + " " + at_split[0])
     return at_rule
 
+
 def restore_braces(split):
     result = []
     if len(split) <= 1:
@@ -26,6 +27,7 @@ def restore_braces(split):
             item = item + "}}"
             result.append(item)
     return result
+
 
 class Stylesheet:
     def __init__(self, href, text, stylesheet_type="file"):

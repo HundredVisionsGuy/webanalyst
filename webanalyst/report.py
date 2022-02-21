@@ -1,4 +1,4 @@
-from bs4.element import ResultSet
+from unicodedata import name
 from webanalyst import CSSinator
 from webanalyst import clerk
 import re
@@ -837,6 +837,7 @@ class CSSReport:
         self.style_tag_contents = []
         self.num_style_tags = 0
         self.linked_stylesheets = {}
+        self.order_of_css_by_file = {}
         self.pages_contain_same_css_files = False
         self.repeat_selectors = {}
         self.repeat_declarations_blocks = {}
@@ -868,6 +869,7 @@ class CSSReport:
     def generate_report(self, html_files):
         self.html_files = html_files
         self.get_project_css_by_file(html_files)
+        self.get_order_of_css_by_file(html_files)
         self.get_num_css_files()
         self.get_style_tags()
         self.get_num_style_tags()
@@ -937,11 +939,13 @@ class CSSReport:
         
         self.report_details["general_styles_goals"]["Color Settings"]=details["Color Settings"]
 
+
     def get_title_and_description(self, req):
         full_details = req.split(": ")
         title = full_details[0].strip()[2:]
         description = full_details[1].strip()
         return description,title
+
 
     def get_general_styles_results(self):
         results = {}
@@ -966,6 +970,7 @@ class CSSReport:
                 self.report_details['general_styles_goals']['Color Settings']['details']['actual']=actual
                 self.report_details['general_styles_goals']['Color Settings']['details']['meets']=passes_page_colors
                 print(passes_page_colors)
+
 
     def get_color_data(self):
         """ Initialize background & foreground to white & black
@@ -1002,6 +1007,8 @@ class CSSReport:
                 
                 # do they meet color contrast requirements?
                 print("Let's check")               
+    
+    
     def set_color_data_defaults(self):
         default_colors = {"color": "#000000",
                        "background": "#ffffff"}
@@ -1026,6 +1033,7 @@ class CSSReport:
         color_data["anchors"]["colors"] = anchor_defaults
         return color_data
 
+
     def meets_page_colors(self, goals):
         meets = False
         try:
@@ -1042,6 +1050,7 @@ class CSSReport:
         except:
             print("We have an exception most likely with the key for goals.")
             return False
+    
            
     def are_background_and_foreground_set(self, sheet):
         for rule in sheet.color_rulesets:
@@ -1051,6 +1060,7 @@ class CSSReport:
                     print(rule.declaration_block.text)
                     return True
     
+    
     def get_font_count(self, font_families):
         # Make sure there are no duplicates
         for font in font_families:
@@ -1058,6 +1068,7 @@ class CSSReport:
             if num > 1:
                 font_families.pop(font)
         return len(font_families)
+
 
     def get_font_families(self):
         font_families = []
@@ -1074,6 +1085,7 @@ class CSSReport:
                     font_families.append(fam)
         return font_families
 
+
     def get_families(self, declaration):
         families = []
         for ruleset in declaration.rulesets:
@@ -1081,6 +1093,7 @@ class CSSReport:
                 if declaration.property in ("font", "font-family"):
                     families.append(declaration.value)
         return families
+
 
     def get_standard_requirements(self):
         # get index position of Standard Req and General Styles headers
@@ -1115,6 +1128,7 @@ class CSSReport:
             # add requirements to dictionary
             self.report_details['standard_requirements_goals'][description]={"min": min, "max": max}
 
+
     def get_standard_requirements_results(self):
         errors = self.get_css_errors()
         self.get_standard_requirements_results_by_key(errors, "CSS Errors")
@@ -1124,6 +1138,7 @@ class CSSReport:
          
         repeats = len(list(self.repeat_declarations_blocks.keys()))
         self.get_standard_requirements_results_by_key(repeats, "Repeat declaration blocks")
+   
    
     def get_standard_requirements_results_by_key(self, results, key):
         range = self.report_details["standard_requirements_goals"][key]
@@ -1137,12 +1152,14 @@ class CSSReport:
         
         self.report_details["standard_requirements_results"][key] = results
 
+
     def get_css_errors(self):
         number = 0
         for errors in self.css_errors.values():
             if errors != "No errors":
                 number += len(errors)
         return number
+
 
     def set_repeat_selectors(self):
         all_selectors = []
@@ -1153,6 +1170,7 @@ class CSSReport:
         # sort then get repeated selectors (if any)
         all_selectors.sort()
         self.get_repeated_selectors(all_selectors, implemented_selectors)
+
 
     def get_repeated_selectors(self, all_selectors, implemented_selectors):
         for selector in all_selectors:
@@ -1174,11 +1192,13 @@ class CSSReport:
                 # sort the pages
                 self.repeat_selectors[selector].sort()
 
+
     def get_implemented_selectors(self, all_selectors, filenames):
         implemented_selectors = self.get_selectors_from_implemented_stylesheets(all_selectors, filenames)
         # get selectors from style_tag_contents
         self.get_selectors_from_style_tags(all_selectors, implemented_selectors)
         return implemented_selectors
+
 
     def get_selectors_from_style_tags(self, all_selectors, implemented_selectors):
         for stylesheet in self.style_tag_contents:
@@ -1188,6 +1208,7 @@ class CSSReport:
                     implemented_selectors[stylesheet.href].append(selector)
                 except KeyError:
                     implemented_selectors[stylesheet.href] = [selector,]
+
 
     def get_selectors_from_implemented_stylesheets(self, all_selectors, filenames):
         implemented_selectors = {}
@@ -1202,12 +1223,14 @@ class CSSReport:
                             implemented_selectors[stylesheet_object.href] = [selector,]
         return implemented_selectors
 
+
     def get_filenames_from_paths(self, linked_stylesheets):
         filenames = []
         for filename in linked_stylesheets:
             filename = clerk.get_file_name(filename)
             filenames.append(filename)
         return filenames
+
 
     def set_repeat_declaration_blocks(self):
         # no repeat blocks (per page)
@@ -1218,6 +1241,7 @@ class CSSReport:
             count = len(sheets)
             if count > 1:
                 self.repeat_declarations_blocks[block]= sheets
+
 
     def get_all_declaration_blocks(self):
         declaration_blocks = {}
@@ -1245,6 +1269,7 @@ class CSSReport:
                     declaration_blocks[declaration_block] = [source, ]
         return declaration_blocks
 
+
     def get_linked_stylesheets(self):
         stylesheets = []
         try:
@@ -1256,12 +1281,14 @@ class CSSReport:
             print("no stylesheet found in {}".format(file))
         return stylesheets
 
+
     def set_readme_list(self):
         readme_list = self.readme_list[:]
         for i in range(len(self.readme_list)):
             if self.readme_list[i] == "### CSS":
                 break
         self.readme_list = readme_list[i:] 
+
 
     def get_project_css_by_file(self, html_files):
         # create a dictionary of files in the project 
@@ -1277,6 +1304,26 @@ class CSSReport:
             file_dict[filename] = styles
         self.project_css_by_html_file = file_dict
     
+    
+    def get_order_of_css_by_file(self, html_files):
+        file_dict = {}
+        for file in html_files:
+            filename = clerk.get_file_name(file)
+            file_dict[filename] = []
+            head_children = self.get_children(file, "head")
+            for element in head_children:
+                tag = element.name
+                if tag == 'link' or tag == 'style':
+                    type = tag
+                    source = element.attrs.get('href')
+                    if source:
+                        if 'http' not in source and '.css' in source[-4:]:
+                            file_dict[filename].append(source)
+                    else:
+                        file_dict[filename].append("style tag")
+        self.order_of_css_by_file = file_dict
+                    
+    
     def check_pages_for_same_css_files(self):
         if len(self.html_files) == 1:
             # Should we also check to make sure that one page is using css?
@@ -1288,6 +1335,7 @@ class CSSReport:
         files = self.extract_only_style_tags_from_css_files(self.project_css_by_html_file)
         files = list(files.values())
         self.pages_contain_same_css_files = all(file == files[0] for file in files)
+   
         
     def extract_only_style_tags_from_css_files(self, files_with_css):
         results = {}
@@ -1298,6 +1346,7 @@ class CSSReport:
                     results[page].append(style) 
         return results
 
+
     def get_children(self, path, parent):
         code = html.get_html(path)
         try:
@@ -1306,6 +1355,7 @@ class CSSReport:
             return children
         except:
             return None
+
 
     def get_css_elements(self, nodes):
         styles=[]
@@ -1322,11 +1372,13 @@ class CSSReport:
                 styles.append("style_tag=" + css_string)
         return styles
 
+
     def get_num_css_files(self):
         css_files = clerk.get_all_files_of_type(self.__dir_path, 'css')
         num_css_files = len(css_files)
         self.report_details["num_css_files"] = num_css_files
         return num_css_files
+
 
     def get_style_tags(self):
         # get HTML files
@@ -1340,10 +1392,12 @@ class CSSReport:
                 self.style_tag_contents.append(css_object)
             self.report_details["style_tags"].append((file, len(style_tags)))
         return self.report_details["style_tags"]
+  
     
     def get_num_style_tags(self):
         self.num_style_tags = len(self.report_details['style_tags'])
         return self.num_style_tags
+
 
     def get_css_code(self):
         # extract content from all CSS files
@@ -1362,6 +1416,7 @@ class CSSReport:
             except:
                 print("Something went wrong with getting stylesheet objects")
     
+    
     def file_is_linked(self, filename):
         for sheets in self.linked_stylesheets.values():
             if sheets:
@@ -1369,6 +1424,7 @@ class CSSReport:
                     if filename in sheet:
                         return True
         return False
+    
     
     def validate_css(self):
         # Get CSS validation on CSS files
@@ -1395,6 +1451,7 @@ class CSSReport:
 
         # add any errors to css_errors
         self.css_errors = self.report_details["css_validator_results"]
+
 
     def process_errors(self, page_name, errors):
         """ receives errors and records warnings and errors """
@@ -1433,12 +1490,14 @@ class CSSReport:
         if warnings_dict:
             self.report_details["css_validator_results"][page_name] = warnings_dict[page_name]
 
+
     def get_error_rows(self, item):
         item_string = item.contents
         item_string = "".join([str(elem) for elem in item_string])
         error_soup = BeautifulSoup(item_string, 'html.parser')
         error_rows = error_soup.find_all('tr', {'class':'error'})
         return error_rows
+
 
     def get_results_details(self, type, tag):
         details = {}
@@ -1454,6 +1513,7 @@ class CSSReport:
         code = tag.contents[5].find('span')
         details['extract'] = code
         return details
+  
     
     def get_warning_rows(self, item):
         item_string = item.contents
@@ -1461,6 +1521,7 @@ class CSSReport:
         error_soup = BeautifulSoup(item_string, 'html.parser')
         rows = error_soup.find_all('tr', {'class':'warning'})
         return rows
+
 
     def publish_results(self):
         # Get report	
@@ -1558,6 +1619,7 @@ class CSSReport:
         # Save new HTML as report/report.html
         with open(report_path, 'w') as f:
             f.write(str(report_content.contents[0]))
+   
     
     def has_css_errors(self, css_errors):
         result = False
@@ -1572,6 +1634,7 @@ class CSSReport:
                 if item == 'error':
                     return True
         return False
+   
     
     def get_css_validation_results(self):
         results = ""
