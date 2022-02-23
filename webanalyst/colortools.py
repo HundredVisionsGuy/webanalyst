@@ -24,10 +24,12 @@ contrast_ratio_map = {
     "graphics UI components": 3,
 }
 
+
 def passes_color_contrast(level, hex1, hex2):
     ratio = contrast_ratio(hex1, hex2)
     min_ratio = contrast_ratio_map[level]
     return ratio >= min_ratio
+
 
 def get_color_contrast_report(hex1, hex2):
     report = {}
@@ -37,6 +39,7 @@ def get_color_contrast_report(hex1, hex2):
         report[key] = passes
     return report
 
+
 def rgb_to_hex(*args):
     # are there three separate values or 1 string
     if len(args) == 3:
@@ -45,7 +48,7 @@ def rgb_to_hex(*args):
         try:
             rgb = args[0]
             r, g, b = extract_rgb_from_string(rgb)
-        except:
+        except Exception:
             # throw an exception
             return "err"
     # Convert r, g, b to hex
@@ -60,6 +63,7 @@ def rgb_to_hex(*args):
     if len(b) == 1:
         b = "0" + b
     return "#" + r + g + b
+
 
 def hex_to_rgb(hex_code):
     """ receives hex (str) -> returns rgb as tuple """
@@ -76,10 +80,12 @@ def hex_to_rgb(hex_code):
 
     return (r, g, b)
 
+
 def rgb_as_string(rgb):
     """ receive rgb as tuple -> returns formatted string """
     r, g, b = rgb
     return f"rgb({r},{g},{b})"
+
 
 def hex_to_decimal(c):
     # make sure to convert to lower case
@@ -88,6 +94,7 @@ def hex_to_decimal(c):
     ones = hex_map[c[1]]
     sixteens = hex_map[c[0]] * 16
     return sixteens + ones
+
 
 def extract_rgb_from_string(rgb):
     output = []
@@ -100,14 +107,15 @@ def extract_rgb_from_string(rgb):
         try:
             output.append(i.split("(")[1].strip())
             continue
-        except:
+        except Exception:
             try:
                 output.append(i.split(")")[0].strip())
-            except:
+            except Exception:
                 output.append(i.strip())
                 continue
 
     return output[0], output[1], output[2]
+
 
 def is_hex(val):
     result = False
@@ -115,11 +123,12 @@ def is_hex(val):
     if not result:
         return False
     
-    #check for proper hex digits
+    # check for proper hex digits
     for i in val:
         if i != "#" and i not in list(hex_map.keys()):
             result = False
     return result
+
 
 def get_relative_luminance(val):
     val /= 255
@@ -127,6 +136,7 @@ def get_relative_luminance(val):
         return val / 12.92
     else:
         return ((val + 0.055) / 1.055)**2.4
+  
               
 def luminance(rgb):
     r, g, b = rgb
@@ -134,6 +144,7 @@ def luminance(rgb):
     g = get_relative_luminance(g)
     b = get_relative_luminance(b)
     return r * 0.2126 + g * 0.7152 + b * 0.0722
+    
     
 def contrast_ratio(hex1, hex2):
     rgb1 = hex_to_rgb(hex1)
@@ -150,6 +161,7 @@ def contrast_ratio(hex1, hex2):
     # take it to 3rd decimal place, then truncate (3rd has been rounded)
     ratio = format(ratio, ".3f")[:-1]
     return float(ratio)
+
 
 if __name__ == "__main__":
     valid_hex = is_hex("#336699")

@@ -17,6 +17,7 @@ def get_nested_at_rule(code, rule):
             at_rule.append(rule + " " + at_split[0])
     return at_rule
 
+
 def restore_braces(split):
     result = []
     if len(split) <= 1:
@@ -26,6 +27,7 @@ def restore_braces(split):
             item = item + "}}"
             result.append(item)
     return result
+
 
 class Stylesheet:
     def __init__(self, href, text, stylesheet_type="file"):
@@ -146,7 +148,7 @@ class Stylesheet:
 
     def sort_selectors(self):
         self.selectors.sort()
-
+        
         
 class NestedAtRule:
     def __init__(self, text):
@@ -441,6 +443,7 @@ def separate_code(code):
     splitzky["comments"] = comments
     return splitzky
 
+
 def get_color_rulesets(objects):
     color_rulesets = []
     if objects:
@@ -454,6 +457,7 @@ def get_color_rulesets(objects):
                                     color_rulesets.append(ruleset)
     return color_rulesets
 
+
 def get_specificity(selector):
     specificity = "000"
     id_selector = get_id_score(selector)
@@ -461,11 +465,13 @@ def get_specificity(selector):
     type_selector = get_type_score(selector)
     return "{}{}{}".format(id_selector, class_selector, type_selector)
     
+    
 def get_id_score(selector):
     """ receives a selector and returns # of id selectors """
     re_pattern = "#\w+"
     id_selectors = re.findall(re_pattern, selector)
     return len(id_selectors)
+
 
 def get_class_score(selector):
     """ receives a selector and returns # of class & psuedo-class selectors """
@@ -473,12 +479,44 @@ def get_class_score(selector):
     selectors = re.findall(re_pattern, selector)
     return len(selectors)
 
+
 def get_type_score(selector):
     """ receives a selector and returns # of type selectors """
     re_pattern = "([^#:\+.\[=a-zA-Z][a-zA-Z$][a-zA-Z1-6]*|^\w*)"
     selectors = re.findall(re_pattern, selector)
     return len(selectors)
 
+
+def get_global_color_details(rulesets):
+    """ receives rulesets and returns data on global colors """
+    # Are color and background color set on global selectors?
+    global_selectors = (
+        "html",
+        "body",
+        ":root",
+        "*"
+    )
+    global_rulesets = []
+    for ruleset in rulesets:
+        if ruleset.selector in global_selectors:
+            selector = ruleset.selector
+            properties = {}
+            background_color = ""
+            color = ""
+            for declaration in ruleset.declaration_block.declarations:
+                if declaration.property == 'background-color':
+                    background_color = declaration.value
+                elif declaration.property == 'color':
+                    color = declaration.value
+                elif declaration.property == 'background':
+                    # check to see if the color value is present
+                    pass
+            if background_color or color:
+                global_rulesets.append({'selector': selector,
+                                        'background-color': background_color,
+                                        'color': color})
+    return global_rulesets                    
+    
 if __name__ == "__main__":
     print("hello, I'm CSSinator.")
     selector = "h1, h2, h3, h4#header"
