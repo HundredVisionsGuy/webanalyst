@@ -291,18 +291,22 @@ class HTMLReport:
         self.augment_errors(errors_dict) # we might need to change to a function
         self.add_warnings(warnings_dict)
 
+
     def augment_errors(self, new_dict):
         """ appends any errors from a dict to validator errors """
         for page, errors in new_dict['HTML'].items():
             self.validator_errors['HTML'][page] = errors
     
+
     def add_warnings(self, warnings):
         for page, warning in warnings['HTML'].items():
             self.validator_warnings['HTML'][page] = warning
 
+
     def add_errors(self, errors):
         for page, error in errors['HTML'].items():
             self.validator_errors[page] = error
+
 
     def analyze_results(self):
         self.can_attain_level()
@@ -389,6 +393,7 @@ class HTMLReport:
         # Save new HTML as report/report.html
         with open(report_path, 'w') as f:
             f.write(str(report_content.contents[0]))
+
 
     def get_html_overview_row(self):
         # get a string version of can_attain_level

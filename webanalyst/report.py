@@ -1,16 +1,10 @@
-from unicodedata import name
-from webanalyst import CSSinator
 from webanalyst import clerk
 import re
 from webanalyst import HTMLinator as html
 from bs4 import BeautifulSoup
 import logging
-from webanalyst import validator as val
-import os
-from webanalyst.CSSinator import Stylesheet as stylesheet
 import webanalyst.CSSReport as CSSReport
 import webanalyst.HTMLReport as HTMLReport
-from webanalyst import stylesheet_analyst as css_analyst
 
 logging.basicConfig(format='%(asctime)s - %(message)s',
                     datefmt='%d-%b-%y %H:%M:%S')

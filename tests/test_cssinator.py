@@ -65,15 +65,18 @@ selectors_with_no_ids = "h1, h2, h3, a:active"          # specificity of 014
 specificity303 = selectors_with_3_ids
 specificity014 = selectors_with_no_ids
 
+
 @pytest.fixture
 def css_code_1_split():
     code_split = css.separate_code(css_code_1_with_comments)
     return code_split
 
+
 @pytest.fixture
 def ruleset1():
     ruleset = css.Ruleset(declaration_block_with_selector)
     return ruleset
+
 
 @pytest.fixture
 def invalid_ruleset():
@@ -98,10 +101,12 @@ def declaration_block_no_selector():
     block = css.DeclarationBlock(declaration_block_just_block)
     return block
 
+
 @pytest.fixture
 def declaration_block_with_one_selector():
     block = css.DeclarationBlock(declaration_block_with_selector)
     return block
+
 
 @pytest.fixture
 def layout_css():
@@ -121,6 +126,7 @@ def layout_css_stylesheet(layout_css):
     css_sheet = css.Stylesheet("layout.css", layout_css)
     return css_sheet
 
+
 def test_separate_code_for_3_comments(css_code_1_split):
     assert len(css_code_1_split['comments']) == 3
 
@@ -128,8 +134,10 @@ def test_separate_code_for_3_comments(css_code_1_split):
 def test_separate_code_for_3_css_items(css_code_1_split):
     assert len(css_code_1_split['code']) == 3
 
+
 def test_ruleset1_for_selector(ruleset1):
     assert ruleset1.selector == "article#gallery"
+
 
 def test_invalid_ruleset_for_swapped_brace_position(invalid_ruleset):
     assert not invalid_ruleset.is_valid
@@ -213,42 +221,52 @@ def test_stylesheet_extract_text_after_code_extraction(layout_css_stylesheet):
 def test_stylesheet_for_extracted_nested_at_rules(layout_css_stylesheet):
     assert len(layout_css_stylesheet.nested_at_rules) == 4
 
+
 # Test properties of Stylesheet
 def test_stylesheet_for_selectors_with_one(
         stylesheet_with_one_declaration_block):
     assert len(stylesheet_with_one_declaration_block.selectors) == 1
 
+
 def test_layout_css_stylesheet_for_multiple_selectors(layout_css_stylesheet):
     assert len(layout_css_stylesheet.selectors) == 22
     
+
 def test_get_id_score_for_3_ids():
     results = css.get_id_score(selectors_with_3_ids)
     assert results == 3
     
+
 def test_get_id_score_for_no_ids():
     results = css.get_id_score(selectors_with_no_ids)
     assert not results
     
+
 def test_get_type_score_for_3_type_selectors():
     results = css.get_type_score(selectors_with_3_ids)
     assert results == 3
     
+
 def test_get_type_score_for_4_type_selectors():
     results = css.get_type_score(selectors_with_no_ids)
     assert results == 4
     
+
 def test_get_class_score_for_0_results():
     results = css.get_class_score(selectors_with_3_ids)
     assert results == 0
     
+
 def test_get_class_score_for_3_results():
     selector = "a:hover, a:link, input[type=text]"
     results = css.get_class_score(selector)
     assert results == 3
 
+
 def test_get_specificity_for_303():
     results = css.get_specificity(specificity303)
     assert results == "303"
+
 
 def test_get_specificity_for_014():
     results = css.get_specificity(specificity014)

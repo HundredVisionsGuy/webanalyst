@@ -8,12 +8,13 @@ from webanalyst import validator as val
 import os
 from webanalyst.CSSinator import Stylesheet as stylesheet
 from webanalyst import stylesheet_analyst as css_analyst
-from webanalyst.report import Report as Report
+import webanalyst.report as rep
 
 logging.basicConfig(format='%(asctime)s - %(message)s',
                     datefmt='%d-%b-%y %H:%M:%S')
 report_template_path = "webanalyst/report_template.html"
 report_path = "report/report.html"
+
 
 class CSSReport:
     def __init__(self, readme_list, dir_path):
@@ -76,13 +77,15 @@ class CSSReport:
         self.get_general_styles_goals()
         self.get_general_styles_results()
         self.publish_results()
-        
+
     def get_general_styles_goals(self):
         try:
             start = self.readme_list.index("* General Styles:") + 1
         except ValueError:
             # There's no general styles goals
-            logging.warn("There's no General Styles Goals in README. Look into it.")
+            warning = "There's no General Styles Goals in README."
+            warning += "Look into it."
+            logging.warn(warning)
             return
         if "* Project-specific Requirements:" in self.readme_list:
             stop = self.readme_list.index("* Project-specific Requirements:")
@@ -94,7 +97,7 @@ class CSSReport:
         details = {}
         for req in requirements:
             if '    * Font Families' in req:
-                response = Report.get_header_details(req)
+                response = rep.Report.get_header_details(req)
                 details = response
             elif '+ minimum' in req.lower() or '+ min' in req.lower():
                 min = req.split(":")[1].strip()
@@ -108,15 +111,18 @@ class CSSReport:
                 if details:
                     # add details to report_details
                     item = details.pop("title")
-                    self.report_details["general_styles_goals"][item]=details
+                    self.report_details["general_styles_goals"][item] = details
 
                     # reset details
-                    details = {"Color Settings":{}}
-                    
+                    details = {"Color Settings": {}}
+
             elif '+ entire page colors set' in req.lower():
                 description, title = self.get_title_and_description(req)
-                details['Color Settings']['details'] = {'description': req.strip()}
-                self.report_details["general_styles_goals"]['Color Settings'] = details['Color Settings']
+                details['Color Settings']['details'] = {
+                    'description': req.strip()
+                    }
+                (self.report_details["general_styles_goals"]
+                    ['Color Settings']) = details['Color Settings']
             elif '+ headers' in req.lower():
                 description, title = self.get_title_and_description(req)
                 details["Color Settings"][title] = description
@@ -129,19 +135,15 @@ class CSSReport:
             elif '- large' in req.lower():
                 description, title = self.get_title_and_description(req)
                 details["Color Settings"]['Color Contrast (readability)'][title] = description
-        
-        self.report_details["general_styles_goals"]["Color Settings"]=details["Color Settings"]
-
+        self.report_details["general_styles_goals"]["Color Settings"] = details["Color Settings"]
 
     def get_title_and_description(self, req):
         full_details = req.split(": ")
         title = full_details[0].strip()[2:]
         description = full_details[1].strip()
-        return description,title
-
+        return description, title
 
     def get_general_styles_results(self):
-        results = {}
         goals = list(self.report_details['general_styles_goals'].items())
         for goal, details in goals:
             if goal == "Font Families":
@@ -151,8 +153,8 @@ class CSSReport:
                 min = int(details['details']['minimum'])
                 max = int(details['details']['maximum'])
                 meets = font_count >= min and font_count <= max
-                self.report_details['general_styles_goals']['Font Families']['details']['actual']=str(font_count)
-                self.report_details['general_styles_goals']['Font Families']['details']['meets']=meets
+                self.report_details['general_styles_goals']['Font Families']['details']['actual'] = str(font_count)
+                self.report_details['general_styles_goals']['Font Families']['details']['meets'] = meets
             elif goal == "Color Settings":
                 color_rulesets = self.get_color_data()
                 passes_page_colors = self.meets_page_colors(details)
@@ -160,10 +162,9 @@ class CSSReport:
                     actual = "We still need this piece of functionality"
                 else:
                     actual = str(color_rulesets)
-                self.report_details['general_styles_goals']['Color Settings']['details']['actual']=actual
-                self.report_details['general_styles_goals']['Color Settings']['details']['meets']=passes_page_colors
+                self.report_details['general_styles_goals']['Color Settings']['details']['actual'] = actual
+                self.report_details['general_styles_goals']['Color Settings']['details']['meets'] = passes_page_colors
                 print(passes_page_colors)
-
 
     def get_color_data(self):
         """ Initialize background & foreground to white & black
@@ -173,22 +174,21 @@ class CSSReport:
             * anchors (default is blue and purple for hover)
             * any other selectors
             If any declarations leave out color or background-color, use the global setting
-            
             NOTE: we will NOT worry about the context (like applying inheritance of an li from ul). That's beyond my paygrade
         """
         color_data = self.set_color_data_defaults()
         print(color_data)
         # TODO:
         # Check all stylesheet objects for color_rulesets
-        color_rulesets_set = False 
+        color_rulesets_set = False
         color_rulesets = []
         if self.stylesheet_objects:
             color_rulesets += CSSinator.get_color_rulesets(self.stylesheet_objects)
+
         # Check all style tag objects for color_rulesets - they will override stylesheets (if same)
-        
         if self.style_tag_contents:
             styletag_color_rulesets = CSSinator.get_color_rulesets(self.style_tag_contents)
-        
+
         # Override any stylesheet rulesets with matching styletag rulesets
         # we may also have to check specificity
         global_colors_set = CSSinator.get_global_color_details(color_rulesets)
@@ -197,18 +197,20 @@ class CSSReport:
             for colors in global_colors_set:
                 # are both background and foreground present?
                 bg_and_color_set = bool(colors.get('background-color')) and bool(colors.get('color'))
-                
+
                 # do they meet color contrast requirements?
-                print("Let's check")               
-    
-    
+                print("Let's check")
+
     def set_color_data_defaults(self):
-        default_colors = {"color": "#000000",
-                       "background": "#ffffff"}
+        default_colors = {
+            "color": "#000000",
+            "background": "#ffffff"
+            }
         general_data = {
-                       "specificity": 1,
-                       "colors": {},
-                       "contrast": ""}
+            "specificity": 1,
+            "colors": {},
+            "contrast": ""
+            }
         global_colors = {"name": "global",
                          "selector": "body"}
         anchor_defaults = {"color": "#0000ff",
@@ -249,7 +251,7 @@ class CSSReport:
         for rule in sheet.color_rulesets:
             if rule.selector in ('body', 'html'):
                 if "background-color:" in rule.declaration_block.text and rule.declaration_block.text.count("color") > 1:
-                            # both are set
+                    # both are set
                     print(rule.declaration_block.text)
                     return True
     
