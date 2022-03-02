@@ -134,7 +134,8 @@ class CSSReport:
                 details["Color Settings"]['Color Contrast (readability)'][title] = description
             elif '- large' in req.lower():
                 description, title = self.get_title_and_description(req)
-                details["Color Settings"]['Color Contrast (readability)'][title] = description
+                (details["Color Settings"]
+                    ['Color Contrast (readability)'][title]) = description
         self.report_details["general_styles_goals"]["Color Settings"] = details["Color Settings"]
 
     def get_title_and_description(self, req):
@@ -180,18 +181,29 @@ class CSSReport:
         print(color_data)
         # TODO:
         # Check all stylesheet objects for color_rulesets
-        color_rulesets_set = False
         color_rulesets = []
-        if self.stylesheet_objects:
-            color_rulesets += CSSinator.get_color_rulesets(self.stylesheet_objects)
-
-        # Check all style tag objects for color_rulesets - they will override stylesheets (if same)
-        if self.style_tag_contents:
-            styletag_color_rulesets = CSSinator.get_color_rulesets(self.style_tag_contents)
+        all_styles = self.get_all_styles_in_order()
 
         # Override any stylesheet rulesets with matching styletag rulesets
         # we may also have to check specificity
+        global_colors = self.get_final_global_colors()
+        
+    def get_all_styles_in_order(self):
+        """ returns each stylesheet object in order of appearance """
+        # whether that's a styletag or external stylesheet
+        all_styles = []
+        
+        # if self.stylesheet_objects:
+        #     color_rulesets += CSSinator.get_color_rulesets(self.stylesheet_objects)
+
+        # # Check all style tag objects for color_rulesets - they will override stylesheets (if same)
+        # if self.style_tag_contents:
+        #     styletag_color_rulesets = CSSinator.get_color_rulesets(self.style_tag_contents)
+        return all_styles
+
+    def get_final_global_colors(self):
         global_colors_set = CSSinator.get_global_color_details(color_rulesets)
+        global_colors_from_styletag = CSSinator.get_global_color_details(styletag_color_rulesets)
         if global_colors_set:
             print("we have our global colors")
             for colors in global_colors_set:
