@@ -193,13 +193,32 @@ class CSSReport:
         # whether that's a styletag or external stylesheet
         all_styles = []
         
-        # if self.stylesheet_objects:
-        #     color_rulesets += CSSinator.get_color_rulesets(self.stylesheet_objects)
+        # loop through CSS by file
+        for file in self.order_of_css_by_file.keys():
+            for item in self.order_of_css_by_file[file]:
+                if item == 'style tag':
+                    # get the stylesheet
+                    styletag = self.get_styletag_object(file)
+                    if styletag:
+                        all_styles.append((file, styletag))
+                else:
+                    stylesheet = self.get_stylesheet_object(item)
+                    if stylesheet:
+                        all_styles.append((file, stylesheet))
 
-        # # Check all style tag objects for color_rulesets - they will override stylesheets (if same)
-        # if self.style_tag_contents:
-        #     styletag_color_rulesets = CSSinator.get_color_rulesets(self.style_tag_contents)
         return all_styles
+
+    def get_styletag_object(self, file):
+        for styletag in self.style_tag_contents:
+            if styletag.href in file:
+                return styletag
+        return None
+
+    def get_stylesheet_object(self, item):
+        for object in self.stylesheet_objects:
+            if object.href in item:
+                return object
+        return None
 
     def get_final_global_colors(self):
         global_colors_set = CSSinator.get_global_color_details(color_rulesets)
