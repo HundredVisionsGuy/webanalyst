@@ -178,7 +178,7 @@ class CSSReport:
             NOTE: we will NOT worry about the context (like applying inheritance of an li from ul). That's beyond my paygrade
         """
         color_data = self.set_color_data_defaults()
-        print(color_data)
+
         # TODO:
         # Check all stylesheet objects for color_rulesets
         color_rulesets = []
@@ -186,7 +186,7 @@ class CSSReport:
 
         # Override any stylesheet rulesets with matching styletag rulesets
         # we may also have to check specificity
-        global_colors = self.get_final_global_colors()
+        global_colors = self.get_final_global_colors(all_styles)
         
     def get_all_styles_in_order(self):
         """ returns each stylesheet object in order of appearance """
@@ -220,17 +220,38 @@ class CSSReport:
                 return object
         return None
 
-    def get_final_global_colors(self):
-        global_colors_set = CSSinator.get_global_color_details(color_rulesets)
-        global_colors_from_styletag = CSSinator.get_global_color_details(styletag_color_rulesets)
-        if global_colors_set:
-            print("we have our global colors")
-            for colors in global_colors_set:
-                # are both background and foreground present?
-                bg_and_color_set = bool(colors.get('background-color')) and bool(colors.get('color'))
+    def get_final_global_colors(self, all_styles):
+        """ get global colors from each stylesheet and each style tag """
+        # track which stylesheets have already been checked, 
+        # so there are no repetitions
+        styles_checked = self.get_styles_checked(all_styles)
 
-                # do they meet color contrast requirements?
-                print("Let's check")
+        # get global styles from only the styles that are checked 
+        # so no duplicates
+        global_color_data = {}
+        for styles in styles_checked.values():
+            global_colors_set = CSSinator.get_global_color_details(styles.rulesets)
+            if global_colors_set:
+                # we have global colors set - let's do something:
+                global_color_data[styles.href] = global_colors_set
+        print(global_color_data)
+        # TODO: Process to determine whether and which files have global 
+        # colors set
+        return None
+        
+
+    def get_styles_checked(self, all_styles):
+        styles_checked = {}
+        for page, styles in all_styles:
+            stylename = None
+            if ".html" in styles.href:
+                # it's a styletag
+                stylename = page + " - styletag"
+            else:
+                stylename = styles.href
+            if stylename not in styles_checked.keys():
+                styles_checked[stylename] = styles
+        return styles_checked
 
     def set_color_data_defaults(self):
         default_colors = {
