@@ -1,3 +1,4 @@
+from fileinput import filename
 from webanalyst import CSSinator
 from webanalyst import clerk
 import re
@@ -186,7 +187,13 @@ class CSSReport:
 
         # Override any stylesheet rulesets with matching styletag rulesets
         # we may also have to check specificity
+        global_color_errors = ""
         global_colors = self.get_final_global_colors(all_styles)
+        num_html_files = len(self.html_files)
+        num_files_colors_set = len(global_colors)
+        if num_files_colors_set < num_html_files:
+            global_color_errors += "Global colors not set on all pages\n"
+            print()
         
     def get_all_styles_in_order(self):
         """ returns each stylesheet object in order of appearance """
@@ -236,9 +243,75 @@ class CSSReport:
                 global_color_data[styles.href] = global_colors_set
         print(global_color_data)
         # TODO: Process to determine whether and which files have global 
-        # colors set
-        return None
-        
+        applied_styles = []
+        for page in self.html_files:
+            filename = page.split("\\")[-1]
+            # initialize applied_styles for each page
+            applied = {
+                "file": filename,
+                "applied": False,
+                "selector": "",
+                "specificity": "",
+                "bg-color": "",
+                "color": ""
+            }
+            for styles in all_styles:
+                if filename in styles[0]:
+                    href = styles[1].href
+                    if href in global_color_data.keys():
+                        details = global_color_data[href]
+                        applied = self.adjust_applied(applied, details) 
+                    elif styles[0] == styles[1].href:
+                        print("it must be a style tag in the page")
+            if applied['applied']:
+                applied_styles.append(applied)
+            
+        return applied_styles
+    
+    def adjust_applied(self, old_styles, new_styles):
+        """ returns old_styles adjusted according to new styles """
+        old_styles['applied']=True
+        for style in new_styles:
+            new_selector = style['selector']
+            old_selector = old_styles['selector']
+            if old_selector:
+                # we need to adjust all that applies
+                # if selectors are the same OR 
+                # old specificity is greater than new, we keep
+                # all old styles unless not set
+                new_specificity = CSSinator.get_specificity(new_selector)
+                if new_specificity >= old_styles['specificity']:
+                    # new wins out for everything present
+                    old_styles['selector'] = style['selector']
+                    old_styles['specificity'] = new_specificity
+                    if style.get('background-color'):
+                        old_styles['bg-color'] = style['background-color']
+                    elif style.get('background'):
+                        old_styles['bg-color'] = style['background']
+                    if style.get('color'):
+                        old_styles['color'] = style['color']
+                else:
+                    # old specificity is greater, so only apply anything not set
+                    if not old_styles['bg-color']:
+                        if style.get('background-color'):
+                            old_styles['bg-color'] = style['background-color']
+                        elif style.get('background'):
+                            old_styles['bg-color'] = style['background']
+                    if not old_styles['color'] and style.get('color'):
+                        old_styles['color'] = style['color']
+
+            else:
+                # this is the first time, get all styles and apply
+                old_styles['selector'] = style['selector']
+                old_styles['specificity'] = CSSinator.get_specificity(old_selector)
+                if style.get('background-color'):
+                    old_styles['bg-color'] = style['background-color']
+                elif style.get('background'):
+                    old_styles['bg-color'] = style['background']
+                if style.get('color'):
+                    old_styles['color'] = style['color']
+                print()
+        return old_styles
 
     def get_styles_checked(self, all_styles):
         styles_checked = {}
