@@ -1,3 +1,4 @@
+import re
 """Main module."""
 hex_map = {"0": 0,
            "1": 1,
@@ -80,6 +81,37 @@ def hex_to_rgb(hex_code):
 
     return (r, g, b)
 
+def get_hsl_from_string(hsl_string):
+    numbers = re.findall('[0-9]+', hsl_string)
+    for i in range(len(numbers)):
+        numbers[i] = int(numbers[i])
+    return tuple(numbers)
+
+def hsl_to_rgb(hsl):
+    # From HSL to RGB color conversion (https://www.rapidtables.com/convert/color/hsl-to-rgb.html)
+
+    h, s, l = hsl
+    s /= 100
+    l /= 100
+    c = (1 - abs(2*l - 1)) * s
+    x = c * (1 - abs((h/60) % 2 - 1))
+    m = l - c / 2
+    if h < 60:
+        r1, g1, b1 = (c, x, 0)
+    elif h < 120:
+        r1, g1, b1 = (x, c, 0)
+    elif h < 180:
+        r1, g1, b1 = (0, c, x)
+    elif h < 240:
+        r1, g1, b1 = (0, x, c)
+    elif h < 300:
+        r1, g1, b1 = (x, 0, c)
+    else:
+        r1, g1, b1 = (c, 0, x)
+    r = round((r1 + m) * 255)
+    g = round((g1 + m) * 255)
+    b = round((b1 + m) * 255)
+    return r, g, b
 
 def rgb_as_string(rgb):
     """ receive rgb as tuple -> returns formatted string """
@@ -164,6 +196,8 @@ def contrast_ratio(hex1, hex2):
 
 
 if __name__ == "__main__":
+    hsl = get_hsl_from_string("hsl(355, 96%, 46%)")
+    rgb = hsl_to_rgb((355,96,46))
     valid_hex = is_hex("#336699")
     print(valid_hex)
     ratio = contrast_ratio("#336699", "#ffffff")

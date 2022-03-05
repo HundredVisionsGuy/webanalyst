@@ -183,6 +183,14 @@ def get_all_keywords():
     keywords = list(get_full_color_keywords().keys())
     return keywords
         
+def is_a_keyword(word):
+    return word in get_all_keywords()
+
+def get_hex_by_keyword(word):
+    keywords = get_full_color_keywords()
+    hex = keywords.get(word)
+    return hex 
+
 if __name__ == '__main__':
     # keywords = get_full_color_keywords()
-    print(get_all_keywords())
+    print(get_hex_by_keyword('beige'))

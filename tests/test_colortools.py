@@ -10,6 +10,12 @@ indigo = "#4b0082"
 aquamarine = "#7FFFD4"
 white = "#ffffff"
 favorite_test_color = "#336699"
+hsl_string_1 = "hsl(355, 96%, 46%)"
+hsl_string_1_as_rgb_str = "rgb(230, 5, 23)"
+hsl_string_1_as_rgb = (230, 5, 23)
+hsl_string_1_as_hex = "#E60517"
+hsla_string_1 = "hsla(355, 96%, 46%, 1.0)"
+hsla_string_1_as_rgba = "rgba(230, 5, 23, 1.0)"
 
 favorite_test_color_contrast_report = {
     "normal AA": "Pass",
@@ -37,6 +43,16 @@ all_fail_color_contrast_report = {
 def indigo_rgb():
     indigo_rgb = color.hex_to_rgb(indigo)
     return indigo_rgb
+
+def test_get_hsl_from_string():
+    results = color.get_hsl_from_string(hsl_string_1)
+    expected = (355, 96, 46)
+    assert results == expected
+
+def test_hsl_to_rgb():
+    results = color.hsl_to_rgb((355, 96, 46))
+    expected = hsl_string_1_as_rgb
+    assert results == expected
 
 def test_hex_to_decimal_for_bc():
     bc_hex = "bc"

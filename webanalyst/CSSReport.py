@@ -1,4 +1,5 @@
 from fileinput import filename
+import keyword
 from webanalyst import CSSinator
 from webanalyst import clerk
 import re
@@ -10,6 +11,8 @@ import os
 from webanalyst.CSSinator import Stylesheet as stylesheet
 from webanalyst import stylesheet_analyst as css_analyst
 import webanalyst.report as rep
+import webanalyst.colortools as colors
+import webanalyst.color_keywords as keywords
 
 logging.basicConfig(format='%(asctime)s - %(message)s',
                     datefmt='%d-%b-%y %H:%M:%S')
@@ -193,8 +196,79 @@ class CSSReport:
         num_files_colors_set = len(global_colors)
         if num_files_colors_set < num_html_files:
             global_color_errors += "Global colors not set on all pages\n"
-            print()
+        global_color_contrast = self.get_global_color_contrast(global_colors)
         
+    def get_global_color_contrast(self, global_colors):
+        results = ""
+        for file in global_colors:
+            color = file.get('color')
+            color = self.get_color_hex(color)
+            if "warning" in color.lower():
+                results += "WARNING for " + file['file'] + ": "
+                results += color 
+                continue
+            bg_color = file.get('bg-color')
+            bg_color = self.get_color_hex(bg_color)
+            if "warning" in bg_color.lower():
+                results += "WARNING for " + file['file'] + ": "
+                results += color
+                continue
+            # Test for contrast
+            contrast_report = colors.get_color_contrast_report(color, bg_color)
+            results += "Results for " + file['file'] + ": "
+            results += self.process_contrast_report(contrast_report)
+
+        return results
+
+    def process_contrast_report(self, report):
+        """ checks to see if passes at best level or not """
+        results = ""
+        if report['normal AAA'] == 'Pass':
+            results = "Success: Page passes at AAA rating for "
+            results += "normal sized font.\n"
+        elif report['normal AA'] == 'Pass':
+            results = "Caution: Page passes at AA rating for normal "
+            results += "sized font (not AAA).\n"
+        elif report['large AAA'] == 'Pass':
+            results = "Failed: Page only passes at large sized font "
+            results += "at a AAA rating. It's okay for headers, but "
+            results += "not for paragraphs and other non-headings.\n"
+        elif report['large AA'] == 'Pass':
+            results = "Failed: Page only passes at large sized font "
+            results += "at a AA rating. It's only okay for large headers, "
+            results += "but not for paragraphs and other non-headings.\n"
+        else:
+            results = "Failed: Text contrast does not pass for large "
+            results += "or small text. You need a higher contrast between "
+            results += "the background and foreground colors."
+        return results
+            
+
+    def get_color_hex(self, color):
+        color_hex = ""
+        if "#" in color:
+            color_hex = color
+        elif keywords.is_a_keyword(color):
+            color_hex = keywords.get_hex_by_keyword(color)
+        elif "rgb" in color:
+            color_hex = colors.rgb_to_hex(color)
+        elif "hsl(" in color:
+            hsl = colors.get_hsl_from_string(color)
+            rgb = colors.hsl_to_rgb(hsl)
+            color_hex = colors.rgb_to_hex(rgb)
+        elif "hsla(" in color[0]:
+            hsla = colors.get_hsl_from_string(color)
+            a = hsla[-1]
+            if len(hsla) == 4 and a < 1:
+                results = "Warning: you are using HSLA with "
+                results += "transparency applied. We cannot "
+                results += "test contrast with transparency applied.\n"
+                return results
+            elif len(hsla) == 4 and a == 1:
+                rgb = colors.hsl_to_rgb(color[:-1])
+                color_hex = colors.rgb_to_hex(rgb)
+        return color_hex
+
     def get_all_styles_in_order(self):
         """ returns each stylesheet object in order of appearance """
         # whether that's a styletag or external stylesheet
