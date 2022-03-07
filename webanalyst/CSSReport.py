@@ -150,6 +150,8 @@ class CSSReport:
 
     def get_general_styles_results(self):
         goals = list(self.report_details['general_styles_goals'].items())
+        all_styles_in_order = self.get_all_styles_in_order()
+
         for goal, details in goals:
             if goal == "Font Families":
                 # get actual # of font families and compare to range (min max)
@@ -161,6 +163,22 @@ class CSSReport:
                 self.report_details['general_styles_goals']['Font Families']['details']['actual'] = str(font_count)
                 self.report_details['general_styles_goals']['Font Families']['details']['meets'] = meets
             elif goal == "Color Settings":
+                color_settings_results = ""
+
+                # Check for global colors 
+                needs_global_colors = self.needs_global_colors_set()
+                global_colors = []
+                if needs_global_colors:
+                    # We have all styles in order let's check for global
+                    # are they set?
+                    global_colors = self.get_final_global_colors(all_styles_in_order)
+                    global_colors_results = self.get_global_colors_results(global_colors)
+                    color_settings_results += global_colors_results
+
+                # check for headers
+                print("Refactoring stopped here. ")
+
+                # check for color contrast
                 color_rulesets = self.get_color_data()
                 passes_page_colors = self.meets_page_colors(details)
                 if not color_rulesets:
@@ -170,6 +188,55 @@ class CSSReport:
                 self.report_details['general_styles_goals']['Color Settings']['details']['actual'] = actual
                 self.report_details['general_styles_goals']['Color Settings']['details']['meets'] = passes_page_colors
                 print(passes_page_colors)
+
+    def get_global_colors_results(self, global_colors):
+        """ Are global colors set for each HTML file? """
+        results = ""
+        num_files = len(self.html_files)
+        num_global_set = len(global_colors)
+        global_filenames = []
+        for i in global_colors:
+            global_filenames.append(i.get('file'))
+        
+        # Check to see if all HTML files have global colors set
+        if num_global_set < num_files:
+            results += "Fail: not all files have global colors applied.\n"
+            for file in self.html_files:
+                filename = file.split("\\")[-1]
+                if filename not in global_filenames:
+                    results += "File: " + filename + " has no global colors set.\n"
+
+        # Were any global styles missing a declaration (color or bg-color):
+        for setting in global_colors:
+            color_set = setting.get('color')
+            if not color_set:
+                results += "Fail: in " + setting.get('file') 
+                results += " the color property was not set.\n"
+            bg_color_set = setting.get('bg-color')
+            if not bg_color_set:
+                results += "Fail: in " + setting.get('file') 
+                results += " the background-color property was not set.\n"
+
+        # If no results, there were no problems
+        if not results:
+            results = "Global Colors Set: " 
+            results += "Success! All files had global colors set.\n"
+            return results
+        else:
+            results = "Global Colors Set: " + results
+            return results
+
+    def needs_global_colors_set(self):
+        """ returns whether global colors should be set """
+        general_styles_goals = self.report_details.get('general_styles_goals')
+        if general_styles_goals:
+            color_settings = general_styles_goals.get('Color Settings')
+            if color_settings:
+                description = color_settings.get('details')
+                if "Entire Page" in description.get('description'):
+                    return True
+
+        return False
 
     def get_color_data(self):
         """ Initialize background & foreground to white & black
@@ -217,12 +284,12 @@ class CSSReport:
             contrast_report = colors.get_color_contrast_report(color, bg_color)
             results += "Results for " + file['file'] + ": "
             
-            contrast_goal = self.get_color_contrast_goals("global")
+            contrast_goal = self.get_color_contrast_goals("global", "")
             results += self.process_contrast_report(contrast_report)
 
         return results
     
-    def get_color_contrast_goals(self, type):
+    def get_color_contrast_goals(self, type="global"):
         # TODO: double check to see if this is even necessary
         general_styles = self.report_details.get('general_styles_goals')
         color_settings = general_styles.get('Color Settings')
@@ -432,7 +499,7 @@ class CSSReport:
             "others": {}
         }
         general_data["colors"] = default_colors
-        color_data["global"] = general_data.copy()
+        color_data["global"] = global_colors.copy()
         color_data["headers"] = general_data.copy()
         color_data["anchors"] = general_data.copy()
         color_data["anchors"]["colors"] = anchor_defaults
