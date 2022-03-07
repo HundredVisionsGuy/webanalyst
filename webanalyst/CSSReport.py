@@ -216,9 +216,20 @@ class CSSReport:
             # Test for contrast
             contrast_report = colors.get_color_contrast_report(color, bg_color)
             results += "Results for " + file['file'] + ": "
+            
+            contrast_goal = self.get_color_contrast_goals("global")
             results += self.process_contrast_report(contrast_report)
 
         return results
+    
+    def get_color_contrast_goals(self, type):
+        # TODO: double check to see if this is even necessary
+        general_styles = self.report_details.get('general_styles_goals')
+        color_settings = general_styles.get('Color Settings')
+        contrast = color_settings.get('Color Contrast (readability)')
+        if type == "global":
+            return "Normal"
+        
 
     def process_contrast_report(self, report):
         """ checks to see if passes at best level or not """
