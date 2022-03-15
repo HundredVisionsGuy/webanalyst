@@ -175,7 +175,8 @@ class CSSReport:
                     global_colors_results = self.get_global_colors_results(global_colors)
                     color_settings_results += global_colors_results
 
-                # check for headers
+                # check for headers for contrast setting and goal message
+                global_headers, goal_msg = self.get_global_headers_goals(goals)
                 print("Refactoring stopped here. ")
 
                 # check for color contrast
@@ -188,6 +189,20 @@ class CSSReport:
                 self.report_details['general_styles_goals']['Color Settings']['details']['actual'] = actual
                 self.report_details['general_styles_goals']['Color Settings']['details']['meets'] = passes_page_colors
                 print(passes_page_colors)
+
+    def get_global_headers_goals(self, goals):
+        message = ""
+        try:
+            color_details = goals[1][1]['Headers']
+            message = "Headers must set " + color_details + " colors "
+            contrast_goal = goals[1][1]["Color Contrast (readability)"]['Large']
+            message += "at a " + contrast_goal + " level.\n"
+        except:
+            input("We have a problem in CSSReport.get_global_headers_goals().")
+            return "", message
+        return contrast_goal, message
+        
+
 
     def get_global_colors_results(self, global_colors):
         """ Are global colors set for each HTML file? """
