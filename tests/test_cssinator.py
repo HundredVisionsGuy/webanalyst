@@ -35,8 +35,7 @@ article#gallery {
     margin: 0 auto;
 }"""
 
-minified_declaration_block_with_selector = """
-article#gallery {display: flex;flex-wrap: wrap; width: 96vw;margin: 0 auto;}"""
+minified_declaration_block_with_selector = """article#gallery {display: flex;flex-wrap: wrap;width: 96vw;margin: 0 auto;}"""
 
 invalid_css = """
 body }
@@ -197,7 +196,8 @@ def test_nested_at_rules_for_rules(layout_css_at_rules):
 
 def test_style_sheet_object_minify_method():
     sheet = css.Stylesheet("local", declaration_block_with_selector)
-    assert sheet.text == minified_declaration_block_with_selector
+    results = css.minify_code(sheet.text)
+    assert results == minified_declaration_block_with_selector
 
 
 def test_style_sheet_object_extract_comments(layout_css_stylesheet):
@@ -250,7 +250,11 @@ def test_get_type_score_for_3_type_selectors():
 def test_get_type_score_for_4_type_selectors():
     results = css.get_type_score(selectors_with_no_ids)
     assert results == 4
-    
+
+def test_get_type_score_for_descendant_selectors():
+    selector = "header h1"
+    results = css.get_type_score(selector)
+    assert results == 2
 
 def test_get_class_score_for_0_results():
     results = css.get_class_score(selectors_with_3_ids)
