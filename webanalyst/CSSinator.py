@@ -486,6 +486,31 @@ def get_type_score(selector):
     selectors = re.findall(re_pattern, selector)
     return len(selectors)
 
+def get_header_color_details(rulesets):
+    """ receives rulesets and returns data on colors set by headers """
+    header_re = "h[1-6]"
+    header_rulesets = []
+    for ruleset in rulesets:
+        selector = ruleset.selector
+        # check selector for having a header
+        has_header = re.search(header_re, selector)
+        if has_header:
+            properties = {}
+            background_color = ""
+            color = ""
+            for declaration in ruleset.declaration_block.declarations:
+                if declaration.property == 'background-color':
+                    background_color = declaration.value
+                elif declaration.property == 'color':
+                    color = declaration.value
+                elif declaration.property == 'background':
+                    # check to see if the color value is present
+                    pass
+            if background_color or color:
+                header_rulesets.append({'selector': selector,
+                                        'background-color': background_color,
+                                        'color': color})
+    return header_rulesets
 
 def get_global_color_details(rulesets):
     """ receives rulesets and returns data on global colors """

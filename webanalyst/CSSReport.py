@@ -280,6 +280,43 @@ class CSSReport:
             global_color_errors += "Global colors not set on all pages\n"
         global_color_contrast = self.get_global_color_contrast(global_colors)
         
+        header_color_errors = ""
+        header_colors = self.get_final_header_colors(all_styles)
+        num_files_colors_set = len(header_colors)
+        if num_files_colors_set < num_html_files:
+            header_color_errors += "Header colors not set on all pages\n"
+        header_color_contrast = self.get_header_color_contrast(header_colors)
+        print(header_color_contrast)
+        return color_data
+       
+    def get_header_color_contrast(self, header_colors):
+        results = ""
+        for file in header_colors:
+            header_rules = header_colors[file]
+            if len(header_rules) > 1:
+                input("Yo! Let's loop through the rulesets")
+            else:
+                color = header_rules[0].get('color')
+                color = self.get_color_hex(color)
+                if "warning" in color.lower():
+                    results += "WARNING for " + file['file'] + ": "
+                    results += color
+                    continue
+                bg_color = header_rules[0].get('background-color')
+                bg_color = self.get_color_hex(bg_color)
+                if "warning" in bg_color.lower():
+                    results += "WARNING for " + file['file'] + ": "
+                    results += bg_color
+                    continue
+                # Test for contrast
+                # Test for contrast
+                contrast_report = colors.get_color_contrast_report(color, bg_color)
+                results += "Results for " + file + ": "
+                target = self.get_color_contrast_target("Large")
+                results += self.process_contrast_report(contrast_report, target)
+
+        return results
+            
     def get_global_color_contrast(self, global_colors):
         results = ""
         for file in global_colors:
@@ -299,10 +336,17 @@ class CSSReport:
             contrast_report = colors.get_color_contrast_report(color, bg_color)
             results += "Results for " + file['file'] + ": "
             
-            contrast_goal = self.get_color_contrast_goals("global", "")
-            results += self.process_contrast_report(contrast_report)
+            target = self.get_color_contrast_target("Normal")
+            results += self.process_contrast_report(contrast_report, target)
 
         return results
+    
+    def get_color_contrast_target(self, size):
+        gen_style_goals = self.report_details['general_styles_goals']
+        color_goals = gen_style_goals['Color Settings']
+        contrast_goals = color_goals.get("Color Contrast (readability)")
+        target = contrast_goals.get(size)
+        return size + ' ' + target
     
     def get_color_contrast_goals(self, type="global"):
         # TODO: double check to see if this is even necessary
@@ -310,30 +354,23 @@ class CSSReport:
         color_settings = general_styles.get('Color Settings')
         contrast = color_settings.get('Color Contrast (readability)')
         if type == "global":
-            return "Normal"
+            return contrast['Normal']
+        if type == "headers":
+            return contrast["Large"]
         
 
-    def process_contrast_report(self, report):
+    def process_contrast_report(self, report, target):
         """ checks to see if passes at best level or not """
         results = ""
-        if report['normal AAA'] == 'Pass':
-            results = "Success: Page passes at AAA rating for "
-            results += "normal sized font.\n"
-        elif report['normal AA'] == 'Pass':
-            results = "Caution: Page passes at AA rating for normal "
-            results += "sized font (not AAA).\n"
-        elif report['large AAA'] == 'Pass':
-            results = "Failed: Page only passes at large sized font "
-            results += "at a AAA rating. It's okay for headers, but "
-            results += "not for paragraphs and other non-headings.\n"
-        elif report['large AA'] == 'Pass':
-            results = "Failed: Page only passes at large sized font "
-            results += "at a AA rating. It's only okay for large headers, "
-            results += "but not for paragraphs and other non-headings.\n"
+        # extract both size and rating
+        size, rating = target.split()
+        if report[target] == 'Pass':
+            results += "Success: page passes at a " + rating
+            results += " rating for " + size.lower() + "-sized text.\n"
         else:
-            results = "Failed: Text contrast does not pass for large "
-            results += "or small text. You need a higher contrast between "
-            results += "the background and foreground colors."
+            results += "Failure: page does NOT pass at a " + rating
+            results += " rating for " + size.lower() + "-sized text.\n"
+            
         return results
             
 
@@ -349,7 +386,7 @@ class CSSReport:
             hsl = colors.get_hsl_from_string(color)
             rgb = colors.hsl_to_rgb(hsl)
             color_hex = colors.rgb_to_hex(rgb)
-        elif "hsla(" in color[0]:
+        elif "hsla(" in color:
             hsla = colors.get_hsl_from_string(color)
             a = hsla[-1]
             if len(hsla) == 4 and a < 1:
@@ -394,6 +431,43 @@ class CSSReport:
                 return object
         return None
 
+    def get_final_header_colors(self, all_styles):
+        """ get header colors from each stylesheet and tag """
+        styles_checked = self.get_styles_checked(all_styles)
+        header_color_data = {}
+        for styles in styles_checked.values():
+            header_colors_set = CSSinator.get_header_color_details(styles.rulesets)
+
+            if header_colors_set:
+                header_color_data[styles.href] = header_colors_set
+        # Process to determine whether and which files have global 
+        applied_styles = []
+        for page in self.html_files:
+            filename = page.split("\\")[-1]
+            # intialize applied_styles for each page
+            applied = {
+                "file": filename,
+                "applied": False,
+                "selector": "",
+                "specificity": "",
+                "bg-color": "",
+                "color": ""
+            }
+            for styles in all_styles:
+                if filename in styles[0]:
+                    href = styles[1].href
+                    if href in header_color_data.keys():
+                        details = header_color_data[href]
+                        applied = self.adjust_applied(applied, details)
+                    elif styles[0] in styles[1].href:
+                        # We have a style tag to process
+                        print("TODO - process the style tag")
+                        details = header_color_data[href]
+            if applied['applied']:
+                applied_styles.append(applied)
+        
+        return header_color_data
+    
     def get_final_global_colors(self, all_styles):
         """ get global colors from each stylesheet and each style tag """
         # track which stylesheets have already been checked, 
@@ -408,8 +482,8 @@ class CSSReport:
             if global_colors_set:
                 # we have global colors set - let's do something:
                 global_color_data[styles.href] = global_colors_set
-        print(global_color_data)
-        # TODO: Process to determine whether and which files have global 
+                
+        # Process to determine whether and which files have global 
         applied_styles = []
         for page in self.html_files:
             filename = page.split("\\")[-1]
@@ -469,6 +543,7 @@ class CSSReport:
 
             else:
                 # this is the first time, get all styles and apply
+                old_selector = style['selector']
                 old_styles['selector'] = style['selector']
                 old_styles['specificity'] = CSSinator.get_specificity(old_selector)
                 if style.get('background-color'):

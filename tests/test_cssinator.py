@@ -260,24 +260,25 @@ def test_get_class_score_for_0_results():
     results = css.get_class_score(selectors_with_3_ids)
     assert results == 0
     
-
 def test_get_class_score_for_3_results():
     selector = "a:hover, a:link, input[type=text]"
     results = css.get_class_score(selector)
     assert results == 3
 
-
 def test_get_specificity_for_303():
     results = css.get_specificity(specificity303)
     assert results == "303"
-
 
 def test_get_specificity_for_014():
     results = css.get_specificity(specificity014)
     assert results == "014"
 
-
 def test_get_specificity_for_033():
     selector = "a:hover, a:link, input[type=text]"
     results = css.get_specificity(selector)
     assert results == "033"
+    
+def test_get_specificity_for_002():
+    selector = "header h1"
+    results = css.get_specificity(selector)
+    assert results == "002"

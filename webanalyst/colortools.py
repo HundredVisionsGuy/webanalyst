@@ -18,11 +18,11 @@ hex_map = {"0": 0,
            "f": 15}
 
 contrast_ratio_map = {
-    "normal AA": 4.5,
-    "normal AAA": 7,
-    "large AA": 3,
-    "large AAA": 4.5,
-    "graphics UI components": 3,
+    "Normal AA": 4.5,
+    "Normal AAA": 7,
+    "Large AA": 3,
+    "Large AAA": 4.5,
+    "Graphics UI components": 3,
 }
 
 
