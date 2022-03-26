@@ -493,9 +493,9 @@ def get_header_color_details(rulesets):
     for ruleset in rulesets:
         selector = ruleset.selector
         # check selector for having a header
-        has_header = re.search(header_re, selector)
-        if has_header:
-            properties = {}
+        heading_selectors = get_header_selectors(selector)
+        if heading_selectors:
+            # get color data 
             background_color = ""
             color = ""
             for declaration in ruleset.declaration_block.declarations:
@@ -505,12 +505,33 @@ def get_header_color_details(rulesets):
                     color = declaration.value
                 elif declaration.property == 'background':
                     # check to see if the color value is present
-                    pass
+                    print("it's time to figure out the background shorthand")
+                if background_color and color:
+                    break
+            
+            # then apply color data to all others
             if background_color or color:
-                header_rulesets.append({'selector': selector,
-                                        'background-color': background_color,
-                                        'color': color})
+                for h_selector in heading_selectors:
+                    header_rulesets.append({'selector': h_selector,
+                                            'background-color': background_color,
+                                            'color': color})
+                
     return header_rulesets
+
+def get_header_selectors(selector):
+    """takes selector and returns any selector that selects an h1-h6 """
+    # NOTE the following:
+    # a selector is only selecting a header if it's the last item
+    # example: header h1 {} does but h1 a {} does not
+    header_selectors = []
+    selectors = [sel.strip() for sel in selector.split(",")]
+    header_re = "h[1-6]"
+    for selector in selectors:
+        items = selector.split()
+        h_match = re.search(header_re, items[-1])
+        if h_match:
+            header_selectors.append(selector)
+    return header_selectors
 
 def get_global_color_details(rulesets):
     """ receives rulesets and returns data on global colors """
