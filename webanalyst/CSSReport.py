@@ -180,6 +180,8 @@ class CSSReport:
                 if global_headers != "NA":
                     # we can process rules for headers
                     global_headers_colors = self.get_final_header_colors(all_styles_in_order, global_colors)
+                    global_headers_results = self.get_global_headers_results(global_headers_colors, goal_msg)
+                    color_settings_results += global_headers_results
                 # check for color contrast
                 color_rulesets = self.get_color_data()
                 passes_page_colors = self.meets_page_colors(details)
@@ -205,6 +207,10 @@ class CSSReport:
         except Exception as e:
             return "NA", str(e)
         return contrast_goal, message
+
+    def get_global_headers_results(self, global_headers_data, goals):
+        results = ""
+        return results
 
     def get_global_colors_results(self, global_colors):
         """ Are global colors set for each HTML file? """
@@ -444,7 +450,8 @@ class CSSReport:
             if header_colors_set:
                 header_color_data[styles.href] = header_colors_set
                 
-        # Process to determine whether and which files have header colors 
+        # We have all header styles
+        # Identify all unique headings applied for each HTML document 
         applied_styles = []
         for page in self.html_files:
             filename = page.split("\\")[-1]
@@ -476,16 +483,44 @@ class CSSReport:
                             applied['css_file'] = "styletag"
                         else:
                             applied['css_file'] = href
+                        
+                        # get global bg color and color
+                        global_bg_color = ""
+                        global_color = ""
+                        for file in global_colors:
+                            if file.get('html_file') == filename:
+                                global_bg_color = file.get('bg-color')
+                                global_color = file.get('color')  
+                        
                         for selector in selectors:
                             details = selector
-                            applied = self.adjust_applied_headers(applied, details, global_colors)
+                            data = applied.copy()
+                            data = self.set_header_color_details(data, details, global_bg_color, global_color)
+                            applied_styles.append(data)
                     elif styles[0] in styles[1].href:
-                        details = header_color_data[href]
-                        applied = self.adjust_applied_headers(applied, details, global_colors)
-            if applied['applied']:
-                applied_styles.append(applied, details)
+                        # We're in a styletag: see if we have header color data 
+                        if header_color_data.get(href):
+                            selectors = header_color_data[href]
+                            if ".html" in href:
+                                applied['css_file'] = "styletag"
+                            else:
+                                applied['css_file'] = href
+                            
+                            # get global bg color and color
+                            global_bg_color = ""
+                            global_color = ""
+                            for file in global_colors:
+                                if file.get('html_file') == filename:
+                                    global_bg_color = file.get('bg-color')
+                                    global_color = file.get('color')  
+                            
+                            for selector in selectors:
+                                details = selector
+                                data = applied.copy()
+                                data = self.set_header_color_details(data, details, global_bg_color, global_color)
+                                applied_styles.append(data)
         
-        return header_color_data
+        return applied_styles
     
     def get_final_global_colors(self, all_styles):
         """ get global colors from each stylesheet and each style tag """
@@ -581,67 +616,24 @@ class CSSReport:
                     old_styles['color'] = style['color']
         return old_styles
 
-    def adjust_applied_headers(self, old_styles, new_styles, global_colors):
-        """ returns old_styles adjusted according to new styles """
-        old_styles['applied'] = True
-        for style in new_styles:
-            new_selector = style['selector']
-            old_selector = old_styles['selector']
-            if old_selector:
-                # we need to adjust all that applies
-                # if selectors are the same OR 
-                # old specificity is greater than new, we keep
-                # all old styles unless not set
-                # If there is a difference in number of headers
-                # set a 2nd set of colors
-                header_re = "h[1-6]"
-                new_selectors = re.findall(header_re, new_selector)
-                old_selectors = re.findall(header_re, old_selector)
-                new_specificity = CSSinator.get_specificity(new_selector)
-                if new_specificity >= old_styles['specificity']:
-                    # new wins out for everything present
-                    old_styles['selector'] = style['selector']
-                    old_styles['specificity'] = new_specificity
-                    if style.get('background-color'):
-                        old_styles['bg-color'] = style['background-color']
-                    elif style.get('background'):
-                        old_styles['bg-color'] = style['background']
-                    if style.get('color'):
-                        old_styles['color'] = style['color']
-                else:
-                    # old specificity is greater, so only apply anything not set
-                    if not old_styles['bg-color']:
-                        if style.get('background-color'):
-                            old_styles['bg-color'] = style['background-color']
-                        elif style.get('background'):
-                            old_styles['bg-color'] = style['background']
-                    if not old_styles['color'] and style.get('color'):
-                        old_styles['color'] = style['color']
-
-            else:
-                # this is the first time, get all styles and apply
-                old_selector = style['selector']
-                old_styles['selector'] = style['selector']
-                old_styles['specificity'] = CSSinator.get_specificity(old_selector)
-                if style.get('background-color'):
-                    old_styles['bg-color'] = style['background-color']
-                elif style.get('background'):
-                    old_styles['bg-color'] = style['background']
-                else:
-                    # background color was never set
-                    # check to see if header was a descendant selector
-                    # get that bg color if possible
-                    # otherwise, try and get the global bg color
-                    
-                    # first, get all styles from the current page
-                    current_page = old_styles.get('html_file')
-                    
-                    # get the context if possible
-                    
-                    old_styles['global-bg-color'] = global_colors
-                if style.get('color'):
-                    old_styles['color'] = style['color']
-        return old_styles
+    def set_header_color_details(self, applied, details, global_bg, global_c):
+        """ sets color details to applied and adds global colors if not set """
+        applied['applied'] = True
+        
+        applied['selector'] = details['selector']
+        applied['specificity'] = CSSinator.get_specificity(details['selector'])
+        if details.get('background-color'):
+            applied['bg-color'] = details['background-color']
+        elif details.get('background'):
+            applied['bg-color'] = details['background']
+        else:
+            # background color was never set
+            applied['global-bg-color'] = global_bg
+        if details.get('color'):
+            applied['color'] = details['color']
+        else:
+            applied['global-color'] = global_c
+        return applied
 
     def get_styles_checked(self, all_styles):
         styles_checked = {}
