@@ -215,12 +215,17 @@ class CSSReport:
         # Check to see if required headings are present and meet
         # Get all heading matches from goals
         # if not specified in README, it's all headings (h1 - h6)
-        from_heading = "h1"
         to_heading = "h6"
-        required_headings = re.findall("h[1-6]", goals)
-        if required_headings:
-            to_heading = required_headings[-1]
-        
+        all_headings = ["h1", "h2", "h3", "h4", "h5", "h6"]
+        required = re.findall("h[1-6]", goals)
+        if required:
+            to_heading = required[-1]
+            to_pos = all_headings.index(to_heading) + 1
+            required_headings = all_headings[:to_pos]
+        else:
+            required_headings = all_headings
+            
+        # Check whether all HTML files address header colors
         pages_addressed = self.get_html_pages_addressed(global_headers_data)
         if len(pages_addressed) < len(self.html_files):
             for file in self.html_files:
@@ -228,9 +233,13 @@ class CSSReport:
                 if filename not in pages_addressed:
                     results += "<li>" + filename + " did not apply styles to headings</li>\n"
         
+        # Check whether both background and foreground colors are set
         if "background and foreground" in goals.lower():
-            # make sure both are set
+            # make sure both are set on all headers
+            # while checking, see if all required headers are present
             print("TODO: make sure both bg and color appear in all styles")
+        
+        # Check whether all required headers
         return results
 
     def get_html_pages_addressed(self, global_headers_data):
