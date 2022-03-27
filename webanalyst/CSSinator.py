@@ -287,6 +287,7 @@ class Declaration:
     def get_declaration(self):
         return self.property + ": " + self.value
 
+
 css_with_errors = """<body> {
     font-size: 1.2em;
     color: brown;
@@ -407,7 +408,8 @@ def get_comment_positions(code):
         positions.append(code.index("/*"))
         positions.append(code.index("*/"))
         return positions
-    except:
+    except Exception as ex:
+        print(ex)
         return
 
 

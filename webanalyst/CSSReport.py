@@ -1,5 +1,6 @@
 from fileinput import filename
 import keyword
+from turtle import bgcolor
 from webanalyst import CSSinator
 from webanalyst import clerk
 import re
@@ -235,12 +236,55 @@ class CSSReport:
         
         # Check whether both background and foreground colors are set
         if "background and foreground" in goals.lower():
-            # make sure both are set on all headers
-            # while checking, see if all required headers are present
-            print("TODO: make sure both bg and color appear in all styles")
-        
+            # use a dictionary to store info (and possibly override at times)
+            applied_colors = self.get_applied_header_colors(global_headers_data, pages_addressed)
+                                
         # Check whether all required headers
         return results
+
+    def get_applied_header_colors(self, global_headers_data, pages_addressed):
+        background_foreground = {}
+            
+            # make sure both are set on all headers
+            # while checking, see if all required headers are present
+        for page in pages_addressed:
+            background_foreground[page] = {}
+            for datum in global_headers_data:
+                if datum.get("html_file") ==  page:
+                    item = {}
+                    selector = datum.get('selector')
+                    specificity = datum.get('specificity')
+                    bg = datum.get('bg-color')
+                    col = datum.get('color')
+                    both_set = bool(datum.get('bg-color')) and bool(datum.get('color'))                            
+                    global_bg = datum.get('global-bg-color')
+                    global_col = datum.get('global-color')
+                    if selector not in background_foreground[page].keys():
+                        background_foreground[page][selector] = {
+                                    "both_set": both_set,
+                                    "specificity": specificity,
+                                    "bg-color": bg,
+                                    "color": col,
+                                    "global-bg-color": global_bg,
+                                    "global-color": global_col}
+                    else:
+                            # override if specificity is greater
+                        old_specificity = background_foreground[page][selector].get('specificity')
+                        if specificity > old_specificity:
+                            my_selector = background_foreground[page][selector]
+                            my_selector['specificity'] = specificity
+                                # override bg &/or color 
+                            if bg:
+                                my_selector['bg-color'] = bg 
+                            if col:
+                                my_selector['color'] = col 
+                            background = my_selector.get('bg-color')
+                            foreground = my_selector.get('color') 
+                            if background and foreground:
+                                my_selector["both_set"] = True
+                            my_selector['global-bg-color'] = global_bg
+                            my_selector['global-color'] = global_col
+        return background_foreground
 
     def get_html_pages_addressed(self, global_headers_data):
         pages_addressed = []
