@@ -209,8 +209,36 @@ class CSSReport:
         return contrast_goal, message
 
     def get_global_headers_results(self, global_headers_data, goals):
+        """ returns results on whether global headers color goals are met"""
         results = ""
+        # Parse goals to identify each goal
+        # Check to see if required headings are present and meet
+        # Get all heading matches from goals
+        # if not specified in README, it's all headings (h1 - h6)
+        from_heading = "h1"
+        to_heading = "h6"
+        required_headings = re.findall("h[1-6]", goals)
+        if required_headings:
+            to_heading = required_headings[-1]
+        
+        pages_addressed = self.get_html_pages_addressed(global_headers_data)
+        if len(pages_addressed) < len(self.html_files):
+            for file in self.html_files:
+                filename = file.split("\\")[-1]
+                if filename not in pages_addressed:
+                    results += "<li>" + filename + " did not apply styles to headings</li>\n"
+        
+        if "background and foreground" in goals.lower():
+            # make sure both are set
+            print("TODO: make sure both bg and color appear in all styles")
         return results
+
+    def get_html_pages_addressed(self, global_headers_data):
+        pages_addressed = []
+        for item in global_headers_data:
+            if item.get('html_file') not in pages_addressed:
+                pages_addressed.append(item.get('html_file'))
+        return pages_addressed
 
     def get_global_colors_results(self, global_colors):
         """ Are global colors set for each HTML file? """
@@ -342,7 +370,7 @@ class CSSReport:
                 continue
             # Test for contrast
             contrast_report = colors.get_color_contrast_report(color, bg_color)
-            results += "Results for " + file['file'] + ": "
+            results += "Results for " + file['html_file'] + ": "
             
             target = self.get_color_contrast_target("Normal")
             results += self.process_contrast_report(contrast_report, target)

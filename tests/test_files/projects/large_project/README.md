@@ -43,7 +43,7 @@ This project does meet the requirements for attaining the next level in CSS.
         + Maximum: 2
     * Color Settings:
         + Entire Page colors set: background and foreground
-        + Headers: background and foreground
+        + Headers: background and foreground (h1 - h3 are required - all others optional - but will be checked if present)
         + Color Contrast (readability): must pass the [color contrast analyzer tool](https://webaim.org/resources/contrastchecker/) at the following levels
             - Normal: AAA
             - Large: AA
