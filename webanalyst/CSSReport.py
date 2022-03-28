@@ -234,11 +234,28 @@ class CSSReport:
                 if filename not in pages_addressed:
                     results += "<li>" + filename + " did not apply styles to headings</li>\n"
         
-        # Check whether both background and foreground colors are set
+        # Get pertinent data on applied header colors by page and selector
+        applied_colors = self.get_applied_header_colors(global_headers_data, pages_addressed)
+            
         if "background and foreground" in goals.lower():
             # use a dictionary to store info (and possibly override at times)
-            applied_colors = self.get_applied_header_colors(global_headers_data, pages_addressed)
-                                
+            both_applied_results = ""
+            for page in applied_colors.keys():
+                for selector, data in applied_colors[page].items():
+                    color = data.get('color')
+                    bg_color = data.get('bg-color')
+                    if not color or not bg_color:
+                        both_applied_results += "<li>In page: " + page + " - "
+                        if not color:
+                            both_applied_results += "color was not applied "
+                        else:
+                            both_applied_results += "background color was not applied "
+                        both_applied_results += "by the " + selector + " selector</li>\n"      
+            if both_applied_results:
+                results += "Headers must set background and foreground colors"
+                results += "<ul>\n"
+                results += both_applied_results + "</ul>\n"
+        
         # Check whether all required headers
         return results
 
