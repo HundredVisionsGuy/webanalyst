@@ -257,6 +257,41 @@ class CSSReport:
                 results += both_applied_results + "</ul>\n"
         
         # Check whether all required headers
+        required_heading_results = self.get_required_headers_results(required_headings, global_headers_data, pages_addressed)
+
+        return results
+
+    def get_required_headers_results(self, required, data, pages):
+        results = ""
+        # were all required headers present on each page?
+        for page in pages:
+            # get a copy of required headers
+            target_headers = required[:]
+            
+            for item in data:
+                html_file = item.get('html_file')
+
+                # remove any header selector from copy of required
+                if item.get('html_file') ==  page:
+                    selector = item.get('selector')
+                    
+                    if selector in target_headers:
+                        target_headers.remove(selector)
+
+                    if not target_headers:
+                        break
+            
+            # check to see if all header selectors have been applied
+            if target_headers:
+                for header_selector in target_headers:
+                    results += "<li>In " + page + ": "
+                    results += header_selector + " was not applied.</li>\n"
+
+        # If we have results, it's a fail
+        if results:
+            result = "Fail: not all required heading selectors are present"
+            results = result + "\n<ul>" + results + "</ul>\n"
+        
         return results
 
     def get_applied_header_colors(self, global_headers_data, pages_addressed):
