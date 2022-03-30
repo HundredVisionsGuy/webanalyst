@@ -456,13 +456,19 @@ class CSSReport:
         meets = True
         for file, details in header_colors.items():
             for selector in details.values():
+                # get the color unless it's not set,
+                # then get the global color
                 color = selector.get('color')
+                if not color:
+                    color = selector.get('global-color')
                 color = self.get_color_hex(color)
                 if "warning" in color.lower():
                     results += "WARNING for " + file['file'] + ": "
                     results += color
                     continue
                 bg_color = selector.get('bg-color')
+                if not bg_color:
+                    bg_color = selector.get('global-bg-color')
                 bg_color = self.get_color_hex(bg_color)
                 if "warning" in bg_color.lower():
                     results += "WARNING for " + file['file'] + ": "
@@ -473,7 +479,15 @@ class CSSReport:
                 contrast_report = colors.get_color_contrast_report(color, bg_color)
                 # results += "Results for " + file + ": "
                 target = self.get_color_contrast_target("Large")
-                results += self.process_contrast_report(contrast_report, target)
+                passes = contrast_report.get(target)
+                if passes == "Fail":
+                    meets = False
+                    selector = list(details.keys())[0]
+                    if not results:
+                        results = "<b>Fail</b>: \n<ul>"
+                    results += "<li>Page " + file + ": " + selector 
+                    results += " fails color contrast report for " + target
+                    results += "</li>\n"
 
         return results
             
