@@ -227,13 +227,17 @@ class CSSReport:
             required_headings = all_headings
             
         # Check whether all HTML files address header colors
+        applies_headers_results = ""
         pages_addressed = self.get_html_pages_addressed(global_headers_data)
         if len(pages_addressed) < len(self.html_files):
             for file in self.html_files:
                 filename = file.split("\\")[-1]
                 if filename not in pages_addressed:
-                    results += "<li>" + filename + " did not apply styles to headings</li>\n"
-        
+                    applies_headers_results += "<li>" + filename + " did not apply styles to headings</li>\n"
+            if applies_headers_results:
+                intro = "Goal: all HTML files address header colors\n<ul>\n"
+                applies_headers_results = intro + applies_headers_results
+                applies_headers_results += "\n</ul>"
         # Get pertinent data on applied header colors by page and selector
         applied_colors = self.get_applied_header_colors(global_headers_data, pages_addressed)
             
@@ -252,13 +256,24 @@ class CSSReport:
                             both_applied_results += "background color was not applied "
                         both_applied_results += "by the " + selector + " selector</li>\n"      
             if both_applied_results:
-                results += "Headers must set background and foreground colors"
-                results += "<ul>\n"
-                results += both_applied_results + "</ul>\n"
+                intro = "Headers must set background and foreground colors\n<ul>\n"
+                both_applied_results = intro + both_applied_results + "</ul>\n"
         
         # Check whether all required headers
         required_heading_results = self.get_required_headers_results(required_headings, global_headers_data, pages_addressed)
+        if required_heading_results:
+            intro = "Required Headers are NOT address. See the following:\n<ul>"
+            required_heading_results = intro + required_heading_results
+            required_heading_results += "</ul>"
 
+        # Check color contrast of all global headers
+        color_contrast_results = self.get_header_color_contrast(applied_colors, goals)
+        # Final check of all global headers goals
+        if applies_headers_results or both_applied_results or required_heading_results:
+            results = "<b>Fail</b>\n "
+            results += applies_headers_results + both_applied_results
+            results += required_heading_results
+        
         return results
 
     def get_required_headers_results(self, required, data, pages):
@@ -430,20 +445,24 @@ class CSSReport:
         print(header_color_contrast)
         return color_data
        
-    def get_header_color_contrast(self, header_colors):
+    def get_header_color_contrast(self, header_colors, goals=""):
         results = ""
-        for file in header_colors:
-            header_rules = header_colors[file]
-            if len(header_rules) > 1:
-                input("Yo! Let's loop through the rulesets")
-            else:
-                color = header_rules[0].get('color')
+        # default target goal is AAA, but if it's just AA, change it
+        target_goal = "AAA"
+        if goals and "AAA" not in goals:
+            # double check
+            if "AA" in goals:
+                target_goal = "AA"
+        meets = True
+        for file, details in header_colors.items():
+            for selector in details.values():
+                color = selector.get('color')
                 color = self.get_color_hex(color)
                 if "warning" in color.lower():
                     results += "WARNING for " + file['file'] + ": "
                     results += color
                     continue
-                bg_color = header_rules[0].get('background-color')
+                bg_color = selector.get('bg-color')
                 bg_color = self.get_color_hex(bg_color)
                 if "warning" in bg_color.lower():
                     results += "WARNING for " + file['file'] + ": "
@@ -452,7 +471,7 @@ class CSSReport:
                 # Test for contrast
                 # Test for contrast
                 contrast_report = colors.get_color_contrast_report(color, bg_color)
-                results += "Results for " + file + ": "
+                # results += "Results for " + file + ": "
                 target = self.get_color_contrast_target("Large")
                 results += self.process_contrast_report(contrast_report, target)
 
