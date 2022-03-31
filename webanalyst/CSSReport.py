@@ -183,17 +183,9 @@ class CSSReport:
                     global_headers_colors = self.get_final_header_colors(all_styles_in_order, global_colors)
                     global_headers_results = self.get_global_headers_results(global_headers_colors, goal_msg)
                     color_settings_results += global_headers_results
-                # check for color contrast
-                color_rulesets = self.get_color_data()
-                passes_page_colors = self.meets_page_colors(details)
-                if not color_rulesets:
-                    actual = "We still need this piece of functionality"
-                else:
-                    actual = str(color_rulesets)
-                self.report_details['general_styles_goals']['Color Settings']['details']['actual'] = actual
-                self.report_details['general_styles_goals']['Color Settings']['details']['meets'] = passes_page_colors
-                print(passes_page_colors)
-
+                
+                self.report_details['general_styles_goals']['Color Settings']['results'] = color_settings_results
+            
     def get_global_headers_goals(self, goals):
         message = ""
         try:
@@ -269,10 +261,10 @@ class CSSReport:
         # Check color contrast of all global headers
         color_contrast_results = self.get_header_color_contrast(applied_colors, goals)
         # Final check of all global headers goals
-        if applies_headers_results or both_applied_results or required_heading_results:
+        if (applies_headers_results or both_applied_results or required_heading_results or color_contrast_results):
             results = "<b>Fail</b>\n "
             results += applies_headers_results + both_applied_results
-            results += required_heading_results
+            results += required_heading_results + color_contrast_results
         
         return results
 
@@ -492,7 +484,8 @@ class CSSReport:
                     results += "<li>Page " + file + ": " + selector 
                     results += " fails color contrast report for " + target
                     results += "</li>\n"
-
+        if results:
+            results += "</ul>"
         return results
             
     def get_global_color_contrast(self, global_colors):
