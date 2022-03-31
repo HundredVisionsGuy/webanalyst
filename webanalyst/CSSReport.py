@@ -461,6 +461,8 @@ class CSSReport:
                 color = selector.get('color')
                 if not color:
                     color = selector.get('global-color')
+                    if not color:
+                        color = "#000000"
                 color = self.get_color_hex(color)
                 if "warning" in color.lower():
                     results += "WARNING for " + file['file'] + ": "
@@ -469,6 +471,8 @@ class CSSReport:
                 bg_color = selector.get('bg-color')
                 if not bg_color:
                     bg_color = selector.get('global-bg-color')
+                    if not bg_color:
+                        bg_color = "#ffffff"
                 bg_color = self.get_color_hex(bg_color)
                 if "warning" in bg_color.lower():
                     results += "WARNING for " + file['file'] + ": "
