@@ -166,6 +166,9 @@ class CSSReport:
             elif goal == "Color Settings":
                 color_settings_results = ""
 
+                # we meet settings until we don't
+                meets_color = True 
+
                 # Check for global colors 
                 needs_global_colors = self.needs_global_colors_set()
                 global_colors = []
@@ -175,6 +178,8 @@ class CSSReport:
                     global_colors = self.get_final_global_colors(all_styles_in_order)
                     global_colors_results = self.get_global_colors_results(global_colors)
                     color_settings_results += global_colors_results
+                    if "fail" in global_colors_results.lower():
+                        meets_color = False
 
                 # check for headers for contrast setting and goal message
                 global_headers, goal_msg = self.get_global_headers_goals(goals)
@@ -182,8 +187,10 @@ class CSSReport:
                     # we can process rules for headers
                     global_headers_colors = self.get_final_header_colors(all_styles_in_order, global_colors)
                     global_headers_results = self.get_global_headers_results(global_headers_colors, goal_msg)
+                    if "fail" in global_headers_results.lower():
+                        meets_color = False
                     color_settings_results += global_headers_results
-                
+                self.report_details['general_styles_goals']['Color Settings']['details']['meets'] = meets_color
                 self.report_details['general_styles_goals']['Color Settings']['results'] = color_settings_results
             
     def get_global_headers_goals(self, goals):
@@ -386,7 +393,7 @@ class CSSReport:
             results += "<b>Success</b>! All files had global colors set.\n"
             return results
         else:
-            results = "<b>Global Colors Set</b>:\n<ul>\n" + results + "</ul>\n"
+            results = "<b>Global Colors Set</b>: <b>Fail</b>\n<ul>\n" + results + "</ul>\n"
             return results
 
     def needs_global_colors_set(self):
@@ -1410,12 +1417,29 @@ class CSSReport:
                 max = goal_details['maximum']
                 actual = goal_details['actual']
                 actual_string = "Minimum: {} Maximum: {} Actual: {}".format(min, max, actual)
+                results = str(goal_details.get('meets'))
             else:
-                actual_string = "Hmmm...."
-                print("What now? No min or max")
-            results = str(goal_details['meets'])
+                # probably we're looking at color details
+                actual_string = details.get('results')
+                results = str(goal_details.get('meets'))
+
+                # convert boolean results to reader friendly text
+                if results == "True":
+                    results = "Passes!"
+                elif results == "False":
+                    results = "Fails!"
+                else:
+                    # something went wrong
+                    print("hoo boy! We had a problem.")
+
             general_styles_goals += "<tr><td>{}</td><td>{}</td><td>{}</td></tr>".format( goal, actual_string, results)
         
+        # create our tbody contents for css general results
+        tbody_contents = BeautifulSoup(
+            general_styles_goals, "html.parser")
+        tbody_id = 'css-general-styles'
+        report_content.find(id=tbody_id).replace_with(tbody_contents)
+
         # Check standard requirements goals
         
         # Any project specific goals?
