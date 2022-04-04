@@ -528,11 +528,12 @@ def get_header_selectors(selector):
     header_selectors = []
     selectors = [sel.strip() for sel in selector.split(",")]
     header_re = "h[1-6]"
-    for selector in selectors:
-        items = selector.split()
-        h_match = re.search(header_re, items[-1])
-        if h_match:
-            header_selectors.append(selector)
+    if selectors[0]:
+        for selector in selectors:
+            items = selector.split()
+            h_match = re.search(header_re, items[-1])
+            if h_match:
+                header_selectors.append(selector)
     return header_selectors
 
 def get_global_color_details(rulesets):

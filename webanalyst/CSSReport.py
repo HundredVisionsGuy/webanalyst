@@ -878,7 +878,7 @@ class CSSReport:
         for font in font_families:
             num = font_families.count(font)
             if num > 1:
-                font_families.pop(font)
+                font_families.remove(font)
         return len(font_families)
 
 

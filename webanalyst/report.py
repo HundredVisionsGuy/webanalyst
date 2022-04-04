@@ -348,16 +348,12 @@ if __name__ == "__main__":
     # large_project = Report(large_project_readme_path)
     # large_project.generate_report()
     
-    single_page_path = "tests/test_files/projects/single_page/"
-    single_page = Report(single_page_path)
-    single_page.generate_report()
+    # single_page_path = "tests/test_files/projects/single_page/"
+    # single_page = Report(single_page_path)
+    # single_page.generate_report()
     
-    # multi_meets_path = "tests/test_files/projects/multi_page_meets/"
-    # project = Report(multi_meets_path)
-    # project.generate_report()
-
-    # about_meets_path = "tests/test_files/projects/about_me/"
-    # project = Report(about_meets_path)
-    # project.generate_report()
-    
+    # project path
+    project_path = "project/"
+    project_page = Report(project_path)
+    project_page.generate_report()
     # print("done")
