@@ -261,7 +261,7 @@ class CSSReport:
         # Check whether all required headers
         required_heading_results = self.get_required_headers_results(required_headings, global_headers_data, pages_addressed)
         if required_heading_results:
-            intro = "Required Headers are NOT address. See the following:\n<ul>"
+            intro = "Required Headers are NOT addressed. See the following:\n<ul>"
             required_heading_results = intro + required_heading_results
             required_heading_results += "</ul>"
 
@@ -384,7 +384,7 @@ class CSSReport:
                 results += " the color property was not set.</li>\n"
             bg_color_set = setting.get('bg-color')
             if not bg_color_set:
-                results += "<li>Fail: in " + setting.get('file') 
+                results += "<li>Fail: in " + setting.get('html_file') 
                 results += " the background-color property was not set.</li>\n"
 
         # If no results, there were no problems

@@ -270,7 +270,7 @@ class GeneralReport:
 
         # Is SPP within range?
         minSPP, maxSPP = self.report_details["writing_goals"]["average_SPP"]
-        self.report_details["writing_goal_results"]["meets_SPP"] = SPP > minSPP and SPP < maxSPP
+        self.report_details["writing_goal_results"]["meets_SPP"] = SPP >= minSPP and SPP <= maxSPP
 
         # calculate words per sentence WPS
         try:
@@ -344,9 +344,13 @@ if __name__ == "__main__":
     # project = Report(about_me_dnn_readme_path)
     # project.generate_report()
 
-    large_project_readme_path = "tests/test_files/projects/large_project/"
-    large_project = Report(large_project_readme_path)
-    large_project.generate_report()
+    # large_project_readme_path = "tests/test_files/projects/large_project/"
+    # large_project = Report(large_project_readme_path)
+    # large_project.generate_report()
+    
+    single_page_path = "tests/test_files/projects/single_page/"
+    single_page = Report(single_page_path)
+    single_page.generate_report()
     
     # multi_meets_path = "tests/test_files/projects/multi_page_meets/"
     # project = Report(multi_meets_path)

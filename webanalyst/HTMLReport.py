@@ -113,7 +113,21 @@ class HTMLReport:
         # iterate through each element and get the total number
         # then compare to required number
         for el in required_elements:
-            actual_number = html.get_num_elements_in_folder(
+            double_el = ""
+            if 'or' in el:
+                # we have 2 elements and either may work
+                # split the two elements and check each 1 at a time
+                # if one meets, they both meet (or else they don't)
+                actual_number = 0
+                double_el = el
+                my_elements = el.split("`")
+                for i in my_elements:
+                    if "or" in i:
+                        my_elements.remove(i)
+                    actual_number += html.get_num_elements_in_folder(i, self.__dir_path)
+                el = my_elements[0] + "` or `" + my_elements[-1]
+            else:
+                actual_number = html.get_num_elements_in_folder(
                 el, self.__dir_path)
 
             # get how many of that element is required
@@ -122,6 +136,10 @@ class HTMLReport:
             # do we have enough of that element to meet?
             el_meets = actual_number >= number_required
 
+            # edit the el if it has two by removing the back tics `
+            if double_el:
+                el = el.replace("`", "")
+            
             # modify the report details on required elements found
             self.report_details["required_elements_found"][el] = [
                 number_required, actual_number, el_meets]
