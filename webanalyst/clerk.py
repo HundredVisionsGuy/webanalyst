@@ -45,7 +45,7 @@ def get_full_path_string(path):
 
 def file_to_string(path):
     my_file = get_full_path_string(path)
-    file = my_file.read_text()
+    file = my_file.read_text(encoding='utf-8')
     return file
 
 

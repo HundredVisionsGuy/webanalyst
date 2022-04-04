@@ -9,14 +9,14 @@ from lxml import html
 
 
 def get_html(path):
-    with open(path) as fp:
+    with open(path, encoding='utf-8') as fp:
         soup = BeautifulSoup(fp, 'html.parser')
         return soup
     return None
 
 
 def get_num_elements_in_file(el, path):
-    with open(path) as fp:
+    with open(path, encoding='utf-8') as fp:
         if el.lower() in ['doctype', 'html', 'head', 'title', 'body']:
             # bs4 won't find doctype
             contents = fp.read()
@@ -45,7 +45,7 @@ def get_num_elements_in_folder(el, dir_path):
 
 
 def get_elements(el, path):
-    with open(path) as fp:
+    with open(path, encoding='utf-8') as fp:
         soup = BeautifulSoup(fp, 'html.parser')
         elements = soup.find_all(el)
     return elements
