@@ -1,7 +1,7 @@
-# Project Name: About Me
+# Project Name: Single Web Page
 
 ## Project Description
-***GOAL***: Students are asked to create a single web page designed to give information about the student using Headings (h1 & h2), paragraphs, links, and bold and italics.
+***GOAL***: Students are asked to create a single web page designed to give information about a student-selected topic using Headings (h1 & h2), paragraphs, links, and bold and italics.
 
 ### HTML Level = 101
 This project does not meet the requirements for attaining the next level in HTML.

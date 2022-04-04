@@ -1,10 +1,10 @@
-# Project Name: Web Page Project
+# Project Name: Single Web Page
 
 ## Project Description
-***GOAL***: Students are asked to create a single web page that uses headers, paragraphs, lists, links, text formatting, and images to mark up information about a single topic of your choice.
+***GOAL***: Students are asked to create a single web page designed to give information about a student-selected topic using Headings (h1 & h2), paragraphs, links, and bold and italics.
 
 ### HTML Level = 101
-This project does meet the requirements for attaining the next level in HTML.
+This project does not meet the requirements for attaining the next level in HTML.
 
 ### CSS Level = 101
 This project does not meet the requirements for attaining the next level in CSS.
@@ -28,27 +28,35 @@ This project does not meet the requirements for attaining the next level in CSS.
         + `H2`: 2 or more
         + `P` : 3 or more
     * Other Tags:
-        + `B`: 2 or more
-        + `I`: 2 or more
-        + `IMG`: 1 or more
-        + `UL`: 1 or more
-        + `OL`: 1 or more
+        + `IMG`: 3 or more
+        + `UL` or `OL`: 1 or more
         + `LI`: 3 or more
-        + `A`: 1 or more
+        + `A`: 3 or more
+        + `STRONG`: 2 or more
+        + `EM`: 2 or more
 ### CSS
 * Standard Requirements:
-    * No CSS errors
-    * No repeat selectors
+    * CSS Errors: no more than 2 (total)
+    * Repeat selectors: None (per page)
+    * Repeat declaration blocks: None (per page)
+* General Styles:
+    * Font Families: number of font families to be set
+        + Minimum: 1
+        + Maximum: 2
+    * Color Settings:
+        + Entire Page colors set: background and foreground
+        + Headers: background and foreground (h1 - h2 are required - all others optional - but will be checked if present)
+        + Color Contrast (readability): must pass the [color contrast analyzer tool](https://webaim.org/resources/contrastchecker/) at the following levels
+            - Normal: AAA
+            - Large: AA
 * Project-specific Requirements:
-    * Fonts: required font changes are as follows:
-        + 1 font family must be set
-        + no more than 2 font families for the entire project
-    * Colors: 
-        + background color must be set for entire page
-        + 1 color must be set for all content
-        + color contrast analyzer: must pass at a minimum of 
-            - AA for headers
-            - AAA for all other elements
+    * Required Selectors:
+        + type
+        + class
+        + id
+    * Required Properties:
+        + padding
+        + border
     * Bonus Opportunity:
         + link colors: 
             * +1 for hyperlink colors 
@@ -60,5 +68,3 @@ This project does not meet the requirements for attaining the next level in CSS.
             +1 for link contrast of AAA
             +1 for hover contrast of AAA
             +1 for visited contrast of AAA
-        
---------
