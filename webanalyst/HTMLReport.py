@@ -123,7 +123,7 @@ class HTMLReport:
                 my_elements = el.split("`")
                 for i in my_elements:
                     if "or" in i:
-                        my_elements.remove(i)
+                        continue
                     actual_number += html.get_num_elements_in_folder(i, self.__dir_path)
                 el = my_elements[0] + "` or `" + my_elements[-1]
             else:

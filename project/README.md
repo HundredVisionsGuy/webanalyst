@@ -29,11 +29,12 @@ This project does not meet the requirements for attaining the next level in CSS.
         + `P` : 3 or more
     * Other Tags:
         + `IMG`: 3 or more
+        + `FIGURE`: 3 or more
         + `UL` or `OL`: 1 or more
         + `LI`: 3 or more
         + `A`: 3 or more
-        + `STRONG`: 2 or more
-        + `EM`: 2 or more
+        + `STRONG` or `B`: 2 or more
+        + `EM` or `I`: 2 or more
 ### CSS
 * Standard Requirements:
     * CSS Errors: no more than 2 (total)
