@@ -139,8 +139,9 @@ class Stylesheet:
         self.nested_at_rules = nested_at_rule_dict
 
     def get_color_ruleset(self, ruleset):
-        if 'color:' in ruleset.declaration_block.text:
-            self.color_rulesets.append(ruleset)
+        if ruleset.declaration_block:
+            if 'color:' in ruleset.declaration_block.text:
+                self.color_rulesets.append(ruleset)
 
     def get_selectors(self):
         for rule in self.rulesets:

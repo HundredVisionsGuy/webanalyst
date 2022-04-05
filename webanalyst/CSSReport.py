@@ -1,6 +1,3 @@
-from fileinput import filename
-import keyword
-from turtle import bgcolor
 from webanalyst import CSSinator
 from webanalyst import clerk
 import re
@@ -10,7 +7,6 @@ import logging
 from webanalyst import validator as val
 import os
 from webanalyst.CSSinator import Stylesheet as stylesheet
-from webanalyst import stylesheet_analyst as css_analyst
 import webanalyst.report as rep
 import webanalyst.colortools as colors
 import webanalyst.color_keywords as keywords
@@ -152,6 +148,10 @@ class CSSReport:
     def get_general_styles_results(self):
         goals = list(self.report_details['general_styles_goals'].items())
         all_styles_in_order = self.get_all_styles_in_order()
+
+        # if there are no styles, we have a major failure
+        if not all_styles_in_order:
+            print()
 
         for goal, details in goals:
             if goal == "Font Families":
@@ -1346,9 +1346,15 @@ class CSSReport:
         cumulative_errors = 0
         has_errors = self.has_css_errors(self.css_errors)
         if not has_errors:
-            # write 1 column entry indicating there are no errors
-            congrats = "Congratulations, no errors were found."
-            general_results = '<tr><td colspan="4">' + congrats + '</td></tr>'
+            # first of all check to make sure ANY CSS has been applied
+            num_css_files = self.report_details.get("num_css_files")
+            num_style_tags = self.report_details.get('style_tags')[0][1]
+            if num_css_files + num_style_tags == 0:
+                fail = "<b>Fail</b>: No CSS styles were applied in the project."
+                general_results = '<tr><td colspan="4">' + fail + '</td></tr>'
+            else:
+                congrats = "Congratulations, no errors were found."
+                general_results = '<tr><td colspan="4">' + congrats + '</td></tr>'
             pages = self.css_errors.keys()
             for page in pages:
                 specific_results += '<tr><td>' + page + '</td>'
