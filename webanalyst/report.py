@@ -356,4 +356,4 @@ if __name__ == "__main__":
     project_path = "project/"
     project_page = Report(project_path)
     project_page.generate_report()
-    # print("done")
+    print(project_page.general_report)

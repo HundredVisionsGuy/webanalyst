@@ -558,8 +558,7 @@ def get_global_color_details(rulesets):
                 elif declaration.property == 'color':
                     color = declaration.value
                 elif declaration.property == 'background':
-                    # check to see if the color value is present
-                    pass
+                    background_color = declaration.value
             if background_color or color:
                 global_rulesets.append({'selector': selector,
                                         'background-color': background_color,

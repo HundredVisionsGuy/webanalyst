@@ -380,7 +380,7 @@ class CSSReport:
         for setting in global_colors:
             color_set = setting.get('color')
             if not color_set:
-                results += "<li><b>Fail</b>: in " + setting.get('file') 
+                results += "<li><b>Fail</b>: in " + setting.get('html_file') 
                 results += " the color property was not set.</li>\n"
             bg_color_set = setting.get('bg-color')
             if not bg_color_set:
@@ -732,8 +732,7 @@ class CSSReport:
                             applied['css_file'] = href
                         applied = self.adjust_applied(applied, details) 
                     elif styles[0] == styles[1].href:
-                        details = global_color_data[href]
-                        
+                        details = global_color_data.get(href)
                         applied = self.adjust_applied(applied, details)
             if applied['applied']:
                 applied_styles.append(applied)
@@ -743,36 +742,37 @@ class CSSReport:
     def adjust_applied(self, old_styles, new_styles):
         """ returns old_styles adjusted according to new styles """
         old_styles['applied'] = True
-        for style in new_styles:
-            new_selector = style['selector']
-            old_selector = old_styles['selector']
-            if old_selector:
-                # we need to adjust all that applies
-                # if selectors are the same OR 
-                # old specificity is greater than new, we keep
-                # all old styles unless not set
-                
-                new_specificity = CSSinator.get_specificity(new_selector)
-                if new_specificity >= old_styles['specificity']:
-                    # new wins out for everything present
-                    old_styles['selector'] = style['selector']
-                    old_styles['specificity'] = new_specificity
-                    if style.get('background-color'):
-                        old_styles['bg-color'] = style['background-color']
-                    elif style.get('background'):
-                        old_styles['bg-color'] = style['background']
-                    if style.get('color'):
-                        old_styles['color'] = style['color']
-                else:
-                    # old specificity is greater, so only apply anything not set
-                    if not old_styles['bg-color']:
+        # but only if there are new styles
+        if new_styles:
+            for style in new_styles:
+                new_selector = style['selector']
+                old_selector = old_styles['selector']
+                if old_selector:
+                    # we need to adjust all that applies
+                    # if selectors are the same OR 
+                    # old specificity is greater than new, we keep
+                    # all old styles unless not set
+                    
+                    new_specificity = CSSinator.get_specificity(new_selector)
+                    if new_specificity >= old_styles['specificity']:
+                        # new wins out for everything present
+                        old_styles['selector'] = style['selector']
+                        old_styles['specificity'] = new_specificity
                         if style.get('background-color'):
                             old_styles['bg-color'] = style['background-color']
                         elif style.get('background'):
                             old_styles['bg-color'] = style['background']
-                    if not old_styles['color'] and style.get('color'):
-                        old_styles['color'] = style['color']
-
+                        if style.get('color'):
+                            old_styles['color'] = style['color']
+                    else:
+                        # old specificity is greater, so only apply anything not set
+                        if not old_styles['bg-color']:
+                            if style.get('background-color'):
+                                old_styles['bg-color'] = style['background-color']
+                            elif style.get('background'):
+                                old_styles['bg-color'] = style['background']
+                        if not old_styles['color'] and style.get('color'):
+                            old_styles['color'] = style['color']
             else:
                 # this is the first time, get all styles and apply
                 old_selector = style['selector']
