@@ -477,7 +477,8 @@ class CSSReport:
                     results += "WARNING for " + file['file'] + ": "
                     results += bg_color
                     continue
-                # Test for contrast
+                # Cannot yet deal with gradients, so check first before crashing
+                
                 # Test for contrast
                 contrast_report = colors.get_color_contrast_report(color, bg_color)
                 # results += "Results for " + file + ": "

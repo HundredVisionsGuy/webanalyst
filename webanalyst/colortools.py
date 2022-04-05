@@ -34,6 +34,8 @@ def passes_color_contrast(level, hex1, hex2):
 
 def get_color_contrast_report(hex1, hex2):
     report = {}
+    # check for gradients and apply to every color in the gradient
+    # if "gradient" in hex1 
     for key, item in contrast_ratio_map.items():
         contrast = contrast_ratio(hex1, hex2)
         passes = "Pass" if contrast >= item else "Fail"
