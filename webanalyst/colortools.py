@@ -89,6 +89,16 @@ def get_hsl_from_string(hsl_string):
         numbers[i] = int(numbers[i])
     return tuple(numbers)
 
+def has_alpha_channel(code):
+    """ returns a true if rgba, hsla, or 8 digit hex code """
+    if "#" in code:
+        if len(code) == 9:
+            return True
+        else:
+            return False
+    if "hsla(" in code:
+         return True
+
 def hsl_to_rgb(hsl):
     # From HSL to RGB color conversion (https://www.rapidtables.com/convert/color/hsl-to-rgb.html)
 

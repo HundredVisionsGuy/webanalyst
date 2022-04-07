@@ -137,3 +137,13 @@ def test_get_color_contrast_report_for_all_failing():
     expected = all_fail_color_contrast_report
     results = color.get_color_contrast_report(aquamarine, white)
     assert expected == results
+
+def test_has_alpha_channel_for_hex_code_with_alpha():
+    expected = True
+    results = color.has_alpha_channel("#33669966")
+    assert expected == results
+
+def test_has_alpha_channel_for_hex_code_without_alpha():
+    expected = False
+    results = color.has_alpha_channel("#336699")
+    assert expected == results
