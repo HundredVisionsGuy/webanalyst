@@ -1,92 +1,56 @@
-html {
-  min-height: 200%;
-
-  /* you must use a font pairing! - mr winika */
-
-  font-family: Arial, Helvetica, sans-serif;
-  color: #fff;
-  text-align: center;
-  
-  /* 
-  
-  background stuff inspired from this codepen https://codepen.io/taylorvowell/pen/AMeqLY 
-  
-  not really gonna say a lot of this was mine lol, but y'know. CSS is super stupid sometimes haha.
-  
-  */
-
-
-  background: #092756;
-  background: -moz-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),-moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), -moz-linear-gradient(-45deg, #46ABA6 0%, #092756 200%);
-  background: -webkit-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%), -webkit-linear-gradient(top, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%), -webkit-linear-gradient(-45deg, #46ABA6 0%,#092756 200%);
-  background: -o-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%), -o-linear-gradient(top, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%), -o-linear-gradient(-45deg, #46ABA6 0%,#092756 200%);
-  background: -ms-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%), -ms-linear-gradient(top, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%), -ms-linear-gradient(-45deg, #46ABA6 0%,#092756 200%);
-  background: -webkit-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%), linear-gradient(to bottom, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%), linear-gradient(135deg, #46ABA6 0%,#092756 200%);
-  background-size: fill ;
-
+body {
+    font-size: 135%;
+    line-height: 1.35;
+    font-family: 'Hind', sans-serif;
+    font-weight: 300;
+    background-color: #10002b; 
+    color: #f2f2f2;
+    margin: .5em 1em;
 }
 
-/* legit none of this has adaptive scaling or anything haha */
-
-.main-box {
-  position: absolute;
-  background-image: 
-    url("https://www.countryflags.com/wp-content/uploads/vatican-city-flag-png-large.png");
-  background-position: center center;
-  background-repeat: no-repeat;
-  top: 4%;
-  left: 4%;
-  width: 715px;
-  padding: 25px;
-  box-sizing: border-box;
-  box-shadow: 0 15px 25px rgba(0,0,0,.6);
-  text-shadow: 0 0 4px black;
-  border-radius: 10px;
+h1,h2, h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800; 
+    color: #E0AAFF; 
 }
-
-.main-box h3 {
-  color: #ffffff;
-  text-shadow: 0 0 4px black;
-  text-align: center;
+/*links*/
+a {
+    color: #c77dff;
 }
-
-.about-box {
-  position: absolute;
-  top: 40%;
-  left: 4%;
-  width: 715px;
-  padding: 25px;
-  background: rgba(0,0,0,.5);
-  box-sizing: border-box;
-  box-shadow: 0 15px 25px rgba(0,0,0,.6);
-  border-radius: 10px;
-  text-align: left;
+a:visited {
+    color: #8200e6; 
 }
-
-.about-box a {
-  color: #ffee80
+a:hover {
+    color: 	#e9ccff; 
 }
-
-
-.content-box {
-  position: absolute;
-  top: 120%;
-  left: 4%;
-  width: 715px;
-  padding: 25px;
-  background: rgba(0,0,0,.5);
-  box-sizing: border-box;
-  box-shadow: 0 15px 25px rgba(0,0,0,.6);
-  border-radius: 10px;
-  text-align: left;
+/*figures*/
+figure {
+    width: 360px;
+    max-width: 100%;
+    min-width: 150; 
+    color: #10002B;
+    background-color: #f2f2f2;
+    padding: .75em .5em 1em .5em; /*first is top, 2nd is right, 3rd is bottom, 4th is left*/
+    border: .3em #a6a6a6 solid;
+    margin: 0;  
 }
-
-.content-box a {
-  color: #ffee80
+figure img {
+    width: 100%;
 }
-
-.content-flex {
-  display: flex;
-  overflow: auto;
+header, main, footer {
+    width: 40em;
+    max-width: 90%;
+}
+.bold {
+  font-weight: bold;  
+}
+.italic {
+    font-style: italic;
+}
+.float_right {
+    float: right; 
+    margin: 0em .5em .5em 1em;
+    max-width: 100%;
+    min-width: 150;
 }
 
