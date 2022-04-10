@@ -269,7 +269,7 @@ class CSSReport:
         color_contrast_results = self.get_header_color_contrast(applied_colors, goals)
         # Final check of all global headers goals
         if (applies_headers_results or both_applied_results or required_heading_results or color_contrast_results):
-            results = "<b>Fail</b>\n "
+            results = "<b>Header Colors Applied: Fail</b><br>\n "
             results += applies_headers_results + both_applied_results
             results += required_heading_results + color_contrast_results
         
