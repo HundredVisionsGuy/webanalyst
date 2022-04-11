@@ -269,7 +269,7 @@ class CSSReport:
         color_contrast_results = self.get_header_color_contrast(applied_colors, goals)
         # Final check of all global headers goals
         if (applies_headers_results or both_applied_results or required_heading_results or color_contrast_results):
-            results = "<b>Fail</b>\n "
+            results = "<b>Header Colors Applied: Fail</b><br>\n "
             results += applies_headers_results + both_applied_results
             results += required_heading_results + color_contrast_results
         
@@ -902,9 +902,10 @@ class CSSReport:
     def get_families(self, declaration):
         families = []
         for ruleset in declaration.rulesets:
-            for declaration in ruleset.declaration_block.declarations:
-                if declaration.property in ("font", "font-family"):
-                    families.append(declaration.value)
+            if ruleset.declaration_block:
+                for declaration in ruleset.declaration_block.declarations:
+                    if declaration.property in ("font", "font-family"):
+                        families.append(declaration.value)
         return families
 
 
@@ -1071,7 +1072,12 @@ class CSSReport:
                     declaration_blocks[declaration_block] = [source, ]
         for sheet in self.stylesheet_objects:
             for ruleset in sheet.rulesets:
-                declaration_block = "{" + ruleset.declaration_block.text
+                # it's possible someone places html, so only process
+                # if the declaration block is NOT a None type
+                if ruleset.declaration_block:
+                    declaration_block = "{" + ruleset.declaration_block.text
+                else:
+                    continue
                 source = sheet.href
                 try:
                     if declaration_blocks[declaration_block]:

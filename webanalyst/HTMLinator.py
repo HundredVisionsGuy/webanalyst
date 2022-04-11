@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import os
 from webanalyst import clerk
 from lxml import html
+import re
 
 
 def get_html(path):
@@ -17,7 +18,7 @@ def get_html(path):
 
 def get_num_elements_in_file(el, path):
     with open(path, encoding='utf-8') as fp:
-        if el.lower() in ['doctype', 'html', 'head', 'title', 'body']:
+        if el.lower() in ['doctype', 'html', 'head', 'title', 'body'] and el.lower() != 'header':
             # bs4 won't find doctype
             contents = fp.read()
             contents = contents.lower()
@@ -26,7 +27,13 @@ def get_num_elements_in_file(el, path):
                 substring = '<!' + substring
             else:
                 substring = '<' + substring
-            count = contents.count(substring)
+            
+            # if the element is the head, you must use a regex
+            # to not count the <header> tag
+            if el.lower() == 'head':
+                count = len(re.findall('<head[\s>]', contents))
+            else:
+                count = contents.count(substring)
             # return # of doctypes
             return count
         soup = BeautifulSoup(fp, 'html.parser')

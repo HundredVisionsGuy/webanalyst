@@ -156,7 +156,9 @@ class HTMLReport:
                 element, self.__dir_path)
             number_required = self.report_details['required_elements']['HTML5_essential_elements'][element.upper(
             )]
-            element_meets = number_found >= number_required
+            # there must be 1 for each page
+            number_required = len(self.html_files)
+            element_meets = number_found == number_required
 
             self.report_details["required_elements_found"]["HTML5_essential_elements_found"][element.upper(
             )] = [number_required, number_found, element_meets]
@@ -423,7 +425,7 @@ class HTMLReport:
 
     def get_validation_results_string(self, validation_type="HTML"):
         results = ""
-        if not self.validator_errors:
+        if not self.validator_errors.get('HTML'):
             return '<tr><td rowspan="4">Congratulations! No Errors Found</td></tr>'
         else:
             try:
