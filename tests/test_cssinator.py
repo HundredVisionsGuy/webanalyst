@@ -316,4 +316,5 @@ def test_is_gradient_for_false():
 def test_is_gradient_for_true():
     value = "-moz-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),-moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), -moz-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)"
     results = css.is_gradient(value)
-    assert results
+    assert results == True
+
