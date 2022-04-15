@@ -282,3 +282,27 @@ def test_get_specificity_for_002():
     selector = "header h1"
     results = css.get_specificity(selector)
     assert results == "002"
+    
+def test_has_vendor_prefix_for_false():
+    selector = "transition"
+    results = css.has_vendor_prefix(selector)
+    expected = False
+    assert results == expected
+    
+def test_has_vendor_prefix_for_webkit():
+    selector = "-webkit-transition"
+    results = css.has_vendor_prefix(selector)
+    expected = True
+    assert results == expected
+    
+def test_has_vendor_prefix_for_moz():
+    selector = "-moz-transition"
+    results = css.has_vendor_prefix(selector)
+    expected = True
+    assert results == expected
+    
+def test_has_vendor_prefix_for_property_with_dash_not_prefix():
+    selector = "background-color"
+    results = css.has_vendor_prefix(selector)
+    expected = False
+    assert results == expected

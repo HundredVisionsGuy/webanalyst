@@ -132,6 +132,7 @@ def rgb_as_string(rgb):
 
 
 def hex_to_decimal(c):
+    """ convert hex code (c) to a decimal value (base 10)"""
     # make sure to convert to lower case
     # so FF becomes ff
     c = c.lower()

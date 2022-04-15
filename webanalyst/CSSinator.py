@@ -566,6 +566,13 @@ def get_global_color_details(rulesets):
                                         'color': color})
     return global_rulesets                    
     
+def has_vendor_prefix(property):
+    vendor_prefixes = ("-webkit-", "-moz-", "-o-", "-ms-")
+    for prefix in vendor_prefixes:
+        if prefix in property:
+            return True
+    return False
+
 if __name__ == "__main__":
     print("hello, I'm CSSinator.")
     selector = "h1, h2, h3, h4#header"

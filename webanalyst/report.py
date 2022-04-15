@@ -353,7 +353,7 @@ if __name__ == "__main__":
     # single_page.generate_report()
     
     # project path
-    project_path = "project/"
+    project_path = "projects/single-page/"
     project_page = Report(project_path)
     project_page.generate_report()
     print(project_page.general_report)
