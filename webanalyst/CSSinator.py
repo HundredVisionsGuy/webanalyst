@@ -4,6 +4,7 @@
 
 import re
 from webanalyst import clerk
+from webanalyst import colortools
 
 
 def get_nested_at_rule(code, rule):
@@ -560,6 +561,8 @@ def get_global_color_details(rulesets):
                     color = declaration.value
                 elif declaration.property == 'background':
                     background_color = declaration.value
+                    if '-moz-' in background_color:
+                        input("We need to fix this")
             if background_color or color:
                 global_rulesets.append({'selector': selector,
                                         'background-color': background_color,
