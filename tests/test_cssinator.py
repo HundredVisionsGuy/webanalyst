@@ -306,3 +306,14 @@ def test_has_vendor_prefix_for_property_with_dash_not_prefix():
     results = css.has_vendor_prefix(selector)
     expected = False
     assert results == expected
+    
+def test_is_gradient_for_false():
+    value = "rgba(155, 155, 155, 0)"
+    results = css.is_gradient(value)
+    expected = False
+    assert results == expected
+    
+def test_is_gradient_for_true():
+    value = "-moz-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),-moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), -moz-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)"
+    results = css.is_gradient(value)
+    assert results

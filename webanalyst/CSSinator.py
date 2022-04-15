@@ -559,10 +559,12 @@ def get_global_color_details(rulesets):
                     background_color = declaration.value
                 elif declaration.property == 'color':
                     color = declaration.value
+                    if is_gradient(color):
+                        print("hoo boy!")
                 elif declaration.property == 'background':
                     background_color = declaration.value
-                    if '-moz-' in background_color:
-                        input("We need to fix this")
+                    if is_gradient(background_color):
+                        print("Houston?")
             if background_color or color:
                 global_rulesets.append({'selector': selector,
                                         'background-color': background_color,
@@ -575,6 +577,9 @@ def has_vendor_prefix(property):
         if prefix in property:
             return True
     return False
+
+def is_gradient(value):
+    return "gradient" in value
 
 if __name__ == "__main__":
     print("hello, I'm CSSinator.")
