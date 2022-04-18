@@ -90,7 +90,7 @@ def test_rgb_to_hex_for_string_336699():
     assert results == expected
 
 def test_is_hex_for_no_hash():
-    assert color.is_hex("336699") == False
+    assert not color.is_hex("336699")
 
 def test_is_hex_for_valid_hex():
     assert color.is_hex("#336699")

@@ -177,6 +177,11 @@ def is_rgb(val):
     results = results and (comma_count == 2 or comma_count == 3)
     return results
 
+def is_hsl(val):
+    results = bool(re.match(hsl_all_forms_re, val))
+    comma_count = val.count(',')
+    results = results and (comma_count == 2 or comma_count == 3)
+    return results
 
 def get_relative_luminance(val):
     val /= 255
