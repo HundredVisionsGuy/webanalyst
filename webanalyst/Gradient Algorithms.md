@@ -20,3 +20,7 @@ Challenge: we need to know what is the background color of its context
 
 IF rgba in color OR it's a hex and there are 9 total characters
     GET opposite color
+
+Some Regex Possibilities
+(?<!-moz-)radial-gradient|(?<!-ms-)radial-gradient|(?<!-webkit-)radial-gradient
+(?<!-moz-)radial-gradient => will only grab radial-gradient if -moz- does NOT precede it (still grabs radial-gradient from other vendor prefixes)

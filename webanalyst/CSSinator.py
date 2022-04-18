@@ -560,11 +560,11 @@ def get_global_color_details(rulesets):
                 elif declaration.property == 'color':
                     color = declaration.value
                     if is_gradient(color):
-                        print("hoo boy!")
+                        colors = process_gradient(color)
                 elif declaration.property == 'background':
                     background_color = declaration.value
                     if is_gradient(background_color):
-                        print("Houston?")
+                        bg_colors = process_gradient(background_color)
             if background_color or color:
                 global_rulesets.append({'selector': selector,
                                         'background-color': background_color,
@@ -581,18 +581,47 @@ def has_vendor_prefix(property):
 def is_gradient(value):
     return "gradient" in value
 
+def process_gradient(code):
+    """ returns vendor prefix warning (if any exist) and list of all colors from gradient """
+    vendor_prefix = has_vendor_prefix(code)
+    colors = []
+    # remove all vendor prefixes
+    data = code.split("),")
+    vendor_regex = "\A-moz-|-webkit-|-ms-|-o-" # only works for start of string
+    for datum in data:
+        if re.match(vendor_regex, datum.strip()):
+            data.remove(datum)
+    
+    # capture only color codes and append to colors
+    if colors:
+        # grab only color codes (Nothing else)
+        print("okay")
+    return (vendor_prefix, colors)
+
 if __name__ == "__main__":
-    print("hello, I'm CSSinator.")
-    selector = "h1, h2, h3, h4#header"
-    score = get_class_score(selector)
-    general_css = clerk.file_to_string(
-        "tests/test_files/projects/large_project/css/general.css")
+    # print("hello, I'm CSSinator.")
+    # selector = "h1, h2, h3, h4#header"
+    # score = get_class_score(selector)
+    # general_css = clerk.file_to_string(
+    #     "tests/test_files/projects/large_project/css/general.css")
     
-    general = Stylesheet("local", general_css, "file")
+    # general = Stylesheet("local", general_css, "file")
     
-    navigation_css = clerk.file_to_string(
-        "tests/test_files/projects/large_project/css/navigation.css")
+    # navigation_css = clerk.file_to_string(
+    #     "tests/test_files/projects/large_project/css/navigation.css")
     
-    navigation = Stylesheet("local", navigation_css, "file")
+    # navigation = Stylesheet("local", navigation_css, "file")
+    insane_gradient = """
+    -moz-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+    -webkit-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+    -o-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+    -ms-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+    radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+    -moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), 
+    -ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)',
+    linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
+    """
     
+    results = process_gradient(insane_gradient)
+    print(results)
 

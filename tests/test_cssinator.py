@@ -64,6 +64,16 @@ selectors_with_no_ids = "h1, h2, h3, a:active"          # specificity of 014
 specificity303 = selectors_with_3_ids
 specificity014 = selectors_with_no_ids
 
+insane_gradient = """
+-moz-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-webkit-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-o-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-ms-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), 
+-ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)',
+linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
+"""
 
 @pytest.fixture
 def css_code_1_split():
@@ -318,3 +328,14 @@ def test_is_gradient_for_true():
     results = css.is_gradient(value)
     assert results == True
 
+def test_process_gradient_for_insane_css_vendor_prefix_check():
+    results = css.process_gradient(insane_gradient)[0]
+    expected = True
+    assert results == expected
+    
+def test_process_gradient_for_insane_css_for_four_returned_colors():
+    colors = css.process_gradient(insane_gradient)[1]
+    results = len(colors)
+    expected = 4
+    assert results == expected 
+    
