@@ -589,14 +589,27 @@ def process_gradient(code):
     data = code.split("),")
     vendor_regex = "\A-moz-|-webkit-|-ms-|-o-" # only works for start of string
     for datum in data:
-        if re.match(vendor_regex, datum.strip()):
-            data.remove(datum)
+        datum = datum.strip()
+        if not re.match(vendor_regex, datum):
+            colors.append(datum)
     
     # capture only color codes and append to colors
     if colors:
         # grab only color codes (Nothing else)
-        print("okay")
+        only_colors = []
+        for gradient in colors:
+            color = get_colors_from_gradient(gradient)
+            
     return (vendor_prefix, colors)
+
+def get_colors_from_gradient(gradient):
+    """ extract all color codes from gradient """
+    colors = []
+    # use regex to pull all possible color codes first
+    codes_with_parentheses_regex = r'rgba\(.*?\)|rgb\(.*?\)|hsl\(.*?\)|hsla\(.*?\)'
+    # split by comma and check for color keywords
+
+    return colors
 
 if __name__ == "__main__":
     # print("hello, I'm CSSinator.")
@@ -618,8 +631,8 @@ if __name__ == "__main__":
     -ms-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
     radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
     -moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), 
-    -ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)',
-    linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
+    -ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%),
+    linear-gradient(-45deg, #46ABA6 0%, #092756 200%)
     """
     
     results = process_gradient(insane_gradient)

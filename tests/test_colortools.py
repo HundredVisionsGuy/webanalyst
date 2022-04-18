@@ -98,6 +98,15 @@ def test_is_hex_for_valid_hex():
 def test_is_hex_for_invalid_not_hex_digit():
     assert not color.is_hex("#3366lh")
 
+def test_is_hex_for_alpha_channel():
+    assert color.is_hex("#33aa0088")
+
+def test_is_hex_for_3_codes():
+    assert color.is_hex("#369")
+
+def test_is_hex_for_invalid_number_digits():
+    assert not color.is_hex("#4469")
+
 def test_contrast_ratio_for_inverted_indigo_white(indigo_rgb):
     expected = 12.95
     results = color.contrast_ratio("#4B0082", "#ffffff")
@@ -147,3 +156,21 @@ def test_has_alpha_channel_for_hex_code_without_alpha():
     expected = False
     results = color.has_alpha_channel("#336699")
     assert expected == results
+
+def test_is_rgb_for_non_rgb():
+    value = "hsla(0, 0, 0, 0)"
+    results = color.is_rgb(value)
+    expected = False
+    assert results == expected
+
+def test_is_rgb_for_rgb():
+    value = "rgb(255, 0, 124)"
+    results = color.is_rgb(value)
+    expected = True
+    assert results == expected
+
+def test_is_rgb_for_rgba():
+    value = "rgba(255, 0, 0, 0.2)"
+    results = color.is_rgb(value)
+    expected = True
+    assert results == expected

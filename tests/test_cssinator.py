@@ -339,3 +339,11 @@ def test_process_gradient_for_insane_css_for_four_returned_colors():
     expected = 4
     assert results == expected 
     
+def test_get_colors_from_gradient_for_hex():
+    gradient = 'linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
+    expected = ['#46ABA6', '#092756']
+    results = css.get_colors_from_gradient(gradient)
+    assert expected == results
+
+def test_get_colors_from_gradient_for_rgba():
+    gradient = 'radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%'
