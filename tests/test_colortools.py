@@ -18,25 +18,25 @@ hsla_string_1 = "hsla(355, 96%, 46%, 1.0)"
 hsla_string_1_as_rgba = "rgba(230, 5, 23, 1.0)"
 
 favorite_test_color_contrast_report = {
-    "normal AA": "Pass",
-    "normal AAA": "Fail",
-    "large AA": "Pass",
-    "large AAA": "Pass",
-    "graphics UI components": "Pass",
+    "Normal AA": "Pass",
+    "Normal AAA": "Fail",
+    "Large AA": "Pass",
+    "Large AAA": "Pass",
+    "Graphics UI components": "Pass",
 }
 all_pass_color_contrast_report = {
-    "normal AA": "Pass",
-    "normal AAA": "Pass",
-    "large AA": "Pass",
-    "large AAA": "Pass",
-    "graphics UI components": "Pass",
+    "Normal AA": "Pass",
+    "Normal AAA": "Pass",
+    "Large AA": "Pass",
+    "Large AAA": "Pass",
+    "Graphics UI components": "Pass",
 }
 all_fail_color_contrast_report = {
-    "normal AA": "Fail",
-    "normal AAA": "Fail",
-    "large AA": "Fail",
-    "large AAA": "Fail",
-    "graphics UI components": "Fail",
+    "Normal AA": "Fail",
+    "Normal AAA": "Fail",
+    "Large AA": "Fail",
+    "Large AAA": "Fail",
+    "Graphics UI components": "Fail",
 }
 
 @pytest.fixture
@@ -117,19 +117,19 @@ def test_contrast_ratio_for_aquamarine_and_white():
     results = color.contrast_ratio(aquamarine, white)
     assert expected == results
 
-def test_passes_conlor_contrast_normal_aa_for_no_pass_aquamarine_white():
+def test_passes_color_contrast_normal_aa_for_no_pass_aquamarine_white():
     expected = False
-    results = color.passes_color_contrast("normal AA", aquamarine, white)
+    results = color.passes_color_contrast("Normal AA", aquamarine, white)
     assert results == expected
 
 def test_passes_normal_aa_for_pass_indigo_white():
     expected = True
-    results = color.passes_color_contrast("normal AA",indigo, white)
+    results = color.passes_color_contrast("Normal AA",indigo, white)
     assert results == expected
 
 def test_passes_normal_aaa_for_no_pass_336699_white():
     expected = False
-    results = color.passes_color_contrast("normal AAA",favorite_test_color, white)
+    results = color.passes_color_contrast("Normal AAA",favorite_test_color, white)
     assert results == expected
 
 def test_get_color_contrast_report_for_favorite_color():
