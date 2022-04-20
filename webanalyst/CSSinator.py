@@ -606,10 +606,26 @@ def get_colors_from_gradient(gradient):
     """ extract all color codes from gradient """
     colors = []
     # use regex to pull all possible color codes first
-    codes_with_parentheses_regex = r'rgba\(.*?\)|rgb\(.*?\)|hsl\(.*?\)|hsla\(.*?\)'
+    append_color_codes("hsl", gradient, colors)
+    append_color_codes("rgb", gradient, colors)
+    append_color_codes("hex", gradient, colors)
+    
     # split by comma and check for color keywords
-
+    gradient_split = gradient.split(',')
+    print(gradient_split)
     return colors
+
+def append_color_codes(type, code, color_list):
+    if type == 'hsl':
+        colors = re.findall(colortools.hsl_all_forms_re, code)
+    elif type == 'rgb':
+        colors = re.findall(colortools.rgb_all_forms_re, code)
+    elif type == 'hex':
+        colors = re.findall(colortools.hex_regex, code)
+    if colors:
+        # strip each color code (mostly for the hex regex)
+        colors = [i.strip(' ') for i in colors]
+        color_list += colors
 
 if __name__ == "__main__":
     # print("hello, I'm CSSinator.")

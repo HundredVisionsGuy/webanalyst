@@ -347,3 +347,21 @@ def test_get_colors_from_gradient_for_hex():
 
 def test_get_colors_from_gradient_for_rgba():
     gradient = 'radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%'
+
+def test_append_color_codes_for_none():
+    colors = []
+    gradient = 'linear-gradient(to bottom, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%'
+    css.append_color_codes("hsl", gradient, colors)
+    assert not colors 
+
+def test_append_color_codes_for_rgb():
+    colors = []
+    gradient = 'linear-gradient(to bottom, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%'
+    css.append_color_codes("rgb", gradient, colors)
+    assert 'rgba(169, 235, 206,.25)' in colors
+
+def test_append_color_codes_for_hex():
+    colors = []
+    gradient = 'linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
+    css.append_color_codes("hex", gradient, colors)
+    assert '#092756' in colors
