@@ -354,14 +354,26 @@ def test_append_color_codes_for_none():
     css.append_color_codes("hsl", gradient, colors)
     assert not colors 
 
-def test_append_color_codes_for_rgb():
+def test_append_color_codes_for_rgba():
     colors = []
     gradient = 'linear-gradient(to bottom, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%'
     css.append_color_codes("rgb", gradient, colors)
     assert 'rgba(169, 235, 206,.25)' in colors
+
+def test_append_color_codes_for_rgb():
+    colors = []
+    gradient = 'linear-gradient(to bottom, rgb(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%'
+    css.append_color_codes("rgb", gradient, colors)
+    assert 'rgb(169, 235, 206,.25)' in colors
 
 def test_append_color_codes_for_hex():
     colors = []
     gradient = 'linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
     css.append_color_codes("hex", gradient, colors)
     assert '#092756' in colors
+
+def test_append_color_codes_for_keyword_antiquewhite():
+    colors = []
+    gradient = 'linear-gradient(-45deg, maroon 0%, #092756 200%)'
+    css.append_color_codes("keywords", gradient, colors)
+    assert 'maroon' in colors

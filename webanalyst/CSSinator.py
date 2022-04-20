@@ -3,7 +3,7 @@
 # a set of tools to analyze CSS
 
 import re
-from webanalyst import clerk
+from webanalyst import color_keywords as keyword
 from webanalyst import colortools
 
 
@@ -609,10 +609,8 @@ def get_colors_from_gradient(gradient):
     append_color_codes("hsl", gradient, colors)
     append_color_codes("rgb", gradient, colors)
     append_color_codes("hex", gradient, colors)
+    append_color_codes("keywords", gradient, colors)
     
-    # split by comma and check for color keywords
-    gradient_split = gradient.split(',')
-    print(gradient_split)
     return colors
 
 def append_color_codes(type, code, color_list):
@@ -622,8 +620,18 @@ def append_color_codes(type, code, color_list):
         colors = re.findall(colortools.rgb_all_forms_re, code)
     elif type == 'hex':
         colors = re.findall(colortools.hex_regex, code)
+    elif type == 'keywords':
+        words = re.findall(r'[+a-z+A-Z]*', code)
+        colors = []
+        for i in words:
+            # regex captures non-strings, so we don't process if empty
+            if i:
+                i = i.strip().lower()
+                is_keyword = keyword.is_a_keyword(i.strip(' '))
+                if is_keyword:
+                    colors.append(i)
     if colors:
-        # strip each color code (mostly for the hex regex)
+        # strip each color code (if hex regex)
         colors = [i.strip(' ') for i in colors]
         color_list += colors
 
@@ -645,10 +653,10 @@ if __name__ == "__main__":
     -webkit-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
     -o-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
     -ms-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
-    radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+    radial-gradient(0% 200%, ellipse cover, antiquewhite 10%,rgba(240, 205, 247,0) 40%),
     -moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), 
     -ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%),
-    linear-gradient(-45deg, #46ABA6 0%, #092756 200%)
+    linear-gradient(-45deg, maroon 0%, #092756 200%)
     """
     
     results = process_gradient(insane_gradient)
