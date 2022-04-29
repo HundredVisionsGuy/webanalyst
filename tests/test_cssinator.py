@@ -334,7 +334,7 @@ def test_process_gradient_for_insane_css_vendor_prefix_check():
     assert results == expected
     
 def test_process_gradient_for_insane_css_for_four_returned_colors():
-    colors = css.process_gradient(insane_gradient)[1]
+    colors = css.process_gradient(insane_gradient)
     results = len(colors)
     expected = 4
     assert results == expected 

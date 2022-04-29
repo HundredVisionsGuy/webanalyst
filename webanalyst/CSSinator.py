@@ -3,6 +3,8 @@
 # a set of tools to analyze CSS
 
 import re
+
+from more_itertools import only
 from webanalyst import color_keywords as keyword
 from webanalyst import colortools
 
@@ -587,6 +589,11 @@ def process_gradient(code):
     colors = []
     # remove all vendor prefixes
     data = code.split("),")
+    # split the last datum in data into two
+    last_item = data[-1].strip()
+    last_split = last_item.split("\n")
+    if len(last_split) == 2:
+        data.append(last_split[1])
     vendor_regex = "\A-moz-|-webkit-|-ms-|-o-" # only works for start of string
     for datum in data:
         datum = datum.strip()
@@ -598,9 +605,11 @@ def process_gradient(code):
         # grab only color codes (Nothing else)
         only_colors = []
         for gradient in colors:
-            color = get_colors_from_gradient(gradient)
+            color_codes = get_colors_from_gradient(gradient)
+            if color_codes:
+                only_colors += color_codes
             
-    return (vendor_prefix, colors)
+    return (only_colors)
 
 def get_colors_from_gradient(gradient):
     """ extract all color codes from gradient """
@@ -659,6 +668,18 @@ if __name__ == "__main__":
     linear-gradient(-45deg, maroon 0%, #092756 200%)
     """
     
+    # results = process_gradient(insane_gradient)
+    # print(results)
+
+    insane_gradient = """
+-moz-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-webkit-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-o-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-ms-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), 
+-ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)',
+linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
+"""
     results = process_gradient(insane_gradient)
     print(results)
-
