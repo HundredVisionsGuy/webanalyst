@@ -1,4 +1,5 @@
 import pytest
+
 from webanalyst import HTMLinator as html
 from webanalyst import clerk
 
@@ -11,5 +12,7 @@ def markup_with_inline_styles():
     return markup
 
 
-def test_html_report_for_file_that_uses_inline_styles(markup_with_inline_styles):
+def test_html_report_for_file_that_uses_inline_styles(
+    markup_with_inline_styles,
+):
     assert html.uses_inline_styles(markup_with_inline_styles)

@@ -14,7 +14,9 @@ from . import validator as val
 
 stylesheet = CSSinator.Stylesheet
 
-logging.basicConfig(format="%(asctime)s - %(message)s", datefmt="%d-%b-%y %H:%M:%S")
+logging.basicConfig(
+    format="%(asctime)s - %(message)s", datefmt="%d-%b-%y %H:%M:%S"
+)
 report_template_path = "webanalyst/report_template.html"
 report_path = "report/report.html"
 
@@ -60,7 +62,9 @@ class CSSReport:
     def set_css_validation(self, css_validation_results):
         self.report_details["css_validator_results"] = css_validation_results
         self.css_errors.update(css_validation_results)
-        self.report_details["css_validator_errors"] = len(css_validation_results)
+        self.report_details["css_validator_errors"] = len(
+            css_validation_results
+        )
 
     def generate_report(self, html_files):
         self.html_files = html_files
@@ -120,9 +124,13 @@ class CSSReport:
 
             elif "+ entire page colors set" in req.lower():
                 description, title = self.get_title_and_description(req)
-                details["Color Settings"]["details"] = {"description": req.strip()}
+                details["Color Settings"]["details"] = {
+                    "description": req.strip()
+                }
                 (
-                    self.report_details["general_styles_goals"]["Color Settings"]
+                    self.report_details["general_styles_goals"][
+                        "Color Settings"
+                    ]
                 ) = details["Color Settings"]
             elif "+ headers" in req.lower():
                 description, title = self.get_title_and_description(req)
@@ -138,11 +146,13 @@ class CSSReport:
             elif "- large" in req.lower():
                 description, title = self.get_title_and_description(req)
                 (
-                    details["Color Settings"]["Color Contrast (readability)"][title]
+                    details["Color Settings"]["Color Contrast (readability)"][
+                        title
+                    ]
                 ) = description
-        self.report_details["general_styles_goals"]["Color Settings"] = details[
+        self.report_details["general_styles_goals"][
             "Color Settings"
-        ]
+        ] = details["Color Settings"]
 
     def get_title_and_description(self, req):
         full_details = req.split(": ")
@@ -166,12 +176,12 @@ class CSSReport:
                 min = int(details["details"]["minimum"])
                 max = int(details["details"]["maximum"])
                 meets = font_count >= min and font_count <= max
-                self.report_details["general_styles_goals"]["Font Families"]["details"][
-                    "actual"
-                ] = str(font_count)
-                self.report_details["general_styles_goals"]["Font Families"]["details"][
-                    "meets"
-                ] = meets
+                self.report_details["general_styles_goals"]["Font Families"][
+                    "details"
+                ]["actual"] = str(font_count)
+                self.report_details["general_styles_goals"]["Font Families"][
+                    "details"
+                ]["meets"] = meets
             elif goal == "Color Settings":
                 color_settings_results = ""
 
@@ -184,7 +194,9 @@ class CSSReport:
                 if needs_global_colors:
                     # We have all styles in order let's check for global
                     # are they set?
-                    global_colors = self.get_final_global_colors(all_styles_in_order)
+                    global_colors = self.get_final_global_colors(
+                        all_styles_in_order
+                    )
                     global_colors_results = self.get_global_colors_results(
                         global_colors
                     )
@@ -217,7 +229,9 @@ class CSSReport:
         try:
             color_details = goals[1][1]["Headers"]
             message = "Headers must set " + color_details + " colors "
-            contrast_goal = goals[1][1]["Color Contrast (readability)"]["Large"]
+            contrast_goal = goals[1][1]["Color Contrast (readability)"][
+                "Large"
+            ]
             message += "at a " + contrast_goal + " level.\n"
         except IndexError:
             return "NA", "IndexError"
@@ -252,7 +266,9 @@ class CSSReport:
                 filename = file.split("\\")[-1]
                 if filename not in pages_addressed:
                     applies_headers_results += (
-                        "<li>" + filename + " did not apply styles to headings</li>\n"
+                        "<li>"
+                        + filename
+                        + " did not apply styles to headings</li>\n"
                     )
             if applies_headers_results:
                 intro = "Goal: all HTML files address header colors\n<ul>\n"
@@ -275,12 +291,16 @@ class CSSReport:
                         if not color:
                             both_applied_results += "color was not applied "
                         else:
-                            both_applied_results += "background color was not applied "
+                            both_applied_results += (
+                                "background color was not applied "
+                            )
                         both_applied_results += (
                             "by the " + selector + " selector</li>\n"
                         )
             if both_applied_results:
-                intro = "Headers must set background and foreground colors\n<ul>\n"
+                intro = (
+                    "Headers must set background and foreground colors\n<ul>\n"
+                )
                 both_applied_results = intro + both_applied_results + "</ul>\n"
 
         # Check whether all required headers
@@ -288,12 +308,16 @@ class CSSReport:
             required_headings, global_headers_data, pages_addressed
         )
         if required_heading_results:
-            intro = "Required Headers are NOT addressed. See the following:\n<ul>"
+            intro = (
+                "Required Headers are NOT addressed. See the following:\n<ul>"
+            )
             required_heading_results = intro + required_heading_results
             required_heading_results += "</ul>"
 
         # Check color contrast of all global headers
-        color_contrast_results = self.get_header_color_contrast(applied_colors, goals)
+        color_contrast_results = self.get_header_color_contrast(
+            applied_colors, goals
+        )
         # Final check of all global headers goals
         if (
             applies_headers_results
@@ -315,7 +339,7 @@ class CSSReport:
             target_headers = required[:]
 
             for item in data:
-                html_file = item.get("html_file")
+                item.get("html_file")
 
                 # remove any header selector from copy of required
                 if item.get("html_file") == page:
@@ -349,12 +373,13 @@ class CSSReport:
             background_foreground[page] = {}
             for datum in global_headers_data:
                 if datum.get("html_file") == page:
-                    item = {}
                     selector = datum.get("selector")
                     specificity = datum.get("specificity")
                     bg = datum.get("bg-color")
                     col = datum.get("color")
-                    both_set = bool(datum.get("bg-color")) and bool(datum.get("color"))
+                    both_set = bool(datum.get("bg-color")) and bool(
+                        datum.get("color")
+                    )
                     global_bg = datum.get("global-bg-color")
                     global_col = datum.get("global-color")
                     if selector not in background_foreground[page].keys():
@@ -368,9 +393,9 @@ class CSSReport:
                         }
                     else:
                         # override if specificity is greater
-                        old_specificity = background_foreground[page][selector].get(
-                            "specificity"
-                        )
+                        old_specificity = background_foreground[page][
+                            selector
+                        ].get("specificity")
                         if specificity > old_specificity:
                             my_selector = background_foreground[page][selector]
                             my_selector["specificity"] = specificity
@@ -405,14 +430,15 @@ class CSSReport:
 
         # Check to see if all HTML files have global colors set
         if num_global_set < num_files:
-            results += (
-                "<li><b>Fail</b>: not all files have global colors applied.\n<ul>\n"
-            )
+            results += "<li><b>Fail</b>: not all files have global "
+            "colors applied.\n<ul>\n"
             for file in self.html_files:
                 filename = file.split("\\")[-1]
                 if filename not in global_filenames:
                     results += (
-                        "<li>File: " + filename + " has no global colors set.</li>\n"
+                        "<li>File: "
+                        + filename
+                        + " has no global colors set.</li>\n"
                     )
             results += "</ul></li>\n"
         # Were any global styles missing a declaration (color or bg-color):
@@ -433,7 +459,9 @@ class CSSReport:
             return results
         else:
             results = (
-                "<b>Global Colors Set</b>: <b>Fail</b>\n<ul>\n" + results + "</ul>\n"
+                "<b>Global Colors Set</b>: <b>Fail</b>\n<ul>\n"
+                + results
+                + "</ul>\n"
             )
             return results
 
@@ -457,13 +485,13 @@ class CSSReport:
         * anchors (default is blue and purple for hover)
         * any other selectors
         If any declarations leave out color or background-color, use the global setting
-        NOTE: we will NOT worry about the context (like applying inheritance of an li from ul). That's beyond my paygrade
+        NOTE: we will NOT worry about the context (like applying inheritance
+              of an li from ul). That's beyond my paygrade
         """
         color_data = self.set_color_data_defaults()
 
         # TODO:
         # Check all stylesheet objects for color_rulesets
-        color_rulesets = []
         all_styles = self.get_all_styles_in_order()
 
         # Override any stylesheet rulesets with matching styletag rulesets
@@ -474,7 +502,7 @@ class CSSReport:
         num_files_colors_set = len(global_colors)
         if num_files_colors_set < num_html_files:
             global_color_errors += "Global colors not set on all pages\n"
-        global_color_contrast = self.get_global_color_contrast(global_colors)
+        self.get_global_color_contrast(global_colors)
 
         header_color_errors = ""
         header_colors = self.get_final_header_colors(all_styles, global_colors)
@@ -488,12 +516,10 @@ class CSSReport:
     def get_header_color_contrast(self, header_colors, goals=""):
         results = ""
         # default target goal is AAA, but if it's just AA, change it
-        target_goal = "AAA"
         if goals and "AAA" not in goals:
             # double check
             if "AA" in goals:
-                target_goal = "AA"
-        meets = True
+                pass
         for file, details in header_colors.items():
             for selector in details.values():
                 # get the color unless it's not set,
@@ -521,12 +547,12 @@ class CSSReport:
                 # Cannot yet deal with gradients, so check first before crashing
 
                 # Test for contrast
-                contrast_report = colors.get_color_contrast_report(color, bg_color)
-                # results += "Results for " + file + ": "
+                contrast_report = colors.get_color_contrast_report(
+                    color, bg_color
+                )
                 target = self.get_color_contrast_target("Large")
                 passes = contrast_report.get(target)
                 if passes == "Fail":
-                    meets = False
                     selector = list(details.keys())[0]
                     if not results:
                         results = "<b>Fail</b>: \n<ul>"
@@ -657,7 +683,9 @@ class CSSReport:
         # if colors were set on headers, add the details to
         # header_color_data's stylesheet
         for styles in styles_checked.values():
-            header_colors_set = CSSinator.get_header_color_details(styles.rulesets)
+            header_colors_set = CSSinator.get_header_color_details(
+                styles.rulesets
+            )
 
             if header_colors_set:
                 header_color_data[styles.href] = header_colors_set
@@ -732,7 +760,10 @@ class CSSReport:
                                 details = selector
                                 data = applied.copy()
                                 data = self.set_header_color_details(
-                                    data, details, global_bg_color, global_color
+                                    data,
+                                    details,
+                                    global_bg_color,
+                                    global_color,
                                 )
                                 applied_styles.append(data)
 
@@ -748,7 +779,9 @@ class CSSReport:
         # so no duplicates
         global_color_data = {}
         for styles in styles_checked.values():
-            global_colors_set = CSSinator.get_global_color_details(styles.rulesets)
+            global_colors_set = CSSinator.get_global_color_details(
+                styles.rulesets
+            )
             if global_colors_set:
                 # we have global colors set - let's do something:
                 global_color_data[styles.href] = global_colors_set
@@ -814,7 +847,9 @@ class CSSReport:
                         # old specificity is greater, so only apply anything not set
                         if not old_styles["bg-color"]:
                             if style.get("background-color"):
-                                old_styles["bg-color"] = style["background-color"]
+                                old_styles["bg-color"] = style[
+                                    "background-color"
+                                ]
                             elif style.get("background"):
                                 old_styles["bg-color"] = style["background"]
                         if not old_styles["color"] and style.get("color"):
@@ -823,7 +858,9 @@ class CSSReport:
                 # this is the first time, get all styles and apply
                 old_selector = style["selector"]
                 old_styles["selector"] = style["selector"]
-                old_styles["specificity"] = CSSinator.get_specificity(old_selector)
+                old_styles["specificity"] = CSSinator.get_specificity(
+                    old_selector
+                )
                 if style.get("background-color"):
                     old_styles["bg-color"] = style["background-color"]
                 elif style.get("background"):
@@ -890,8 +927,9 @@ class CSSReport:
                         if self.are_background_and_foreground_set(sheet):
                             return True
             return meets
-        except:
+        except Exception as e:
             print("We have an exception most likely with the key for goals.")
+            print(e)
             return False
 
     def are_background_and_foreground_set(self, sheet):
@@ -915,7 +953,6 @@ class CSSReport:
 
     def get_font_families(self):
         font_families = []
-        rulesets = []
         for declaration in self.style_tag_contents:
             families = self.get_families(declaration)
             if families:
@@ -980,7 +1017,9 @@ class CSSReport:
         self.get_standard_requirements_results_by_key(errors, "CSS Errors")
 
         repeats = len(list(self.repeat_selectors.keys()))
-        self.get_standard_requirements_results_by_key(repeats, "Repeat selectors")
+        self.get_standard_requirements_results_by_key(
+            repeats, "Repeat selectors"
+        )
 
         repeats = len(list(self.repeat_declarations_blocks.keys()))
         self.get_standard_requirements_results_by_key(
@@ -1011,7 +1050,9 @@ class CSSReport:
         # get the names of all linked stylesheets
         linked_stylesheets = self.get_linked_stylesheets()
         filenames = self.get_filenames_from_paths(linked_stylesheets)
-        implemented_selectors = self.get_implemented_selectors(all_selectors, filenames)
+        implemented_selectors = self.get_implemented_selectors(
+            all_selectors, filenames
+        )
         # sort then get repeated selectors (if any)
         all_selectors.sort()
         self.get_repeated_selectors(all_selectors, implemented_selectors)
@@ -1031,7 +1072,8 @@ class CSSReport:
                         elif page not in pages:
                             self.repeat_selectors[selector].append(page)
                         else:
-                            # At this point, only append if we have not yet matched the number of pages to the count
+                            # At this point, only append if we have not
+                            # yet matched the number of pages to the count
                             if len(self.repeat_selectors[selector]) < count:
                                 self.repeat_selectors[selector].append(page)
 
@@ -1039,14 +1081,20 @@ class CSSReport:
                 self.repeat_selectors[selector].sort()
 
     def get_implemented_selectors(self, all_selectors, filenames):
-        implemented_selectors = self.get_selectors_from_implemented_stylesheets(
-            all_selectors, filenames
+        implemented_selectors = (
+            self.get_selectors_from_implemented_stylesheets(
+                all_selectors, filenames
+            )
         )
         # get selectors from style_tag_contents
-        self.get_selectors_from_style_tags(all_selectors, implemented_selectors)
+        self.get_selectors_from_style_tags(
+            all_selectors, implemented_selectors
+        )
         return implemented_selectors
 
-    def get_selectors_from_style_tags(self, all_selectors, implemented_selectors):
+    def get_selectors_from_style_tags(
+        self, all_selectors, implemented_selectors
+    ):
         for stylesheet in self.style_tag_contents:
             for selector in stylesheet.selectors:
                 all_selectors.append(selector)
@@ -1057,7 +1105,9 @@ class CSSReport:
                         selector,
                     ]
 
-    def get_selectors_from_implemented_stylesheets(self, all_selectors, filenames):
+    def get_selectors_from_implemented_stylesheets(
+        self, all_selectors, filenames
+    ):
         implemented_selectors = {}
         for stylesheet_object in self.stylesheet_objects:
             if stylesheet_object.href in filenames:
@@ -1065,9 +1115,9 @@ class CSSReport:
                     if (selector, stylesheet_object.href) not in all_selectors:
                         all_selectors.append(selector)
                         try:
-                            implemented_selectors[stylesheet_object.href].append(
-                                selector
-                            )
+                            implemented_selectors[
+                                stylesheet_object.href
+                            ].append(selector)
                         except KeyError:
                             implemented_selectors[stylesheet_object.href] = [
                                 selector,
@@ -1085,7 +1135,6 @@ class CSSReport:
         # no repeat blocks (per page)
         # any repeat blocks from a style tag?
         declaration_blocks = self.get_all_declaration_blocks()
-        # just_blocks = list(declaration_blocks.keys())
         for block, sheets in declaration_blocks.items():
             count = len(sheets)
             if count > 1:
@@ -1171,7 +1220,6 @@ class CSSReport:
             for element in head_children:
                 tag = element.name
                 if tag == "link" or tag == "style":
-                    type = tag
                     source = element.attrs.get("href")
                     if source:
                         if "http" not in source and ".css" in source[-4:]:
@@ -1192,7 +1240,9 @@ class CSSReport:
             self.project_css_by_html_file
         )
         files = list(files.values())
-        self.pages_contain_same_css_files = all(file == files[0] for file in files)
+        self.pages_contain_same_css_files = all(
+            file == files[0] for file in files
+        )
 
     def extract_only_style_tags_from_css_files(self, files_with_css):
         results = {}
@@ -1209,7 +1259,7 @@ class CSSReport:
             head = code.find(parent)
             children = head.findChildren()
             return children
-        except:
+        except Exception:
             return None
 
     def get_css_elements(self, nodes):
@@ -1264,8 +1314,9 @@ class CSSReport:
 
                 css = stylesheet(filename, css_code)
                 self.stylesheet_objects.append(css)
-            except:
+            except Exception as e:
                 print("Something went wrong with getting stylesheet objects")
+                print(e)
 
     def file_is_linked(self, filename):
         for sheets in self.linked_stylesheets.values():
@@ -1331,15 +1382,17 @@ class CSSReport:
                     warnings_dict[page_name].append(row_dict)
 
         if errors_dict:
-            self.report_details["css_validator_results"][page_name] = errors_dict[
+            self.report_details["css_validator_results"][
                 page_name
-            ]
+            ] = errors_dict[page_name]
         else:
-            self.report_details["css_validator_results"][page_name] = "No errors"
-        if warnings_dict:
-            self.report_details["css_validator_results"][page_name] = warnings_dict[
+            self.report_details["css_validator_results"][
                 page_name
-            ]
+            ] = "No errors"
+        if warnings_dict:
+            self.report_details["css_validator_results"][
+                page_name
+            ] = warnings_dict[page_name]
 
     def get_error_rows(self, item):
         item_string = item.contents
@@ -1385,18 +1438,21 @@ class CSSReport:
             num_css_files = self.report_details.get("num_css_files")
             num_style_tags = self.report_details.get("style_tags")[0][1]
             if num_css_files + num_style_tags == 0:
-                fail = "<b>Fail</b>: No CSS styles were applied in the project."
+                fail = (
+                    "<b>Fail</b>: No CSS styles were applied in the project."
+                )
                 general_results = '<tr><td colspan="4">' + fail + "</td></tr>"
             else:
                 congrats = "Congratulations, no errors were found."
-                general_results = '<tr><td colspan="4">' + congrats + "</td></tr>"
+                general_results = (
+                    '<tr><td colspan="4">' + congrats + "</td></tr>"
+                )
             pages = self.css_errors.keys()
             for page in pages:
                 specific_results += "<tr><td>" + page + "</td>"
                 specific_results += "<td>No errors found</td>"
                 specific_results += "<td>NA</td>" * 2 + "</tr>\n"
         else:
-            # cumulative_errors = 0
             specific_results = ""
             for page, errors in self.css_errors.items():
                 # Process general results
@@ -1404,7 +1460,9 @@ class CSSReport:
                 cumulative_errors += num_errors
                 general_results += "<tr><td>" + page + "</td>"
                 general_results += "<td>" + str(num_errors) + "</td>"
-                general_results += "<td>" + str(cumulative_errors) + "</td></tr>"
+                general_results += (
+                    "<td>" + str(cumulative_errors) + "</td></tr>"
+                )
 
                 # process specific results
                 for error in errors:
@@ -1440,22 +1498,25 @@ class CSSReport:
         ]
         min = css_errors_goal["min"]
         max = css_errors_goal["max"]
-        css_errors_goal = "<td>CSS Errors - Min: {} Max: {}</td>".format(min, max)
+        css_errors_goal = "<td>CSS Errors - Min: {} Max: {}</td>".format(
+            min, max
+        )
         css_validator_errors = "<td>Total CSS Errors: {}</td></tr>".format(
             cumulative_errors
         )
         css_validator_results = str(bool(cumulative_errors < max))
         css_validator_results = "<td>" + css_validator_results + "</td>"
-        css_goals_tbody = "<tr>" + css_validator_errors + "</tr>"
+        "<tr>" + css_validator_errors + "</tr>"
 
         # What about general styles goals?
         # Loop through general Styles Goals and get all goals and results
         general_styles_goals = ""
-        for goal, details in self.report_details["general_styles_goals"].items():
+        for goal, details in self.report_details[
+            "general_styles_goals"
+        ].items():
             # Build out the table row
             goal_details = details["details"]
-            goal_description = goal_details.get("description")
-            goal_str = "<strong>{}</strong>: {}".format(goal, goal_description)
+            goal_details.get("description")
             has_min_max = goal_details.get("minimum")
             if has_min_max:
                 min = goal_details["minimum"]
@@ -1479,8 +1540,10 @@ class CSSReport:
                     # something went wrong
                     print("hoo boy! We had a problem.")
 
-            general_styles_goals += "<tr><td>{}</td><td>{}</td><td>{}</td></tr>".format(
-                goal, actual_string, results
+            general_styles_goals += (
+                "<tr><td>{}</td><td>{}</td><td>{}</td></tr>".format(
+                    goal, actual_string, results
+                )
             )
 
         # create our tbody contents for css general results
@@ -1497,7 +1560,6 @@ class CSSReport:
             f.write(str(report_content.contents[0]))
 
     def has_css_errors(self, css_errors):
-        result = False
         for page, item in css_errors.items():
             if isinstance(item, list):
                 for el in item:
@@ -1525,9 +1587,12 @@ class CSSReport:
             return '<tr><td rowspan="4">Congratulations! No Errors Found</td></tr>'
         else:
             try:
-                validation_report = self.validator_errors[validation_type].copy()
-            except:
+                validation_report = self.validator_errors[
+                    "validation_type"
+                ].copy()
+            except Exception as e:
                 print("Whoah Nelly")
+                print(e)
             cumulative_errors = 0
             for page, errors in validation_report.items():
                 num_errors = len(errors)
@@ -1535,9 +1600,13 @@ class CSSReport:
                 if num_errors != 1:
                     error_str += "s"
                 cumulative_errors += num_errors
-                cumulative_errors_string = str(cumulative_errors) + " total errors"
-                meets = str(cumulative_errors <= self.report_details["validator_goals"])
-                results += Report.get_report_results_string(
+                cumulative_errors_string = (
+                    str(cumulative_errors) + " total errors"
+                )
+                meets = str(
+                    cumulative_errors <= self.report_details["validator_goals"]
+                )
+                results += rep.Report.get_report_results_string(
                     "", page, error_str, cumulative_errors_string, meets
                 )
             return results

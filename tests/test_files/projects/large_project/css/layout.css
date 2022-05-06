@@ -4,7 +4,7 @@ body {
   padding: 0;
 }
 /* layouts with grid */
-.container { 
+.container {
   display: grid;
 }
 header,
@@ -38,20 +38,20 @@ article.page.down {
 .sidebar {
   grid-area: sidebar;
  }
-footer.main { 
+footer.main {
   grid-area: footer;
  }
 .container {
   grid-template-columns: auto;
   grid-template-rows: auto ;
-  grid-template-areas: 
+  grid-template-areas:
     "header"
     "main"
     "sidebar"
     "footer";
 }
 #image-gallery .container {
-  grid-template-areas: 
+  grid-template-areas:
     "header header"
     "main main"
     "footer footer";
@@ -143,15 +143,9 @@ figcaption {
   .container {
     grid-template-columns: 2fr 1fr;
     grid-template-rows: auto ;
-    grid-template-areas: 
+    grid-template-areas:
       "header header"
       "main sidebar"
       "footer footer";
   }
 }
-
-
-
-
-
-

@@ -28,9 +28,9 @@ contrast_ratio_map = {
     "Graphics UI components": 3,
 }
 
-rgb_all_forms_re = "rgba\(.*?\)|rgb\(.*?\)"
-hsl_all_forms_re = "hsl\(.*?\)|hsla\(.*?\)"
-hex_regex = "(#\w{3}\s|#\w{6}\s|#\w{8}\s)"
+rgb_all_forms_re = r"rgba\(.*?\)|rgb\(.*?\)"
+hsl_all_forms_re = r"hsl\(.*?\)|hsla\(.*?\)"
+hex_regex = r"(#\w{3}\s|#\w{6}\s|#\w{8}\s)"
 
 
 def passes_color_contrast(level, hex1, hex2):
@@ -110,14 +110,15 @@ def has_alpha_channel(code):
 
 
 def hsl_to_rgb(hsl):
-    # From HSL to RGB color conversion (https://www.rapidtables.com/convert/color/hsl-to-rgb.html)
+    # From HSL to RGB color conversion
+    # (https://www.rapidtables.com/convert/color/hsl-to-rgb.html)
 
-    h, s, l = hsl
+    h, s, light = hsl
     s /= 100
-    l /= 100
-    c = (1 - abs(2 * l - 1)) * s
+    light /= 100
+    c = (1 - abs(2 * light - 1)) * s
     x = c * (1 - abs((h / 60) % 2 - 1))
-    m = l - c / 2
+    m = light - c / 2
     if h < 60:
         r1, g1, b1 = (c, x, 0)
     elif h < 120:

@@ -107,8 +107,7 @@ class Stylesheet:
                             at_rules.append(rule + split_code[1])
                     else:
                         # it's only an @rule
-                        # at_rules.append(rule + split_code + "}}")
-                        print("skip")
+                        print("skipping non-nested @rule.")
 
         self.text = "".join(non_at_rules_css)
         self.nested_at_rules = at_rules
@@ -295,7 +294,7 @@ css_with_errors = """<body> {
     font-size: 1.2em;
     color: brown;
     background-color: aliceblue;
-} 
+}
 """
 css_code = """
 /* styles.css
@@ -375,9 +374,10 @@ def minify_code(text):
 
 def missing_end_semicolon(css_code):
     # remove all whitespace and line breaks
+    cleaned = css_code.replace(" ", "")
+    cleaned = css_code.replace("\n", "")
     # if there is no semicolon preceding closing curly bracket,
-    # return True
-    return True
+    return ";}" in cleaned
 
 
 def has_repeat_selector(css_code):
@@ -467,7 +467,6 @@ def get_color_rulesets(objects):
 
 
 def get_specificity(selector):
-    specificity = "000"
     id_selector = get_id_score(selector)
     class_selector = get_class_score(selector)
     type_selector = get_type_score(selector)
@@ -476,28 +475,27 @@ def get_specificity(selector):
 
 def get_id_score(selector):
     """receives a selector and returns # of id selectors"""
-    re_pattern = "#\w+"
+    re_pattern = r"#\w+"
     id_selectors = re.findall(re_pattern, selector)
     return len(id_selectors)
 
 
 def get_class_score(selector):
     """receives a selector and returns # of class & psuedo-class selectors"""
-    re_pattern = "\.\w+|:\w+|\[\w+=\w+]"
+    re_pattern = r"\.\w+|:\w+|\[\w+=\w+]"
     selectors = re.findall(re_pattern, selector)
     return len(selectors)
 
 
 def get_type_score(selector):
     """receives a selector and returns # of type selectors"""
-    re_pattern = "([^#:\+.\[=a-zA-Z][a-zA-Z$][a-zA-Z1-6]*|^\w*)"
+    re_pattern = r"([^#:\+.\[=a-zA-Z][a-zA-Z$][a-zA-Z1-6]*|^\w*)"
     selectors = re.findall(re_pattern, selector)
     return len(selectors)
 
 
 def get_header_color_details(rulesets):
     """receives rulesets and returns data on colors set by headers"""
-    header_re = "h[1-6]"
     header_rulesets = []
     for ruleset in rulesets:
         selector = ruleset.selector
@@ -557,7 +555,6 @@ def get_global_color_details(rulesets):
     for ruleset in rulesets:
         if ruleset.selector in global_selectors:
             selector = ruleset.selector
-            properties = {}
             background_color = ""
             color = ""
             for declaration in ruleset.declaration_block.declarations:
@@ -567,10 +564,14 @@ def get_global_color_details(rulesets):
                     color = declaration.value
                     if is_gradient(color):
                         colors = process_gradient(color)
+                        todo = input("We have colors: " + colors)
+                        print(todo)
                 elif declaration.property == "background":
                     background_color = declaration.value
                     if is_gradient(background_color):
                         bg_colors = process_gradient(background_color)
+                        todo = input("We have bg colors: " + bg_colors)
+                        print(todo)
             if background_color or color:
                 global_rulesets.append(
                     {
@@ -595,8 +596,10 @@ def is_gradient(value):
 
 
 def process_gradient(code):
-    """returns vendor prefix warning (if any exist) and list of all colors from gradient"""
+    """returns vendor prefix warning and list of all colors from gradient"""
     vendor_prefix = has_vendor_prefix(code)
+    todo = input("We have a vendor prefix. What to do? " + vendor_prefix)
+    print(todo)
     colors = []
     # remove all vendor prefixes
     data = code.split("),")
@@ -605,7 +608,9 @@ def process_gradient(code):
     last_split = last_item.split("\n")
     if len(last_split) == 2:
         data.append(last_split[1])
-    vendor_regex = "\A-moz-|-webkit-|-ms-|-o-"  # only works for start of string
+    vendor_regex = (
+        r"\A-moz-|-webkit-|-ms-|-o-"  # only works for start of string
+    )
     for datum in data:
         datum = datum.strip()
         if not re.match(vendor_regex, datum):
@@ -620,7 +625,7 @@ def process_gradient(code):
             if color_codes:
                 only_colors += color_codes
 
-    return only_colors
+    return colors
 
 
 def get_colors_from_gradient(gradient):
@@ -659,39 +664,37 @@ def append_color_codes(type, code, color_list):
 
 
 if __name__ == "__main__":
-    # print("hello, I'm CSSinator.")
-    # selector = "h1, h2, h3, h4#header"
-    # score = get_class_score(selector)
-    # general_css = clerk.file_to_string(
-    #     "tests/test_files/projects/large_project/css/general.css")
 
-    # general = Stylesheet("local", general_css, "file")
-
-    # navigation_css = clerk.file_to_string(
-    #     "tests/test_files/projects/large_project/css/navigation.css")
-
-    # navigation = Stylesheet("local", navigation_css, "file")
     insane_gradient = """
-    -moz-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
-    -webkit-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
-    -o-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
-    -ms-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
-    radial-gradient(0% 200%, ellipse cover, antiquewhite 10%,rgba(240, 205, 247,0) 40%),
-    -moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), 
+    -moz-radial-gradient(0% 200%, ellipse cover,
+    rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+    -webkit-radial-gradient(0% 200%, ellipse cover,
+    rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+    -o-radial-gradient(0% 200%, ellipse cover,
+    rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+    -ms-radial-gradient(0% 200%, ellipse cover,
+    rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+    radial-gradient(0% 200%, ellipse cover, antiquewhite 10%,
+    rgba(240, 205, 247,0) 40%),
+    -moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%,
+    rgba(42,60,87,.4) 200%),
     -ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%),
     linear-gradient(-45deg, maroon 0%, #092756 200%)
     """
 
-    # results = process_gradient(insane_gradient)
-    # print(results)
-
     insane_gradient = """
--moz-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
--webkit-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
--o-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
--ms-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
--moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), 
+-moz-radial-gradient(0% 200%, ellipse cover,
+rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-webkit-radial-gradient(0% 200%, ellipse cover,
+rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-o-radial-gradient(0% 200%, ellipse cover,
+rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-ms-radial-gradient(0% 200%, ellipse cover,
+rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+radial-gradient(0% 200%, ellipse cover,
+rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%,
+rgba(42,60,87,.4) 200%),
 -ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)',
 linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
 """

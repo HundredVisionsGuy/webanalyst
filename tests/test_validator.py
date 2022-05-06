@@ -1,5 +1,6 @@
-from webanalyst import validator as val
 import pytest
+
+from webanalyst import validator as val
 
 html_files = val.get_html_file_names()
 browser = val.browser
@@ -88,7 +89,11 @@ def test_get_css_errors_with_valid_css(valid_css_results):
 
 def test_clean_error_msg():
     expected = "Value Error: display phred is not a display value: phred"
-    msg = "\n                                Value Error :  display                                             phred is not a display value : \n                                            \n                                    phred\n                                \n"
+    msg = "\n                                Value Error :  display"
+    "                                             phred is not a display "
+    "value : \n                                            \n"
+    "                                    phred\n"
+    "                                \n"
     results = val.clean_error_msg(msg)
     assert results == expected
 

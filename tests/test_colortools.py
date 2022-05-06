@@ -3,6 +3,7 @@
 """Tests for `webtools` package."""
 
 import pytest
+
 from webanalyst import colortools as color
 
 # define some colors
@@ -146,7 +147,9 @@ def test_passes_normal_aa_for_pass_indigo_white():
 
 def test_passes_normal_aaa_for_no_pass_336699_white():
     expected = False
-    results = color.passes_color_contrast("Normal AAA", favorite_test_color, white)
+    results = color.passes_color_contrast(
+        "Normal AAA", favorite_test_color, white
+    )
     assert results == expected
 
 

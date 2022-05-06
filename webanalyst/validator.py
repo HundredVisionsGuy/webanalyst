@@ -1,12 +1,12 @@
-# import pytest
-# from html.parser import HTMLParser
-import requests
 import os
-from . import clerk
-import mechanicalsoup
-import bs4
-from bs4 import BeautifulSoup
 import re
+
+import bs4
+import mechanicalsoup
+import requests
+from bs4 import BeautifulSoup
+
+from . import clerk
 
 w3cURL = "https://validator.w3.org/nu/?out=json"
 
@@ -53,14 +53,15 @@ def get_markup_validity(filepath):
             errors = r.json()
             errors = errors["messages"]
             print(errors[-1])
-        except:
+        except KeyError:
             errors = [
                 {
                     "type": "alert",
                     "lastLine": "NA",
                     "lastColumn": "NA",
                     "firstColumn": "NA",
-                    "message": "Problems connecting with the validator - probably no connection",
+                    "message": "Problems connecting with the validator - "
+                    "probably no connection",
                     "extract": "NA",
                     "hiliteStart": "NA",
                     "hiliteLength": "NA",
@@ -115,11 +116,11 @@ def validate_css(css_code):
         browser["text"] = css_code
         browser.submit_selected()
         results = browser.get_current_page().select("#results_container")
-        # print("\nCSS Validator:\n")
-        # print(results)
     except Exception:
         # Convert the file "no_css_connection.html" into a soup tag object
-        no_connection_code = clerk.file_to_string("webanalyst/no_css_connection.html")
+        no_connection_code = clerk.file_to_string(
+            "webanalyst/no_css_connection.html"
+        )
         soup = BeautifulSoup(no_connection_code, "lxml")
         # Convert string to result set
         results = soup.select("#results_container")
@@ -139,7 +140,9 @@ if __name__ == "__main__":
     # test getting number of errorsz
     print(get_num_errors(report))
 
-    css_code = clerk.get_css_from_style_tag("tests/test_files/html_with_css.html")
+    css_code = clerk.get_css_from_style_tag(
+        "tests/test_files/html_with_css.html"
+    )
     css_validator_results = validate_css(css_code)
     is_valid = is_css_valid(css_validator_results)
     print(is_valid)
@@ -147,4 +150,3 @@ if __name__ == "__main__":
     print(css_validator_results)
     is_valid = is_css_valid(css_validator_results)
     print(is_valid)
-    # print(validate_css("#header { display: flex; }"))

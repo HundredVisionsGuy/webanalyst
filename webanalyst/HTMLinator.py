@@ -2,11 +2,13 @@
 # by Hundredvisionsguy
 # A library to assess HTML levels and skills
 
-from bs4 import BeautifulSoup
 import os
-from . import clerk
-from lxml import html
 import re
+
+from bs4 import BeautifulSoup
+from lxml import html
+
+from . import clerk
 
 
 def get_html(path):
@@ -34,10 +36,10 @@ def get_num_elements_in_file(el, path):
             # if the element is the head, you must use a regex
             # to not count the <header> tag
             if el.lower() == "head":
-                count = len(re.findall("<head[\s>]", contents))
+                count = len(re.findall(r"<head[\s>]", contents))
             else:
                 count = contents.count(substring)
-            # return # of doctypes
+            # return the number of doctypes
             return count
         soup = BeautifulSoup(fp, "html.parser")
         elements = soup.find_all(el.lower())

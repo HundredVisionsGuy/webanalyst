@@ -1,4 +1,5 @@
 import pytest
+
 from webanalyst import clerk
 
 # TODO - separate tests based on command-line flag
@@ -14,18 +15,18 @@ report_template_path = "./webanalyst/report_template.html"
 @pytest.fixture
 def test_code_one():
     test_code = """<!DOCTYPE html>\n<html lang="en">\n\n<head>
-    <link rel="stylesheet" href="styles.css">    <meta charset="UTF-8">    
+    <link rel="stylesheet" href="styles.css">    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me</title>\n    
+    <title>About Me</title>\n
     <style>\n        body {
                     color: #121212 background-fred: #f1f1f1;
                             }\n    </style>
-    </head>\n\n<h1>About Me<h1>\n        
-    <h2>Background</h2>\n        
-    <p>I was born a young child in Phoenix, Arizona. 
+    </head>\n\n<h1>About Me<h1>\n
+    <h2>Background</h2>\n
+    <p>I was born a young child in Phoenix, Arizona.
     I was the last of five children, but I had a good childhood.</p>
-    <h2>Hobbies</h2>     
-    <p>I love to play <strong>guitar and code. I have both an electric 
+    <h2>Hobbies</h2>
+    <p>I love to play <strong>guitar and code. I have both an electric
     and acoustic guitar, but I prefer my acoustic.</p>
     </html>"""
     return test_code
@@ -35,18 +36,18 @@ def test_code_one():
 def test_code_two():
     test_code = """<!DOCTYPE html>\n<html lang="en">\n\n<head>
     <link rel="stylesheet" href="styles.css">    <meta charset="UTF-8">
-    <link rel="stylesheet" href="mystyles.css">    
+    <link rel="stylesheet" href="mystyles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me</title>\n    
+    <title>About Me</title>\n
     <style>\n        body {
                     color: #121212 background-fred: #f1f1f1;
                             }\n    </style>
-    </head>\n\n<h1>About Me<h1>\n        
-    <h2>Background</h2>\n        
-    <p>I was born a young child in Phoenix, Arizona. 
+    </head>\n\n<h1>About Me<h1>\n
+    <h2>Background</h2>\n
+    <p>I was born a young child in Phoenix, Arizona.
     I was the last of five children, but I had a good childhood.</p>
-    <h2>Hobbies</h2>     
-    <p>I love to play <strong>guitar and code. I have both an electric 
+    <h2>Hobbies</h2>
+    <p>I love to play <strong>guitar and code. I have both an electric
     and acoustic guitar, but I prefer my acoustic.</p>
     </html>"""
     return test_code
@@ -76,7 +77,7 @@ def test_get_css_from_style():
 
 def test_file_to_string_with_sample():
     sample_test = clerk.file_to_string(sample_txt_path)
-    expected = "Hey!"
+    expected = "Hey!\n"
     assert sample_test == expected
 
 
@@ -104,7 +105,9 @@ def test_get_all_project_files_from_large_project():
         "tests\\test_files\\projects\\large_project\\css\\navigation.css",
         "tests\\test_files\\projects\\large_project\\js\\scripts.js",
     ]
-    results = clerk.get_all_project_files("tests/test_files/projects/large_project")
+    results = clerk.get_all_project_files(
+        "tests/test_files/projects/large_project"
+    )
     assert expected == results
 
 
@@ -121,14 +124,17 @@ def test_get_all_html_project_files_from_large_project():
 
 
 def test_split_into_sentences():
-    paragraph = "Hello, you! How are you? i am fine Mr. selenium.\nsee ya later."
+    paragraph = (
+        "Hello, you! How are you? i am fine Mr. selenium.\nsee ya later."
+    )
     results = len(clerk.split_into_sentences(paragraph))
     expected = 4
     assert results == expected
 
 
 def test_remove_inline_tags():
-    paragraph = '<p>Site designed by <a href="mailto:guy@hundredvisions.com">Hundred visions Guy</a> &copy; 2019.</p>'
+    paragraph = '<p>Site designed by <a href="mailto:guy@hundredvisions.com">'
+    "Hundred visions Guy</a> &copy; 2019.</p>"
     results = clerk.remove_tags(paragraph)
     expected = "Site designed by Hundred visions Guy &copy; 2019."
     assert results == expected

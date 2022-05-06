@@ -1,4 +1,3 @@
-import pytest
 from html.parser import HTMLParser
 
 import webanalyst.validator as validator
@@ -20,7 +19,6 @@ type(file)
 class MyHTMLParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
-        # self.feed(data)
         self.starttags = []
         self.endtags = []
 
