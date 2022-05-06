@@ -14,11 +14,13 @@ about_me_dnm_path = "tests/test_files/projects/about_me_does_not_meet/"
 report_html_doc_path = "report/report.html"
 multipage_meets_path = "tests/test_files/projects/multi_page_meets/"
 
+
 @pytest.fixture
 def about_me_report():
     my_report = report.Report(about_me_path)
     my_report.generate_report()
     yield my_report
+
 
 @pytest.fixture
 def about_me_dnm_report():
@@ -26,11 +28,13 @@ def about_me_dnm_report():
     my_report.generate_report()
     yield my_report
 
+
 @pytest.fixture
 def large_project_report():
     my_test_project = report.Report(large_project_path)
     my_test_project.generate_report()
     yield my_test_project
+
 
 @pytest.fixture
 def multipage_meets_report():
@@ -38,17 +42,20 @@ def multipage_meets_report():
     my_project.generate_report()
     yield my_project
 
+
 @pytest.fixture
 def about_me_readme_list():
     my_report = report.Report(about_me_path)
     my_list = my_report.get_readme_list()
     yield my_list
 
+
 @pytest.fixture
 def about_me_dnn_readme_list():
     my_report = report.Report(about_me_dnm_path)
     my_list = my_report.get_readme_list()
     yield my_list
+
 
 @pytest.fixture
 def large_project_readme_list():
@@ -61,6 +68,7 @@ def large_project_readme_list():
 def about_me_general_report(about_me_report):
     yield about_me_report.general_report
 
+
 @pytest.fixture
 def large_project_general_report(large_project_report):
     yield large_project_report.general_report
@@ -70,30 +78,37 @@ def large_project_general_report(large_project_report):
 def about_me_html_report(about_me_report):
     yield about_me_report.html_report
 
+
 @pytest.fixture
 def about_me_dnm_html_report(about_me_dnm_report):
     yield about_me_dnm_report.html_report
+
 
 @pytest.fixture
 def large_project_html_report(large_project_report):
     yield large_project_report.html_report
 
+
 @pytest.fixture
 def about_me_css_report(about_me_report):
     yield about_me_report.css_report
+
 
 @pytest.fixture
 def about_me_dnm_css_report(about_me_dnm_report):
     # css_report = report.CSSReport(about_me_dnn_readme_list, about_me_dnm_path)
     yield about_me_dnm_report.css_report
 
+
 @pytest.fixture
 def large_project_css_report(large_project_report):
     yield large_project_report.css_report
 
+
 @pytest.fixture
 def multi_page_meets_css_report(multipage_meets_report):
     yield multipage_meets_report.css_report
+
 
 @pytest.fixture
 def paragraph_tag():
@@ -101,16 +116,20 @@ def paragraph_tag():
     p_tag = BeautifulSoup(p, 'html.parser')
     return p_tag
 
+
 @pytest.fixture
 def about_me_required_elements():
     return ['DOCTYPE', 'HTML', 'HEAD', 'TITLE', 'BODY', 'H1', 'H2', 'P', 'STRONG', 'EM']
+
 
 def test_report_for_general_report_pre_generate_report():
     about_report = report.Report(about_me_path)
     assert not about_report.general_report
 
+
 def test_report_for_general_report_post_generate_report(about_me_report):
     assert about_me_report.general_report
+
 
 def test_about_me_report_for_report_object(about_me_report):
     assert about_me_report
@@ -215,6 +234,7 @@ def test_publish_results_for_report_file_existing(about_me_general_report):
     results = clerk.file_exists(report.report_path)
     assert results
 
+
 def test_general_report_for_get_report_results_string_for_spp(about_me_general_report):
     spp_input = ["general-spp-results",
                 "Avg. Sentences / Paragraph",
@@ -224,6 +244,7 @@ def test_general_report_for_get_report_results_string_for_spp(about_me_general_r
     expected = '<tr class="general-spp-results"><td>Avg. Sentences / Paragraph</td><td>[1, 5]</td><td>1.6666666666666667</td><td>Meets</td></tr>'
     assert results == expected
 
+
 def test_general_report_for_get_report_results_string_for_wps(about_me_general_report):
     wps_input = ["general-wps-results",
                 "Avg. Words / Sentence",
@@ -232,6 +253,7 @@ def test_general_report_for_get_report_results_string_for_wps(about_me_general_r
     results = report.Report.get_report_results_string(wps_input[0], wps_input[1], wps_input[2], actual["actual_WPS"], actual["meets_WPS"])
     expected = '<tr class="general-wps-results"><td>Avg. Words / Sentence</td><td>[10, 20]</td><td>12.2</td><td>Meets</td></tr>'
     assert results == expected
+
 
 def test_static_method_get_report_results_string_for_html(about_me_general_report):
     html_id = "general-html-files-results"
@@ -243,6 +265,7 @@ def test_static_method_get_report_results_string_for_html(about_me_general_repor
     expected = '<tr class="general-html-files-results"><td>HTML</td><td>1</td><td>1</td><td>Meets</td></tr>'
     assert results == expected
 
+
 def test_general_report_for_get_report_results_string_for_css(about_me_general_report):
     html_id = "general-css-files-results"
     type_column = "CSS"
@@ -253,10 +276,12 @@ def test_general_report_for_get_report_results_string_for_css(about_me_general_r
     expected = '<tr class="general-css-files-results"><td>CSS</td><td>0</td><td>0</td><td>Meets</td></tr>'
     assert results == expected
 
+
 def test_large_project_general_report_for_get_min_number_files_for_2_HTML(large_project_general_report):
     results = large_project_general_report.get_min_number_files("html")
     expected = 2
     assert results == expected
+
 
 def test_large_project_general_report_for_get_min_number_files_for_2_CSS(large_project_general_report):
     results = large_project_general_report.get_min_number_files("css")
@@ -288,6 +313,7 @@ def test_about_me_html_report_for_can_attain_next_level(about_me_html_report):
     results = about_me_html_report.can_attain_level()
     expected = False
     assert results == expected
+
 
 def test_about_me_html_report_for_analyze_results_can_attain_level_property_change(about_me_html_report):
     about_me_html_report.analyze_results()
@@ -434,17 +460,20 @@ def test_about_me_css_report_for_get_project_css_by_file(about_me_css_report):
     num_css_tags = len(about_me_css_report.project_css_by_html_file["index.html"])
     assert num_css_tags == 1
 
+
 def test_about_me_css_report_for_get_children_head(about_me_css_report):
     children = about_me_css_report.get_children('tests\\test_files\\projects\\about_me\\index.html', 'head')
     assert len(children) == 4
 
 def test_large_project_css_report_for_get_children_head(large_project_css_report):
     children = large_project_css_report.get_children('tests\\test_files\\projects\\large_project\\gallery.html', 'head')
-    assert len(children) == 8
+    assert len(children) == 9
+
 
 def test_large_project_css_report_for_get_project_css_by_file(large_project_css_report):
     num_css_files = len(large_project_css_report.project_css_by_html_file["gallery.html"])
-    assert num_css_files == 3
+    assert num_css_files == 4
+
 
 def test_about_me_css_report_for_no_css_files(about_me_css_report):
     expected = 0
@@ -504,8 +533,14 @@ def test_get_implemented_selectors(large_project_css_report):
     assert results == expected
 
 def test_get_repeated_selectors(large_project_css_report):
-    expected = {'.container': ['layout.css', 'layout.css'], '.image-gallery .display-box': ['layout.css', 'layout.css'], 'body': ['about.html', 'general.css', 'layout.css'], 'header': ['layout.css', 'navigation.css'], 'header h1': ['layout.css', 'navigation.css']}
-    results = large_project_css_report.repeat_selectors
+    repeated_selectors = {'.container': ['layout.css', 'layout.css'], 
+    '.image-gallery .display-box': ['layout.css', 'layout.css'], 
+    'body': ['about.html', 'gallery.html', 'general.css', 'layout.css'], 
+    'header': ['layout.css', 'navigation.css'], 
+    'header h1': ['layout.css', 'navigation.css']}
+    expected = 'gallery.html' in repeated_selectors['body']
+    actual_repeats = large_project_css_report.repeat_selectors
+    results = 'gallery.html' in actual_repeats['body']
     assert results == expected
 
 def test_file_is_linked_for_true(large_project_css_report):

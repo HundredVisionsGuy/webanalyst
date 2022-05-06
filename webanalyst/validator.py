@@ -2,7 +2,7 @@
 #from html.parser import HTMLParser
 import requests
 import os
-from webanalyst import clerk
+from . import clerk
 import mechanicalsoup
 import bs4
 from bs4 import BeautifulSoup

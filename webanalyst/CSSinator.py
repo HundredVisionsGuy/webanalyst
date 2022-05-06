@@ -4,9 +4,8 @@
 
 import re
 
-from more_itertools import only
-from webanalyst import color_keywords as keyword
-from webanalyst import colortools
+from . import color_keywords as keyword
+from . import colortools
 
 
 def get_nested_at_rule(code, rule):

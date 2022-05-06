@@ -4,7 +4,7 @@
 
 from bs4 import BeautifulSoup
 import os
-from webanalyst import clerk
+from . import clerk
 from lxml import html
 import re
 

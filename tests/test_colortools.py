@@ -3,7 +3,7 @@
 """Tests for `webtools` package."""
 
 import pytest
-import webanalyst.colortools as color
+from webanalyst import colortools as color
 
 # define some colors
 indigo = "#4b0082"
