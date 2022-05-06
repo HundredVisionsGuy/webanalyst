@@ -12,6 +12,7 @@ logging.basicConfig(format='%(asctime)s - %(message)s',
 report_template_path = "webanalyst/report_template.html"
 report_path = "report/report.html"
 
+
 class Report:
     def __init__(self, dir_path):
         self.__readme_path = dir_path + "README.md"

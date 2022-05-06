@@ -7,8 +7,8 @@
 # (https://developer.mozilla.org/en-US/docs/MDN/Contribute/Guidelines/Code_guidelines/CSS#Use_expanded_syntax)
 # to be used by report.py
 
-from webanalyst import CSSinator as cssinator
-from webanalyst import clerk
+from . import CSSinator as cssinator
+from . import clerk
 # from webanalyst import colortools
 import re
 

@@ -1,6 +1,6 @@
 import pytest
-import webanalyst.CSSinator as css
-import webanalyst.clerk as clerk
+from webanalyst import CSSinator as css
+from webanalyst import clerk
 
 css_code_1_with_comments = """
 /* comment #1 */

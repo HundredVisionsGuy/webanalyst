@@ -1,5 +1,6 @@
+
 import pytest
-import webanalyst.clerk as clerk
+from webanalyst import clerk
 
 # TODO - separate tests based on command-line flag
 css_file_path = 'test_files/projects/large_project/test.css'
@@ -10,10 +11,53 @@ working_dir_txt_path = './README.md'
 project_readme_path = './project/README.md'
 report_template_path = './webanalyst/report_template.html'
 
+
+@pytest.fixture
+def test_code_one():
+    test_code = """<!DOCTYPE html>\n<html lang="en">\n\n<head>
+    <link rel="stylesheet" href="styles.css">    <meta charset="UTF-8">    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>\n    
+    <style>\n        body {
+                    color: #121212 background-fred: #f1f1f1;
+                            }\n    </style>
+    </head>\n\n<h1>About Me<h1>\n        
+    <h2>Background</h2>\n        
+    <p>I was born a young child in Phoenix, Arizona. 
+    I was the last of five children, but I had a good childhood.</p>
+    <h2>Hobbies</h2>     
+    <p>I love to play <strong>guitar and code. I have both an electric 
+    and acoustic guitar, but I prefer my acoustic.</p>
+    </html>"""
+    return test_code
+
+
+@pytest.fixture
+def test_code_two():
+    test_code = """<!DOCTYPE html>\n<html lang="en">\n\n<head>
+    <link rel="stylesheet" href="styles.css">    <meta charset="UTF-8">
+    <link rel="stylesheet" href="mystyles.css">    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>\n    
+    <style>\n        body {
+                    color: #121212 background-fred: #f1f1f1;
+                            }\n    </style>
+    </head>\n\n<h1>About Me<h1>\n        
+    <h2>Background</h2>\n        
+    <p>I was born a young child in Phoenix, Arizona. 
+    I was the last of five children, but I had a good childhood.</p>
+    <h2>Hobbies</h2>     
+    <p>I love to play <strong>guitar and code. I have both an electric 
+    and acoustic guitar, but I prefer my acoustic.</p>
+    </html>"""
+    return test_code
+
+
 def test_clerk_for_file_exists_for_report_template():
     results = clerk.file_exists(report_template_path)
     expected = True
     assert results == expected
+
 
 def test_get_file_type_for_html():
     filetype = clerk.get_file_type(html_file_path)
@@ -86,15 +130,18 @@ def test_remove_inline_tags():
     expected = 'Site designed by Hundred visions Guy &copy; 2019.'
     assert results == expected
 
+
 def test_get_file_name_for_html_file_path():
     results = clerk.get_file_name(html_file_path)
     expected = 'sample_no_errors.html'
     assert results == expected
 
+
 def test_get_file_name_for_css_file_path():
     results = clerk.get_file_name(css_file_path)
     expected = "test.css"
     assert results == expected
+
 
 def test_clear_extra_text():
     sample = "\n             body has something       in here.    "
@@ -103,12 +150,11 @@ def test_clear_extra_text():
     assert results == expected
 
 
-def test_get_linked_css_for_one_filename():
-    test_code = '<!DOCTYPE html>\n<html lang="en">\n\n<head> \n    <meta charset="UTF-8">\n<link rel="stylesheet" href="mystyles.css">    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>About Me</title>\n    <style>\n        body {\n            color: #121212 background-fred: #f1f1f1;\n        }\n    </style>\n</head>\n\n<h1>About Me<h1>\n        <h2>Background</h2>\n        <p>I was born a young child in Phoenix, Arizona. I was the last of five children, but I had a good childhood.\n        </p>\n\n        <h2>Hobbies</h2>\n        <p>I love to play <strong>guitar and code. I have both an electric and acoustic guitar, but I prefer my\n                acoustic.</p>\n\n\n</html>'
-    results = clerk.get_linked_css(test_code)
-    assert "mystyles.css" in results
+def test_get_linked_css_for_one_filename(test_code_one):
+    results = clerk.get_linked_css(test_code_one)
+    assert "styles.css" in results
 
-def test_get_linked_css_for_two_filenames():
-    test_code = '<!DOCTYPE html>\n<html lang="en">\n\n<head> \n<link rel="stylesheet" href="styles.css">    <meta charset="UTF-8">\n<link rel="stylesheet" href="mystyles.css">    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>About Me</title>\n    <style>\n        body {\n            color: #121212 background-fred: #f1f1f1;\n        }\n    </style>\n</head>\n\n<h1>About Me<h1>\n        <h2>Background</h2>\n        <p>I was born a young child in Phoenix, Arizona. I was the last of five children, but I had a good childhood.\n        </p>\n\n        <h2>Hobbies</h2>\n        <p>I love to play <strong>guitar and code. I have both an electric and acoustic guitar, but I prefer my\n                acoustic.</p>\n\n\n</html>'
-    results = clerk.get_linked_css(test_code)
-    assert "mystyles.css" in results
+
+def test_get_linked_css_for_two_filenames(test_code_two):
+    results = clerk.get_linked_css(test_code_two)
+    assert "mystyles.css" in results and "styles.css" in results

@@ -1,7 +1,7 @@
 import pytest
-import webanalyst.stylesheet_analyst as css_analyst
-import webanalyst.CSSinator as styles
-import webanalyst.clerk as clerk
+from webanalyst import stylesheet_analyst as css_analyst
+from webanalyst import CSSinator as styles
+from webanalyst import clerk
 
 css_with_3_repeat_selectors = """
 body {
