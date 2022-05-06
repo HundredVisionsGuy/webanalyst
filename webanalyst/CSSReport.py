@@ -1,15 +1,18 @@
-from webanalyst import CSSinator
-from webanalyst import clerk
-import re
-from webanalyst import HTMLinator as html
-from bs4 import BeautifulSoup
 import logging
-from webanalyst import validator as val
 import os
-from webanalyst.CSSinator import Stylesheet as stylesheet
-import webanalyst.report as rep
-import webanalyst.colortools as colors
-import webanalyst.color_keywords as keywords
+import re
+
+from bs4 import BeautifulSoup
+
+from . import CSSinator
+from . import HTMLinator as html
+from . import clerk
+from . import color_keywords as keywords
+from . import colortools as colors
+from . import report as rep
+from . import validator as val
+
+stylesheet = CSSinator.Stylesheet
 
 logging.basicConfig(format='%(asctime)s - %(message)s',
                     datefmt='%d-%b-%y %H:%M:%S')
