@@ -7,11 +7,10 @@
 # (https://developer.mozilla.org/en-US/docs/MDN/Contribute/Guidelines/Code_guidelines/CSS#Use_expanded_syntax)
 # to be used by report.py
 
+import re
+
 from . import CSSinator as cssinator
 from . import clerk
-
-# from webanalyst import colortools
-import re
 
 styles = cssinator.Stylesheet
 global_selectors = ("body", "html", "*")
@@ -224,11 +223,18 @@ def applies_global_colors(sheet):
         if rule.selector not in global_selectors:
             continue
         for declaration in rule.declaration_block.declarations:
-            if declaration.property not in ("color", "background-color", "background"):
+            if declaration.property not in (
+                "color",
+                "background-color",
+                "background",
+            ):
                 continue
             color_properties.append((declaration.property, declaration.value))
     if len(color_properties) >= 2:
-        if color_properties[0][0] == "color" or color_properties[1][0] == "color":
+        if (
+            color_properties[0][0] == "color"
+            or color_properties[1][0] == "color"
+        ):
             if (
                 color_properties[0][0] == "background-color"
                 or color_properties[1][0] == "background-color"
@@ -253,7 +259,6 @@ def applies_global_font(sheet):
 
 def applies_selector(sheet, selector):
     """determines whether a stylesheet uses a particular selector or not"""
-    pass
 
 
 def has_descendant_selector(sheet):
@@ -326,14 +331,10 @@ def has_id_selector(sheet):
 if __name__ == "__main__":
     # Test off of large project
 
-    # layout_css = clerk.file_to_string("tests/test_files/css_for_testing.css")
-    # layout_css = clerk.file_to_string("tests/test_files/projects/large_project/css/general.css")
     layout_css = clerk.file_to_string(
         "tests/test_files/projects/large_project/css/navigation.css"
     )
     test_sheet = cssinator.Stylesheet("local", layout_css, "file")
-
-    # testing_css = clerk.file_to_string("tests/test_files/css_for_testing.css")
 
     repeat_selectors = get_repeat_selectors(test_sheet)
     print(repeat_selectors)

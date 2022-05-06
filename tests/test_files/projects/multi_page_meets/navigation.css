@@ -11,7 +11,7 @@ nav ul {
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: row;        
+    flex-direction: row;
 }
 nav a {
     text-decoration: none;

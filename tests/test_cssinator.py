@@ -1,4 +1,5 @@
 import pytest
+
 from webanalyst import CSSinator as css
 from webanalyst import clerk
 
@@ -36,9 +37,9 @@ article#gallery {
     margin: 0 auto;
 }"""
 
-minified_declaration_block_with_selector = (
-    """article#gallery {display: flex;flex-wrap: wrap;width: 96vw;margin: 0 auto;}"""
-)
+minified_declaration_block_with_selector = "article#gallery "
+minified_declaration_block_with_selector += "{display: flex;flex-wrap: "
+minified_declaration_block_with_selector += "wrap;width: 96vw;margin: 0 auto;}"
 
 invalid_css = """
 body }
@@ -61,19 +62,26 @@ body { font-size: 120%; }
 /* other comment */
 h1 { font-family: serif;}
 """
-
-selectors_with_3_ids = "body #nav div#phred, p#red"  # specificity of 303
-selectors_with_no_ids = "h1, h2, h3, a:active"  # specificity of 014
+# specificity of 303
+selectors_with_3_ids = "body #nav div#phred, p#red"
+# specificity of 014
+selectors_with_no_ids = "h1, h2, h3, a:active"
 specificity303 = selectors_with_3_ids
 specificity014 = selectors_with_no_ids
 
 insane_gradient = """
--moz-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
--webkit-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
--o-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
--ms-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
--moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), 
+-moz-radial-gradient(0% 200%, ellipse cover,
+rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-webkit-radial-gradient(0% 200%, ellipse cover,
+rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-o-radial-gradient(0% 200%, ellipse cover,
+rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-ms-radial-gradient(0% 200%, ellipse cover,
+rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+radial-gradient(0% 200%, ellipse cover,
+rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+-moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%,
+rgba(42,60,87,.4) 200%),
 -ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)',
 linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
 """
@@ -179,6 +187,18 @@ def test_valid_color_declaration_is_valid(valid_color_declaration):
     assert valid_color_declaration.is_valid
 
 
+def test_missing_end_semicolon_for_true_and_false():
+    missing = "body {\n    font-size: 20px;\n    font-family: sans-serif"
+    missing += "\ncolor: #336699\n}"
+    result = css.missing_end_semicolon(missing)
+    assert not result
+
+    including = "body {\n    font-size: 20px;\n    font-family: sans-serif"
+    including += "\ncolor: #336699;\n}"
+    result = css.missing_end_semicolon(including)
+    assert result
+
+
 def test_invalid1_declaration_is_valid():
     dec = css.Declaration(declarations["invalid1"])
     assert not dec.is_valid
@@ -219,11 +239,15 @@ def test_style_sheet_object_extract_comments(layout_css_stylesheet):
     assert len(layout_css_stylesheet.comments) == 6
 
 
-def test_style_sheet_object_extract_comments_for_first_comment(layout_css_stylesheet):
+def test_style_sheet_object_extract_comments_for_first_comment(
+    layout_css_stylesheet,
+):
     assert layout_css_stylesheet.comments[0] == "/* layout.css */"
 
 
-def test_stylesheet_extract_comments_for_code_after_extraction(layout_css_stylesheet):
+def test_stylesheet_extract_comments_for_code_after_extraction(
+    layout_css_stylesheet,
+):
     assert len(layout_css_stylesheet.comments) == 6
 
 
@@ -236,7 +260,9 @@ def test_stylesheet_for_extracted_nested_at_rules(layout_css_stylesheet):
 
 
 # Test properties of Stylesheet
-def test_stylesheet_for_selectors_with_one(stylesheet_with_one_declaration_block):
+def test_stylesheet_for_selectors_with_one(
+    stylesheet_with_one_declaration_block,
+):
     assert len(stylesheet_with_one_declaration_block.selectors) == 1
 
 
@@ -334,14 +360,17 @@ def test_has_vendor_prefix_for_property_with_dash_not_prefix():
 def test_is_gradient_for_false():
     value = "rgba(155, 155, 155, 0)"
     results = css.is_gradient(value)
-    expected = False
-    assert results == expected
+    assert results
 
 
 def test_is_gradient_for_true():
-    value = "-moz-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),-moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), -moz-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)"
+    value = "-moz-radial-gradient(0% 200%, ellipse cover, "
+    value += "rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) "
+    value += "40%),-moz-linear-gradient(top, rgba(169, 235, 206,"
+    value += ".25) 0%, rgba(42,60,87,.4) 200%), "
+    value += "-moz-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)"
     results = css.is_gradient(value)
-    assert results == True
+    assert results
 
 
 def test_process_gradient_for_insane_css_vendor_prefix_check():
@@ -365,32 +394,29 @@ def test_get_colors_from_gradient_for_hex():
 
 
 def test_get_colors_from_gradient_for_rgba():
-    gradient = "radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%"
+    pass
 
 
 def test_append_color_codes_for_none():
     colors = []
-    gradient = (
-        "linear-gradient(to bottom, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%"
-    )
+    gradient = "linear-gradient(to bottom, rgba(169, "
+    gradient += "235, 206,.25) 0%,rgba(42,60,87,.4) 200%"
     css.append_color_codes("hsl", gradient, colors)
     assert not colors
 
 
 def test_append_color_codes_for_rgba():
     colors = []
-    gradient = (
-        "linear-gradient(to bottom, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%"
-    )
+    gradient = "linear-gradient(to bottom, "
+    "rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%"
     css.append_color_codes("rgb", gradient, colors)
     assert "rgba(169, 235, 206,.25)" in colors
 
 
 def test_append_color_codes_for_rgb():
     colors = []
-    gradient = (
-        "linear-gradient(to bottom, rgb(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%"
-    )
+    gradient = "linear-gradient(to bottom, rgb(169, 235, "
+    "206,.25) 0%,rgba(42,60,87,.4) 200%"
     css.append_color_codes("rgb", gradient, colors)
     assert "rgb(169, 235, 206,.25)" in colors
 

@@ -38,6 +38,11 @@ pylint = "*"
 tox = "*"
 autopep8 = "*"
 black = "*"
+pre-commit = "*"
+isort = "*"
+flake8 = "*"
+autoflake = "*"
+autoflake8 = "*"
 
 [requires]
 python_version = "3.9"

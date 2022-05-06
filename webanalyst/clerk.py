@@ -1,15 +1,18 @@
 # clerk.py
-import AdvancedHTMLParser as h_parser
-from pathlib import Path
 import collections
 import re
+from pathlib import Path
+
+import AdvancedHTMLParser as h_parser
 
 working_dir = Path.cwd()
 # sentence splitting patterns
 alphabets = r"([A-Za-z])"
 prefixes = r"(Mr|St|Mrs|Ms|Dr)[.]"
 suffixes = r"(Inc|Ltd|Jr|Sr|Co)"
-starters = r"(Mr|Mrs|Ms|Dr|He\s|She\s|It\s|They\s|Their\s|Our\s|We\s|But\s|However\s|That\s|This\s|Wherever)"
+starters = r"(Mr|Mrs|Ms|Dr|He\s|She\s|It\s|They\s|"
+starters += r"Their\s|Our\s|We\s|But\s|However\s|"
+starters += r"That\s|This\s|Wherever)"
 acronyms = r"([A-Z][.][A-Z][.](?:[A-Z][.])?)"
 websites = r"[.](com|net|org|io|gov)"
 # tag removal pattern
@@ -121,7 +124,9 @@ def split_into_sentences(text):
         "\\1<prd>\\2<prd>\\3<prd>",
         text,
     )
-    text = re.sub(alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>", text)
+    text = re.sub(
+        alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>", text
+    )
     text = re.sub(" " + suffixes + "[.] " + starters, " \\1<stop> \\2", text)
     text = re.sub(" " + suffixes + "[.]", " \\1<prd>", text)
     text = re.sub(" " + alphabets + "[.]", " \\1<prd>", text)
