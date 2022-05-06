@@ -19,6 +19,7 @@ multipage_meets_path = "tests/test_files/projects/multi_page_meets/"
 def about_me_report():
     my_report = report.Report(about_me_path)
     my_report.generate_report()
+    print(my_report)
     yield my_report
 
 
@@ -26,7 +27,7 @@ def about_me_report():
 def about_me_dnm_report():
     my_report = report.Report(about_me_dnm_path)
     my_report.generate_report()
-    yield my_report
+    return my_report
 
 
 @pytest.fixture
@@ -111,8 +112,10 @@ def multi_page_meets_css_report(multipage_meets_report):
 
 @pytest.fixture
 def paragraph_tag():
-    p = "<p>I was born a young child in Phoenix, Arizona. I was the last of "
-    "five children, but I had a good childhood.</p>"
+    p = (
+        "<p>I was born a young child in Phoenix, Arizona. I was the last of "
+        "five children, but I had a good childhood.</p>"
+    )
     p_tag = BeautifulSoup(p, "html.parser")
     return p_tag
 
@@ -176,9 +179,11 @@ def test_about_me_general_report_for_title(about_me_general_report):
 def test_about_me_report_for_get_description(about_me_general_report):
     about_me_general_report.set_description()
     results = about_me_general_report.get_description()
-    expected = "Students are asked to create a single web page "
-    "designed to give information about the student using Headings "
-    "(h1 & h2), paragraphs, links, and bold and italics."
+    expected = (
+        "Students are asked to create a single web page "
+        "designed to give information about the student using Headings "
+        "(h1 & h2), paragraphs, links, and bold and italics."
+    )
     assert results == expected
 
 
@@ -301,9 +306,11 @@ def test_general_report_for_get_report_results_string_for_spp(
         actual["actual_SPP"],
         actual["meets_SPP"],
     )
-    expected = '<tr class="general-spp-results"><td>Avg. Sentences'
-    " / Paragraph</td><td>[1, 5]</td><td>1.6666666666666667</td>"
-    "<td>Meets</td></tr>"
+    expected = (
+        '<tr class="general-spp-results"><td>Avg. Sentences'
+        " / Paragraph</td><td>[1, 5]</td><td>1.6666666666666667</td>"
+        "<td>Meets</td></tr>"
+    )
     assert results == expected
 
 
@@ -319,9 +326,11 @@ def test_general_report_for_get_report_results_string_for_wps(
         actual["actual_WPS"],
         actual["meets_WPS"],
     )
-    expected = '<tr class="general-wps-results"><td>Avg. Words '
-    "/ Sentence</td><td>[10, 20]</td><td>12.2</td><td>Meets</td>"
-    "</tr>"
+    expected = (
+        '<tr class="general-wps-results"><td>Avg. Words '
+        "/ Sentence</td><td>[10, 20]</td><td>12.2</td><td>Meets</td>"
+        "</tr>"
+    )
     assert results == expected
 
 
@@ -336,8 +345,10 @@ def test_static_method_get_report_results_string_for_html(
     results = report.Report.get_report_results_string(
         html_id, type_column, target["HTML"], num_files, actual["Meets HTML"]
     )
-    expected = '<tr class="general-html-files-results"><td>HTML</td>'
-    "<td>1</td><td>1</td><td>Meets</td></tr>"
+    expected = (
+        '<tr class="general-html-files-results"><td>HTML</td>'
+        "<td>1</td><td>1</td><td>Meets</td></tr>"
+    )
     assert results == expected
 
 
@@ -352,8 +363,10 @@ def test_general_report_for_get_report_results_string_for_css(
     results = report.Report.get_report_results_string(
         html_id, type_column, target["CSS"], num_files, actual["Meets CSS"]
     )
-    expected = '<tr class="general-css-files-results"><td>CSS</td>'
-    "<td>0</td><td>0</td><td>Meets</td></tr>"
+    expected = (
+        '<tr class="general-css-files-results"><td>CSS</td>'
+        "<td>0</td><td>0</td><td>Meets</td></tr>"
+    )
     assert results == expected
 
 

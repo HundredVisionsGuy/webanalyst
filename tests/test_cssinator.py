@@ -360,7 +360,7 @@ def test_has_vendor_prefix_for_property_with_dash_not_prefix():
 def test_is_gradient_for_false():
     value = "rgba(155, 155, 155, 0)"
     results = css.is_gradient(value)
-    assert results
+    assert not results
 
 
 def test_is_gradient_for_true():
@@ -407,16 +407,20 @@ def test_append_color_codes_for_none():
 
 def test_append_color_codes_for_rgba():
     colors = []
-    gradient = "linear-gradient(to bottom, "
-    "rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%"
+    gradient = (
+        "linear-gradient(to bottom, "
+        "rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%"
+    )
     css.append_color_codes("rgb", gradient, colors)
     assert "rgba(169, 235, 206,.25)" in colors
 
 
 def test_append_color_codes_for_rgb():
     colors = []
-    gradient = "linear-gradient(to bottom, rgb(169, 235, "
-    "206,.25) 0%,rgba(42,60,87,.4) 200%"
+    gradient = (
+        "linear-gradient(to bottom, rgb(169, 235, "
+        "206,.25) 0%,rgba(42,60,87,.4) 200%"
+    )
     css.append_color_codes("rgb", gradient, colors)
     assert "rgb(169, 235, 206,.25)" in colors
 

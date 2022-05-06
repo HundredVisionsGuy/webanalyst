@@ -570,8 +570,8 @@ def get_global_color_details(rulesets):
                     background_color = declaration.value
                     if is_gradient(background_color):
                         bg_colors = process_gradient(background_color)
-                        todo = input("We have bg colors: " + bg_colors)
-                        print(todo)
+                        print("We have bg colors: " + str(bg_colors))
+
             if background_color or color:
                 global_rulesets.append(
                     {
@@ -598,8 +598,8 @@ def is_gradient(value):
 def process_gradient(code):
     """returns vendor prefix warning and list of all colors from gradient"""
     vendor_prefix = has_vendor_prefix(code)
-    todo = input("We have a vendor prefix. What to do? " + vendor_prefix)
-    print(todo)
+    msg = str(vendor_prefix) + "We have a vendor prefix. What to do? "
+    print(msg)
     colors = []
     # remove all vendor prefixes
     data = code.split("),")

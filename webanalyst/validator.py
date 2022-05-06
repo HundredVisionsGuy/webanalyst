@@ -53,7 +53,7 @@ def get_markup_validity(filepath):
             errors = r.json()
             errors = errors["messages"]
             print(errors[-1])
-        except KeyError:
+        except IndexError:
             errors = [
                 {
                     "type": "alert",

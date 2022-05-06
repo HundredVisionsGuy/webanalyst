@@ -133,8 +133,10 @@ def test_split_into_sentences():
 
 
 def test_remove_inline_tags():
-    paragraph = '<p>Site designed by <a href="mailto:guy@hundredvisions.com">'
-    "Hundred visions Guy</a> &copy; 2019.</p>"
+    paragraph = (
+        '<p>Site designed by <a href="mailto:guy@hundredvisions.com">'
+        "Hundred visions Guy</a> &copy; 2019.</p>"
+    )
     results = clerk.remove_tags(paragraph)
     expected = "Site designed by Hundred visions Guy &copy; 2019."
     assert results == expected
