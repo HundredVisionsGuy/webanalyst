@@ -9,46 +9,107 @@
 
 from . import CSSinator as cssinator
 from . import clerk
+
 # from webanalyst import colortools
 import re
 
 styles = cssinator.Stylesheet
-global_selectors = ('body', 'html', '*')
-descendant_re = r'([^/s,;]+\s){2}[{]'
+global_selectors = ("body", "html", "*")
+descendant_re = r"([^/s,;]+\s){2}[{]"
 
 # note multiple_selectors_re only works when looking at selectors
-multiple_selectors_re = r'\S+,\s{1}'    
-direct_child_selector_re = r'(\S+\s?>\s?\S+){1}'
-general_sibling_selector_re = r'(\S+\s?~\s?\S+){1}'
-adjacent_sibling_selector_re = r'(\S+\s?\+\s?\S+){1}'
-class_selector_re = r'(\.\S+){1}\s?\S?\s?'
-id_selector_re = r'(\#\S+){1}\s?\S?\s?'
+multiple_selectors_re = r"\S+,\s{1}"
+direct_child_selector_re = r"(\S+\s?>\s?\S+){1}"
+general_sibling_selector_re = r"(\S+\s?~\s?\S+){1}"
+adjacent_sibling_selector_re = r"(\S+\s?\+\s?\S+){1}"
+class_selector_re = r"(\.\S+){1}\s?\S?\s?"
+id_selector_re = r"(\#\S+){1}\s?\S?\s?"
 
 pseudoselectors = (
-    ':active', ':any-link', ':autofill', 
-    ':blank', ':checked', ':current', ':default', ':defined', 
-    ':dir(', ':disabled', ':empty', ':enabled', ':first', 
-    ':first-child', ':first-of-type', ':fullscreen', ':future', 
-    ':focus', ':focus-visible', ':focus-within', ':has(', 
-    ':host', ':host(', ':host-context(', ':hover', ':indeterminate', 
-    ':in-range', ':invalid', ':is(', ':lang(', ':last-child', 
-    ':last-of-type', ':left', ':link', ':local-link', ':not(', 
-    ':nth-child(', ':nth-col(', ':nth-last-child(', ':nth-last-col(', 
-    ':nth-last-of-type(', ':nth-of-type(', ':only-child', 
-    ':only-of-type', ':optional', ':out-of-range', ':past', 
-    ':picture-in-picture', ':placeholder-shown', ':paused', 
-    ':playing', ':read-only', ':read-write', ':required', ':right', 
-    ':root', ':scope', ':state(', ':target', ':target-within', 
-    ':user-invalid', ':valid', ':visited', ':where('
-    )
+    ":active",
+    ":any-link",
+    ":autofill",
+    ":blank",
+    ":checked",
+    ":current",
+    ":default",
+    ":defined",
+    ":dir(",
+    ":disabled",
+    ":empty",
+    ":enabled",
+    ":first",
+    ":first-child",
+    ":first-of-type",
+    ":fullscreen",
+    ":future",
+    ":focus",
+    ":focus-visible",
+    ":focus-within",
+    ":has(",
+    ":host",
+    ":host(",
+    ":host-context(",
+    ":hover",
+    ":indeterminate",
+    ":in-range",
+    ":invalid",
+    ":is(",
+    ":lang(",
+    ":last-child",
+    ":last-of-type",
+    ":left",
+    ":link",
+    ":local-link",
+    ":not(",
+    ":nth-child(",
+    ":nth-col(",
+    ":nth-last-child(",
+    ":nth-last-col(",
+    ":nth-last-of-type(",
+    ":nth-of-type(",
+    ":only-child",
+    ":only-of-type",
+    ":optional",
+    ":out-of-range",
+    ":past",
+    ":picture-in-picture",
+    ":placeholder-shown",
+    ":paused",
+    ":playing",
+    ":read-only",
+    ":read-write",
+    ":required",
+    ":right",
+    ":root",
+    ":scope",
+    ":state(",
+    ":target",
+    ":target-within",
+    ":user-invalid",
+    ":valid",
+    ":visited",
+    ":where(",
+)
 
 pseudoelements = (
-    '::after', '::backdrop', '::before',
-    '::cue', '::cue-region', '::first-letter', '::first-line',
-    '::file-selector-button', '::grammar-error', '::marker',
-    '::part(', '::placeholde', '::selection', '::slotted(', 
-    '::spelling-error', '::target-text' 
-    )
+    "::after",
+    "::backdrop",
+    "::before",
+    "::cue",
+    "::cue-region",
+    "::first-letter",
+    "::first-line",
+    "::file-selector-button",
+    "::grammar-error",
+    "::marker",
+    "::part(",
+    "::placeholde",
+    "::selection",
+    "::slotted(",
+    "::spelling-error",
+    "::target-text",
+)
 
 
 def get_repeat_selectors(sheet):
@@ -73,63 +134,130 @@ def has_type_selector(sheet):
 
 def get_type_selectors():
     type_selectors = [
-        "body", "html", "p", "h1", "h2",
-        "h3", "h4", "h5", "h6", "ul", "ol", "li",
-        "dt", "dd", "dl", "a", "br", "hr", "table",
-        "tr", "td", "th", "thead", "tbody", "tfoot",
-        "div", "span", "i", "b", "em", "strong",
-        "kbd", "button", "input", "abbr", "address", "applet",
-        "area", "article", "aside", "audio", "bdi", "bdo", "blockquote",
-        "canvas", "caption", "cite", "code", "col", "colgroup",
-        "data", "datalist", "details", "dfn", "dialog",
-        "embed", "fieldset", "figurecaption", "figure",
-        "footer", "form", "header", "iframe", "img",
-        "ins", "label", "legend", "main", "map", "mark",
-        "meter", "nav", "object", "optgroup", "option",
-        "output", "param", ]
+        "body",
+        "html",
+        "p",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "ul",
+        "ol",
+        "li",
+        "dt",
+        "dd",
+        "dl",
+        "a",
+        "br",
+        "hr",
+        "table",
+        "tr",
+        "td",
+        "th",
+        "thead",
+        "tbody",
+        "tfoot",
+        "div",
+        "span",
+        "i",
+        "b",
+        "em",
+        "strong",
+        "kbd",
+        "button",
+        "input",
+        "abbr",
+        "address",
+        "applet",
+        "area",
+        "article",
+        "aside",
+        "audio",
+        "bdi",
+        "bdo",
+        "blockquote",
+        "canvas",
+        "caption",
+        "cite",
+        "code",
+        "col",
+        "colgroup",
+        "data",
+        "datalist",
+        "details",
+        "dfn",
+        "dialog",
+        "embed",
+        "fieldset",
+        "figurecaption",
+        "figure",
+        "footer",
+        "form",
+        "header",
+        "iframe",
+        "img",
+        "ins",
+        "label",
+        "legend",
+        "main",
+        "map",
+        "mark",
+        "meter",
+        "nav",
+        "object",
+        "optgroup",
+        "option",
+        "output",
+        "param",
+    ]
     type_selectors.sort()
     return type_selectors
 
 
 def applies_global_colors(sheet):
-    """ checks to see if a stylesheet sets color and bg color globally """
+    """checks to see if a stylesheet sets color and bg color globally"""
     results = False
     color_properties = []
     for rule in sheet.rulesets:
         if rule.selector not in global_selectors:
             continue
         for declaration in rule.declaration_block.declarations:
-            if declaration.property not in ('color', 'background-color', 
-                                            'background'):
+            if declaration.property not in ("color", "background-color", "background"):
                 continue
             color_properties.append((declaration.property, declaration.value))
     if len(color_properties) >= 2:
-        if color_properties[0][0] == 'color' or color_properties[1][0] == 'color':
-            if color_properties[0][0] == 'background-color' or color_properties[1][0] == 'background-color':
+        if color_properties[0][0] == "color" or color_properties[1][0] == "color":
+            if (
+                color_properties[0][0] == "background-color"
+                or color_properties[1][0] == "background-color"
+            ):
                 results = True
     return results
-    
-    
+
+
 def applies_global_font(sheet):
-    """ checks to see if a stylesheet sets color and bg color globally """
+    """checks to see if a stylesheet sets color and bg color globally"""
     font_properties = []
     for rule in sheet.rulesets:
         if rule.selector not in global_selectors:
             continue
         for declaration in rule.declaration_block.declarations:
-            if declaration.property not in ('font', 'font-family'):
+            if declaration.property not in ("font", "font-family"):
                 continue
             font_properties.append(declaration)
-        
+
     return bool(font_properties)
 
 
 def applies_selector(sheet, selector):
-    """ determines whether a stylesheet uses a particular selector or not """
+    """determines whether a stylesheet uses a particular selector or not"""
     pass
 
+
 def has_descendant_selector(sheet):
-    """ return true if regex has a match with descendant selector pattern """
+    """return true if regex has a match with descendant selector pattern"""
     match = re.search(descendant_re, sheet.text)
     if match:
         return True
@@ -137,13 +265,13 @@ def has_descendant_selector(sheet):
 
 
 def has_multiple_selector(sheet):
-    """ returns True if separates selectors with commas (e.g. h1, h2, h3 {...})"""
+    """returns True if separates selectors with commas (e.g. h1, h2, h3 {...})"""
     # We can only sift through selectors (not the entire text for this)
     return check_selectors_with_regex(sheet, multiple_selectors_re)
 
 
 def has_direct_child_selector(sheet):
-    """ returns True if separates selectors with > (e.g. article > p {...})"""
+    """returns True if separates selectors with > (e.g. article > p {...})"""
     return check_selectors_with_regex(sheet, direct_child_selector_re)
 
 
@@ -161,7 +289,7 @@ def check_selectors_with_regex(sheet, regex):
 
 
 def has_psuedoselector(sheet):
-    """ returns True if has a psuedoselector """
+    """returns True if has a psuedoselector"""
     results = False
     for selector in sheet.selectors:
         if ":" in selector:
@@ -172,9 +300,9 @@ def has_psuedoselector(sheet):
 
 
 def get_psuedoselectors(sheet):
-    """ returns a list of all psuedoselectors from a stylesheet """
+    """returns a list of all psuedoselectors from a stylesheet"""
     selectors = []
-    return selectors 
+    return selectors
 
 
 def has_repeat_selectors(sheet):
@@ -194,16 +322,19 @@ def has_class_selector(sheet):
 def has_id_selector(sheet):
     return check_selectors_with_regex(sheet, id_selector_re)
 
+
 if __name__ == "__main__":
     # Test off of large project
-    
+
     # layout_css = clerk.file_to_string("tests/test_files/css_for_testing.css")
     # layout_css = clerk.file_to_string("tests/test_files/projects/large_project/css/general.css")
-    layout_css = clerk.file_to_string("tests/test_files/projects/large_project/css/navigation.css")
+    layout_css = clerk.file_to_string(
+        "tests/test_files/projects/large_project/css/navigation.css"
+    )
     test_sheet = cssinator.Stylesheet("local", layout_css, "file")
-    
+
     # testing_css = clerk.file_to_string("tests/test_files/css_for_testing.css")
-    
+
     repeat_selectors = get_repeat_selectors(test_sheet)
     print(repeat_selectors)
     has_type_selector(test_sheet)

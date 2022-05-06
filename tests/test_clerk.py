@@ -1,15 +1,14 @@
-
 import pytest
 from webanalyst import clerk
 
 # TODO - separate tests based on command-line flag
-css_file_path = 'test_files/projects/large_project/test.css'
-html_file_path = 'test_files/sample_no_errors.html'
-html_with_css = 'tests/test_files/html_with_css.html'
-sample_txt_path = 'tests/test_files/sample.txt'
-working_dir_txt_path = './README.md'
-project_readme_path = './project/README.md'
-report_template_path = './webanalyst/report_template.html'
+css_file_path = "test_files/projects/large_project/test.css"
+html_file_path = "test_files/sample_no_errors.html"
+html_with_css = "tests/test_files/html_with_css.html"
+sample_txt_path = "tests/test_files/sample.txt"
+working_dir_txt_path = "./README.md"
+project_readme_path = "./project/README.md"
+report_template_path = "./webanalyst/report_template.html"
 
 
 @pytest.fixture
@@ -61,12 +60,12 @@ def test_clerk_for_file_exists_for_report_template():
 
 def test_get_file_type_for_html():
     filetype = clerk.get_file_type(html_file_path)
-    assert filetype == 'html'
+    assert filetype == "html"
 
 
 def test_get_file_type_for_css():
     filetype = clerk.get_file_type(css_file_path)
-    assert filetype == 'css'
+    assert filetype == "css"
 
 
 def test_get_css_from_style():
@@ -95,25 +94,29 @@ def test_file_to_string_in_project_directory():
 
 
 def test_get_all_project_files_from_large_project():
-    expected = ['tests\\test_files\\projects\\large_project\\about.html',
-                'tests\\test_files\\projects\\large_project\\gallery.html',
-                'tests\\test_files\\projects\\large_project\\index.html',
-                'tests\\test_files\\projects\\large_project\\css\\general.css',
-                'tests\\test_files\\projects\\large_project\\css\\grid-layout.css',
-                'tests\\test_files\\projects\\large_project\\css\\layout.css',
-                'tests\\test_files\\projects\\large_project\\css\\navigation.css',
-                'tests\\test_files\\projects\\large_project\\js\\scripts.js']
-    results = clerk.get_all_project_files(
-        'tests/test_files/projects/large_project')
+    expected = [
+        "tests\\test_files\\projects\\large_project\\about.html",
+        "tests\\test_files\\projects\\large_project\\gallery.html",
+        "tests\\test_files\\projects\\large_project\\index.html",
+        "tests\\test_files\\projects\\large_project\\css\\general.css",
+        "tests\\test_files\\projects\\large_project\\css\\grid-layout.css",
+        "tests\\test_files\\projects\\large_project\\css\\layout.css",
+        "tests\\test_files\\projects\\large_project\\css\\navigation.css",
+        "tests\\test_files\\projects\\large_project\\js\\scripts.js",
+    ]
+    results = clerk.get_all_project_files("tests/test_files/projects/large_project")
     assert expected == results
 
 
 def test_get_all_html_project_files_from_large_project():
-    expected = ['tests\\test_files\\projects\\large_project\\about.html',
-                'tests\\test_files\\projects\\large_project\\gallery.html',
-                'tests\\test_files\\projects\\large_project\\index.html']
+    expected = [
+        "tests\\test_files\\projects\\large_project\\about.html",
+        "tests\\test_files\\projects\\large_project\\gallery.html",
+        "tests\\test_files\\projects\\large_project\\index.html",
+    ]
     results = clerk.get_all_files_of_type(
-        'tests/test_files/projects/large_project', 'html')
+        "tests/test_files/projects/large_project", "html"
+    )
     assert expected == results
 
 
@@ -127,13 +130,13 @@ def test_split_into_sentences():
 def test_remove_inline_tags():
     paragraph = '<p>Site designed by <a href="mailto:guy@hundredvisions.com">Hundred visions Guy</a> &copy; 2019.</p>'
     results = clerk.remove_tags(paragraph)
-    expected = 'Site designed by Hundred visions Guy &copy; 2019.'
+    expected = "Site designed by Hundred visions Guy &copy; 2019."
     assert results == expected
 
 
 def test_get_file_name_for_html_file_path():
     results = clerk.get_file_name(html_file_path)
-    expected = 'sample_no_errors.html'
+    expected = "sample_no_errors.html"
     assert results == expected
 
 

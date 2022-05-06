@@ -13,7 +13,7 @@ starters = r"(Mr|Mrs|Ms|Dr|He\s|She\s|It\s|They\s|Their\s|Our\s|We\s|But\s|Howev
 acronyms = r"([A-Z][.][A-Z][.](?:[A-Z][.])?)"
 websites = r"[.](com|net|org|io|gov)"
 # tag removal pattern
-TAG_RE = re.compile(r'<[^>]+>')
+TAG_RE = re.compile(r"<[^>]+>")
 
 
 def file_exists(filename):
@@ -26,16 +26,16 @@ def delete_file(filepath):
     try:
         data_file.unlink()
     except IsADirectoryError as e:
-        print(f'Error: {data_file} : {e.strerror}')
+        print(f"Error: {data_file} : {e.strerror}")
 
 
 def get_path_list(path):
-    path_list = path.split('/')
+    path_list = path.split("/")
     return path_list
 
 
 def get_full_path_string(path):
-    """path must be a relative path starting with working directory """
+    """path must be a relative path starting with working directory"""
     full_path = working_dir
     p_list = get_path_list(path)
     for i in p_list:
@@ -45,7 +45,7 @@ def get_full_path_string(path):
 
 def file_to_string(path):
     my_file = get_full_path_string(path)
-    file = my_file.read_text(encoding='utf-8')
+    file = my_file.read_text(encoding="utf-8")
     return file
 
 
@@ -63,23 +63,24 @@ def get_css_from_style_tag(path):
     full_code = file_to_string(path)
     parser = h_parser.AdvancedHTMLParser()
     parser.parseStr(full_code)
-    css_advancedTag = parser.getElementsByTagName('style')
+    css_advancedTag = parser.getElementsByTagName("style")
     return css_advancedTag[0].innerText
 
+
 def get_linked_css(contents_str):
-    """ returns a list of linked CSS files """
+    """returns a list of linked CSS files"""
     filenames = []
     parser = h_parser.AdvancedHTMLParser()
     parser.parseStr(contents_str)
-    linked_files = parser.getElementsByTagName('link')
+    linked_files = parser.getElementsByTagName("link")
     if len(linked_files) > 1:
         for file in linked_files:
-            linked_file = file.getAttribute('href')
-            if 'https://' in linked_file:
+            linked_file = file.getAttribute("href")
+            if "https://" in linked_file:
                 continue
             filenames.append(linked_file)
     elif len(linked_files) == 1:
-        filename = linked_files[0].getAttribute('href')
+        filename = linked_files[0].getAttribute("href")
         filenames.append(filename)
     else:
         return None
@@ -92,9 +93,9 @@ def get_css_from_stylesheet(path):
 
 def get_all_project_files(dir):
     files = []
-    files += get_all_files_of_type(dir, 'html')
-    files += get_all_files_of_type(dir, 'css')
-    files += get_all_files_of_type(dir, 'js')
+    files += get_all_files_of_type(dir, "html")
+    files += get_all_files_of_type(dir, "css")
+    files += get_all_files_of_type(dir, "js")
     return files
 
 
@@ -114,22 +115,24 @@ def split_into_sentences(text):
     if "Ph.D" in text:
         text = text.replace("Ph.D.", "Ph<prd>D<prd>")
     text = re.sub(r"\s" + alphabets + "[.] ", " \\1<prd> ", text)
-    text = re.sub(acronyms+" "+starters, "\\1<stop> \\2", text)
-    text = re.sub(alphabets + "[.]" + alphabets + "[.]" +
-                  alphabets + "[.]", "\\1<prd>\\2<prd>\\3<prd>", text)
-    text = re.sub(alphabets + "[.]" + alphabets +
-                  "[.]", "\\1<prd>\\2<prd>", text)
-    text = re.sub(" "+suffixes+"[.] "+starters, " \\1<stop> \\2", text)
-    text = re.sub(" "+suffixes+"[.]", " \\1<prd>", text)
+    text = re.sub(acronyms + " " + starters, "\\1<stop> \\2", text)
+    text = re.sub(
+        alphabets + "[.]" + alphabets + "[.]" + alphabets + "[.]",
+        "\\1<prd>\\2<prd>\\3<prd>",
+        text,
+    )
+    text = re.sub(alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>", text)
+    text = re.sub(" " + suffixes + "[.] " + starters, " \\1<stop> \\2", text)
+    text = re.sub(" " + suffixes + "[.]", " \\1<prd>", text)
     text = re.sub(" " + alphabets + "[.]", " \\1<prd>", text)
     if "”" in text:
         text = text.replace(".”", "”.")
-    if "\"" in text:
-        text = text.replace(".\"", "\".")
+    if '"' in text:
+        text = text.replace('."', '".')
     if "!" in text:
-        text = text.replace("!\"", "\"!")
+        text = text.replace('!"', '"!')
     if "?" in text:
-        text = text.replace("?\"", "\"?")
+        text = text.replace('?"', '"?')
     text = text.replace(".", ".<stop>")
     text = text.replace("?", "?<stop>")
     text = text.replace("!", "!<stop>")
@@ -142,13 +145,15 @@ def split_into_sentences(text):
 
 def remove_tags(element):
     """Removes all HTML tags from block tag (str)"""
-    return TAG_RE.sub('', element)
+    return TAG_RE.sub("", element)
+
 
 def clear_extra_text(str):
-    """ Removes line returns and extra spaces """
+    """Removes line returns and extra spaces"""
     str = str.replace("\n", "")
-    str = re.sub(r'\s+',' ', str)
+    str = re.sub(r"\s+", " ", str)
     return str.strip()
+
 
 if __name__ == "__main__":
     html_with_css = "./tests/test_files/html_with_css.html"
@@ -168,14 +173,13 @@ if __name__ == "__main__":
     css_code = get_css_from_style_tag(html_with_css)
 
     # test get_all_project_files()
-    test_project_files = 'project'
+    test_project_files = "project"
     results = get_all_project_files(test_project_files)
     for i in results:
         print(i)
 
     # test getting list of all files with .css extension
-    test_project_files = './tests/test_files/project'
-    results = get_all_files_of_type(test_project_files, 'css')
+    test_project_files = "./tests/test_files/project"
+    results = get_all_files_of_type(test_project_files, "css")
     for i in results:
         print(i)
-

@@ -50,7 +50,7 @@ class Stylesheet:
         self.get_selectors()
 
     def minify(self):
-        """ remove all whitespace, line returns, and tabs from text """
+        """remove all whitespace, line returns, and tabs from text"""
         self.text = minify_code(self.text)
 
     def extract_comments(self):
@@ -80,7 +80,7 @@ class Stylesheet:
         # Search through nested at rules
         at_rules = []
         non_at_rules_css = []
-        
+
         # split at the double }} (end of a nested at rule)
         css_split = self.text.split("}}", 3)
         css_split = restore_braces(css_split)
@@ -99,7 +99,7 @@ class Stylesheet:
                     split_code = code.split(rule)
                     if len(split_code) == 2:
                         if split_code[0]:
-                            # an @rule was NOT at the beginning or else, 
+                            # an @rule was NOT at the beginning or else,
                             # there would be an empty string
                             non_at_rules_css.append(split_code[0])
                             at_rules.append(rule + split_code[1])
@@ -110,7 +110,7 @@ class Stylesheet:
                         # at_rules.append(rule + split_code + "}}")
                         print("skip")
 
-        self.text = ''.join(non_at_rules_css)
+        self.text = "".join(non_at_rules_css)
         self.nested_at_rules = at_rules
 
     def extract_rulesets(self):
@@ -142,7 +142,7 @@ class Stylesheet:
 
     def get_color_ruleset(self, ruleset):
         if ruleset.declaration_block:
-            if 'color:' in ruleset.declaration_block.text:
+            if "color:" in ruleset.declaration_block.text:
                 self.color_rulesets.append(ruleset)
 
     def get_selectors(self):
@@ -151,8 +151,8 @@ class Stylesheet:
 
     def sort_selectors(self):
         self.selectors.sort()
-        
-        
+
+
 class NestedAtRule:
     def __init__(self, text):
         is_valid = False
@@ -170,7 +170,7 @@ class NestedAtRule:
         # remove anything before the @ sign
         rule_list = self.__text.split("@")
         rule_list = "@" + rule_list[1]
-        
+
         # split at the first {
         pos = rule_list.find("{")
         self.rule = rule_list[:pos].strip()
@@ -227,7 +227,7 @@ class DeclarationBlock:
         declarations = declarations.split(";")
 
         # remove all spaces and line returns
-        for i in range(len(declarations)): 
+        for i in range(len(declarations)):
             # make sure i is not out of range (after popping i)
             if i > len(declarations) - 1:
                 break
@@ -236,8 +236,8 @@ class DeclarationBlock:
             if not declarations[i]:
                 declarations.pop(i)
         # create our declaration objects
-        # we separated the cleaning from the separating due 
-        # to the potential of popping i resulting in index error 
+        # we separated the cleaning from the separating due
+        # to the potential of popping i resulting in index error
         # or missing a declaration (it happened)
         for i in range(len(declarations)):
             declarations[i] = Declaration(declarations[i])
@@ -253,7 +253,7 @@ class Declaration:
         self.set_declaration()
 
     def set_declaration(self):
-        """ validate while trying to set declaration """
+        """validate while trying to set declaration"""
         # assume it's valid until proven otherwise
         self.is_valid = True
         # Make sure there's a colon for validity and separating
@@ -340,11 +340,15 @@ figure img {
 def split_by_partition(text, part):
     # base case
     if text.count(part) == 0:
-        return [text, ]
+        return [
+            text,
+        ]
     # recursive case
     else:
         text_tuple = text.partition(part)
-        return [text_tuple[0], ] + split_by_partition(text_tuple[2], part)
+        return [
+            text_tuple[0],
+        ] + split_by_partition(text_tuple[2], part)
 
 
 nested_at_rules = (
@@ -357,12 +361,12 @@ nested_at_rules = (
     "@viewport",
     "@counter-style",
     "@font-feature-values",
-    "@property"
+    "@property",
 )
 
 
 def minify_code(text):
-    """ remove all new lines, tabs, and double spaces """
+    """remove all new lines, tabs, and double spaces"""
     text = text.replace("\n", "")
     text = text.replace("  ", "")
     text = text.replace("\t", "")
@@ -383,8 +387,8 @@ def has_repeat_selector(css_code):
 def split_css(css_code):
     """returns list of selectors & declarations (no { or })"""
     # remove newlines
-    css_code = css_code.replace('\n', '')
-    pattern = r'\{(.*?)\}'
+    css_code = css_code.replace("\n", "")
+    pattern = r"\{(.*?)\}"
     return re.split(pattern, css_code)
 
 
@@ -392,7 +396,7 @@ def get_selectors(css_list):
     selectors = []
     for i in range(0, len(css_list), 2):
         selectors.append(css_list[i].strip())
-    selectors.remove('')
+    selectors.remove("")
     return selectors
 
 
@@ -400,8 +404,8 @@ def get_declarations(css_list):
     declarations = []
     for i in range(1, len(css_list), 2):
         declarations.append(css_list[i].strip())
-    if '' in declarations:
-        declarations.remove('')
+    if "" in declarations:
+        declarations.remove("")
     return declarations
 
 
@@ -417,10 +421,9 @@ def get_comment_positions(code):
 
 
 def separate_code(code):
-    """ splits code into two lists: code & comments """
+    """splits code into two lists: code & comments"""
     code = code.strip()
-    splitzky = {"code": [],
-                "comments": []}
+    splitzky = {"code": [], "comments": []}
 
     new_code = []
     comments = []
@@ -434,9 +437,9 @@ def separate_code(code):
             stop = positions[1]
             if code[:start]:
                 new_code.append(code[:start])
-            if code[start:stop+2]:
-                comments.append(code[start:stop+2])
-            code = code[stop + 2:]
+            if code[start : stop + 2]:
+                comments.append(code[start : stop + 2])
+            code = code[stop + 2 :]
             code = code.strip()
         else:
             if "/*" not in code and "*/" not in code:
@@ -469,30 +472,31 @@ def get_specificity(selector):
     class_selector = get_class_score(selector)
     type_selector = get_type_score(selector)
     return "{}{}{}".format(id_selector, class_selector, type_selector)
-    
-    
+
+
 def get_id_score(selector):
-    """ receives a selector and returns # of id selectors """
+    """receives a selector and returns # of id selectors"""
     re_pattern = "#\w+"
     id_selectors = re.findall(re_pattern, selector)
     return len(id_selectors)
 
 
 def get_class_score(selector):
-    """ receives a selector and returns # of class & psuedo-class selectors """
+    """receives a selector and returns # of class & psuedo-class selectors"""
     re_pattern = "\.\w+|:\w+|\[\w+=\w+]"
     selectors = re.findall(re_pattern, selector)
     return len(selectors)
 
 
 def get_type_score(selector):
-    """ receives a selector and returns # of type selectors """
+    """receives a selector and returns # of type selectors"""
     re_pattern = "([^#:\+.\[=a-zA-Z][a-zA-Z$][a-zA-Z1-6]*|^\w*)"
     selectors = re.findall(re_pattern, selector)
     return len(selectors)
 
+
 def get_header_color_details(rulesets):
-    """ receives rulesets and returns data on colors set by headers """
+    """receives rulesets and returns data on colors set by headers"""
     header_re = "h[1-6]"
     header_rulesets = []
     for ruleset in rulesets:
@@ -500,31 +504,36 @@ def get_header_color_details(rulesets):
         # check selector for having a header
         heading_selectors = get_header_selectors(selector)
         if heading_selectors:
-            # get color data 
+            # get color data
             background_color = ""
             color = ""
             for declaration in ruleset.declaration_block.declarations:
-                if declaration.property == 'background-color':
+                if declaration.property == "background-color":
                     background_color = declaration.value
-                elif declaration.property == 'color':
+                elif declaration.property == "color":
                     color = declaration.value
-                elif declaration.property == 'background':
+                elif declaration.property == "background":
                     # check to see if the color value is present
                     print("it's time to figure out the background shorthand")
                 if background_color and color:
                     break
-            
+
             # then apply color data to all others
             if background_color or color:
                 for h_selector in heading_selectors:
-                    header_rulesets.append({'selector': h_selector,
-                                            'background-color': background_color,
-                                            'color': color})
-                
+                    header_rulesets.append(
+                        {
+                            "selector": h_selector,
+                            "background-color": background_color,
+                            "color": color,
+                        }
+                    )
+
     return header_rulesets
 
+
 def get_header_selectors(selector):
-    """takes selector and returns any selector that selects an h1-h6 """
+    """takes selector and returns any selector that selects an h1-h6"""
     # NOTE the following:
     # a selector is only selecting a header if it's the last item
     # example: header h1 {} does but h1 a {} does not
@@ -539,15 +548,11 @@ def get_header_selectors(selector):
                 header_selectors.append(selector)
     return header_selectors
 
+
 def get_global_color_details(rulesets):
-    """ receives rulesets and returns data on global colors """
+    """receives rulesets and returns data on global colors"""
     # Are color and background color set on global selectors?
-    global_selectors = (
-        "html",
-        "body",
-        ":root",
-        "*"
-    )
+    global_selectors = ("html", "body", ":root", "*")
     global_rulesets = []
     for ruleset in rulesets:
         if ruleset.selector in global_selectors:
@@ -556,22 +561,27 @@ def get_global_color_details(rulesets):
             background_color = ""
             color = ""
             for declaration in ruleset.declaration_block.declarations:
-                if declaration.property == 'background-color':
+                if declaration.property == "background-color":
                     background_color = declaration.value
-                elif declaration.property == 'color':
+                elif declaration.property == "color":
                     color = declaration.value
                     if is_gradient(color):
                         colors = process_gradient(color)
-                elif declaration.property == 'background':
+                elif declaration.property == "background":
                     background_color = declaration.value
                     if is_gradient(background_color):
                         bg_colors = process_gradient(background_color)
             if background_color or color:
-                global_rulesets.append({'selector': selector,
-                                        'background-color': background_color,
-                                        'color': color})
-    return global_rulesets                    
-    
+                global_rulesets.append(
+                    {
+                        "selector": selector,
+                        "background-color": background_color,
+                        "color": color,
+                    }
+                )
+    return global_rulesets
+
+
 def has_vendor_prefix(property):
     vendor_prefixes = ("-webkit-", "-moz-", "-o-", "-ms-")
     for prefix in vendor_prefixes:
@@ -579,11 +589,13 @@ def has_vendor_prefix(property):
             return True
     return False
 
+
 def is_gradient(value):
     return "gradient" in value
 
+
 def process_gradient(code):
-    """ returns vendor prefix warning (if any exist) and list of all colors from gradient """
+    """returns vendor prefix warning (if any exist) and list of all colors from gradient"""
     vendor_prefix = has_vendor_prefix(code)
     colors = []
     # remove all vendor prefixes
@@ -593,12 +605,12 @@ def process_gradient(code):
     last_split = last_item.split("\n")
     if len(last_split) == 2:
         data.append(last_split[1])
-    vendor_regex = "\A-moz-|-webkit-|-ms-|-o-" # only works for start of string
+    vendor_regex = "\A-moz-|-webkit-|-ms-|-o-"  # only works for start of string
     for datum in data:
         datum = datum.strip()
         if not re.match(vendor_regex, datum):
             colors.append(datum)
-    
+
     # capture only color codes and append to colors
     if colors:
         # grab only color codes (Nothing else)
@@ -607,41 +619,44 @@ def process_gradient(code):
             color_codes = get_colors_from_gradient(gradient)
             if color_codes:
                 only_colors += color_codes
-            
-    return (only_colors)
+
+    return only_colors
+
 
 def get_colors_from_gradient(gradient):
-    """ extract all color codes from gradient """
+    """extract all color codes from gradient"""
     colors = []
     # use regex to pull all possible color codes first
     append_color_codes("hsl", gradient, colors)
     append_color_codes("rgb", gradient, colors)
     append_color_codes("hex", gradient, colors)
     append_color_codes("keywords", gradient, colors)
-    
+
     return colors
 
+
 def append_color_codes(type, code, color_list):
-    if type == 'hsl':
+    if type == "hsl":
         colors = re.findall(colortools.hsl_all_forms_re, code)
-    elif type == 'rgb':
+    elif type == "rgb":
         colors = re.findall(colortools.rgb_all_forms_re, code)
-    elif type == 'hex':
+    elif type == "hex":
         colors = re.findall(colortools.hex_regex, code)
-    elif type == 'keywords':
-        words = re.findall(r'[+a-z+A-Z]*', code)
+    elif type == "keywords":
+        words = re.findall(r"[+a-z+A-Z]*", code)
         colors = []
         for i in words:
             # regex captures non-strings, so we don't process if empty
             if i:
                 i = i.strip().lower()
-                is_keyword = keyword.is_a_keyword(i.strip(' '))
+                is_keyword = keyword.is_a_keyword(i.strip(" "))
                 if is_keyword:
                     colors.append(i)
     if colors:
         # strip each color code (if hex regex)
-        colors = [i.strip(' ') for i in colors]
+        colors = [i.strip(" ") for i in colors]
         color_list += colors
+
 
 if __name__ == "__main__":
     # print("hello, I'm CSSinator.")
@@ -649,12 +664,12 @@ if __name__ == "__main__":
     # score = get_class_score(selector)
     # general_css = clerk.file_to_string(
     #     "tests/test_files/projects/large_project/css/general.css")
-    
+
     # general = Stylesheet("local", general_css, "file")
-    
+
     # navigation_css = clerk.file_to_string(
     #     "tests/test_files/projects/large_project/css/navigation.css")
-    
+
     # navigation = Stylesheet("local", navigation_css, "file")
     insane_gradient = """
     -moz-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
@@ -666,7 +681,7 @@ if __name__ == "__main__":
     -ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%),
     linear-gradient(-45deg, maroon 0%, #092756 200%)
     """
-    
+
     # results = process_gradient(insane_gradient)
     # print(results)
 

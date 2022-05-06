@@ -7,8 +7,7 @@ from . import CSSReport
 from . import HTMLinator as html
 from . import HTMLReport, clerk
 
-logging.basicConfig(format='%(asctime)s - %(message)s',
-                    datefmt='%d-%b-%y %H:%M:%S')
+logging.basicConfig(format="%(asctime)s - %(message)s", datefmt="%d-%b-%y %H:%M:%S")
 report_template_path = "webanalyst/report_template.html"
 report_path = "report/report.html"
 
@@ -30,16 +29,15 @@ class Report:
         return self.__readme_list
 
     @staticmethod
-    def get_report_results_string(tr_class, type_column, target, 
-                                  results, results_key):
+    def get_report_results_string(tr_class, type_column, target, results, results_key):
         results_key = str(results_key)
         if tr_class:
             results_string = '<tr class="' + tr_class + '">'
         else:
-            results_string = '<tr>'
-        results_string += '<td>' + type_column + '</td>'
+            results_string = "<tr>"
+        results_string += "<td>" + type_column + "</td>"
         if target != "":
-            results_string += '<td>' + str(target) + '</td>'
+            results_string += "<td>" + str(target) + "</td>"
         if results != "":
             results_string += "<td>" + str(results) + "</td>"
         if results_key == "True":
@@ -60,7 +58,7 @@ class Report:
         description = header_list[1]
         return {"title": title, "details": {"description": description.strip()}}
 
-    @staticmethod 
+    @staticmethod
     def foo():
         pass
 
@@ -69,15 +67,9 @@ class Report:
         self.get_readme_text()
 
         # instantiate all reports
-        self.general_report = GeneralReport(
-            self.__readme_list,
-            self.__dir_path)
-        self.html_report = HTMLReport.HTMLReport(
-            self.__readme_list,
-            self.__dir_path)
-        self.css_report = CSSReport.CSSReport(
-            self.__readme_list,
-            self.__dir_path)
+        self.general_report = GeneralReport(self.__readme_list, self.__dir_path)
+        self.html_report = HTMLReport.HTMLReport(self.__readme_list, self.__dir_path)
+        self.css_report = CSSReport.CSSReport(self.__readme_list, self.__dir_path)
 
         # run each report
         self.prep_report()
@@ -87,7 +79,7 @@ class Report:
 
         # send linked stylesheets to css report
         self.css_report.linked_stylesheets = self.html_report.linked_stylesheets
-        
+
         # Get CSS validation and send to css report
         try:
             css_validation_results = self.html_report.validator_errors["CSS"]
@@ -99,7 +91,7 @@ class Report:
     def prep_report(self):
         # Create a report HTML file in the report folder
         report_template_content = clerk.file_to_string(report_template_path)
-        with open('report/report.html', 'w') as f:
+        with open("report/report.html", "w") as f:
             f.write(report_template_content)
 
 
@@ -117,14 +109,8 @@ class GeneralReport:
         self.words_per_sentence = 0.0
         self.sentences_per_paragraph = 0.0
         self.report_details = {
-            "min_number_files": {
-                "HTML": None,
-                "CSS": None
-            },
-            "num_files_results": {
-                "Meets HTML": False,
-                "Meets CSS": False
-            },
+            "min_number_files": {"HTML": None, "CSS": None},
+            "num_files_results": {"Meets HTML": False, "Meets CSS": False},
             "writing_goals": {
                 "average_SPP": [1, 5],
                 "average_WPS": [10, 20],
@@ -134,7 +120,7 @@ class GeneralReport:
                 "meets_SPP": False,
                 "actual_WPS": 0,
                 "meets_WPS": False,
-            }
+            },
         }
 
     def generate_report(self):
@@ -179,11 +165,11 @@ class GeneralReport:
         min_css_files = 0
         for row in self.__readme_list:
             if "* [HTML]" in row:
-                num = re.search(r'[0-9]+', row)
+                num = re.search(r"[0-9]+", row)
                 if num:
                     min_html_files = num.group(0)
             if "* [CSS]" in row:
-                num = re.search(r'[0-9]+', row)
+                num = re.search(r"[0-9]+", row)
                 if num:
                     min_css_files = num.group(0)
 
@@ -191,7 +177,7 @@ class GeneralReport:
         self.report_details["min_number_files"]["CSS"] = int(min_css_files)
 
     def get_min_number_files(self, filetype):
-        """ receives filetype and returns minimum # of that file"""
+        """receives filetype and returns minimum # of that file"""
         if filetype.lower() == "html":
             return self.report_details["min_number_files"]["HTML"]
         elif filetype.lower() == "css":
@@ -247,16 +233,18 @@ class GeneralReport:
     def meets_num_html_files(self):
         # compare actual number of files to min
         # number of files.
-        self.num_html_files = len(
-            clerk.get_all_files_of_type(self.__dir_path, "html"))
+        self.num_html_files = len(clerk.get_all_files_of_type(self.__dir_path, "html"))
         min_required = self.report_details["min_number_files"]["HTML"]
-        self.report_details["num_files_results"]["Meets HTML"] = self.num_html_files >= min_required
+        self.report_details["num_files_results"]["Meets HTML"] = (
+            self.num_html_files >= min_required
+        )
 
     def meets_num_css_files(self):
-        self.num_css_files = len(
-            clerk.get_all_files_of_type(self.__dir_path, "css"))
+        self.num_css_files = len(clerk.get_all_files_of_type(self.__dir_path, "css"))
         min_required = self.report_details["min_number_files"]["CSS"]
-        self.report_details["num_files_results"]["Meets CSS"] = self.num_css_files >= min_required
+        self.report_details["num_files_results"]["Meets CSS"] = (
+            self.num_css_files >= min_required
+        )
 
     def analyze_results(self):
         # Does it meet min file requirements?
@@ -272,7 +260,9 @@ class GeneralReport:
 
         # Is SPP within range?
         minSPP, maxSPP = self.report_details["writing_goals"]["average_SPP"]
-        self.report_details["writing_goal_results"]["meets_SPP"] = SPP >= minSPP and SPP <= maxSPP
+        self.report_details["writing_goal_results"]["meets_SPP"] = (
+            SPP >= minSPP and SPP <= maxSPP
+        )
 
         # calculate words per sentence WPS
         try:
@@ -283,7 +273,9 @@ class GeneralReport:
 
         # Is WPS within range?
         min_wps, max_wps = self.report_details["writing_goals"]["average_WPS"]
-        self.report_details["writing_goal_results"]["meets_WPS"] = WPS > min_wps and WPS < max_wps
+        self.report_details["writing_goal_results"]["meets_WPS"] = (
+            WPS > min_wps and WPS < max_wps
+        )
 
     def publish_results(self):
         # Get report
@@ -301,37 +293,54 @@ class GeneralReport:
         # Min HTML files & Actual HTML files
         # Report.get_report_results_string()
         html_results_string = Report.get_report_results_string(
-            "general-html-files-results", "HTML", goals_details['HTML'], self.num_html_files, goals_results['Meets HTML'])
+            "general-html-files-results",
+            "HTML",
+            goals_details["HTML"],
+            self.num_html_files,
+            goals_results["Meets HTML"],
+        )
         html_results_tag = BeautifulSoup(html_results_string, "html.parser")
-        report_content.find(
-            id="general-html-files-results").replace_with(html_results_tag)
+        report_content.find(id="general-html-files-results").replace_with(
+            html_results_tag
+        )
 
         # Min CSS files & Actual CSS files
         css_results_string = Report.get_report_results_string(
-            "general-css-files-results", "CSS",  
-            goals_details['CSS'], self.num_css_files, 
-            goals_results['Meets CSS'])
+            "general-css-files-results",
+            "CSS",
+            goals_details["CSS"],
+            self.num_css_files,
+            goals_results["Meets CSS"],
+        )
 
         css_results_tag = BeautifulSoup(css_results_string, "html.parser")
-        report_content.find(
-            id="general-css-files-results").replace_with(css_results_tag)
+        report_content.find(id="general-css-files-results").replace_with(
+            css_results_tag
+        )
 
-        spp_results_string = Report.get_report_results_string("general-spp-results", 
-            "Avg. Sentences / Paragraph", str(writing_goals["average_SPP"]), 
-            writing_results["actual_SPP"], writing_results["meets_SPP"])
-        
+        spp_results_string = Report.get_report_results_string(
+            "general-spp-results",
+            "Avg. Sentences / Paragraph",
+            str(writing_goals["average_SPP"]),
+            writing_results["actual_SPP"],
+            writing_results["meets_SPP"],
+        )
+
         spp_results_tag = BeautifulSoup(spp_results_string, "html.parser")
-        report_content.find(
-            id="general-spp-results").replace_with(spp_results_tag)
+        report_content.find(id="general-spp-results").replace_with(spp_results_tag)
 
-        wps_results_string = Report.get_report_results_string("general-wps-results", "Avg. Words / Sentence", str(
-            writing_goals["average_WPS"]), writing_results["actual_WPS"], writing_results["meets_WPS"])
+        wps_results_string = Report.get_report_results_string(
+            "general-wps-results",
+            "Avg. Words / Sentence",
+            str(writing_goals["average_WPS"]),
+            writing_results["actual_WPS"],
+            writing_results["meets_WPS"],
+        )
         wps_results_tag = BeautifulSoup(wps_results_string, "html.parser")
-        report_content.find(
-            id="general-wps-results").replace_with(wps_results_tag)
+        report_content.find(id="general-wps-results").replace_with(wps_results_tag)
 
         # Save new HTML as report/general_report.html
-        with open(report_path, 'w') as f:
+        with open(report_path, "w") as f:
             f.write(str(report_content.contents[2]))
 
 
@@ -349,11 +358,11 @@ if __name__ == "__main__":
     # large_project_readme_path = "tests/test_files/projects/large_project/"
     # large_project = Report(large_project_readme_path)
     # large_project.generate_report()
-    
+
     # single_page_path = "tests/test_files/projects/single_page/"
     # single_page = Report(single_page_path)
     # single_page.generate_report()
-    
+
     # project path
     project_path = "projects/single-page/"
     project_page = Report(project_path)

@@ -25,7 +25,8 @@ declarations = {
     "valid1": "color: #336699;",
     "invalid1": "value;",
     "invalid2": "property:;",
-    "invalid3": "property:val; something"}
+    "invalid3": "property:val; something",
+}
 
 declaration_block_with_selector = """
 article#gallery {
@@ -35,7 +36,9 @@ article#gallery {
     margin: 0 auto;
 }"""
 
-minified_declaration_block_with_selector = """article#gallery {display: flex;flex-wrap: wrap;width: 96vw;margin: 0 auto;}"""
+minified_declaration_block_with_selector = (
+    """article#gallery {display: flex;flex-wrap: wrap;width: 96vw;margin: 0 auto;}"""
+)
 
 invalid_css = """
 body }
@@ -59,8 +62,8 @@ body { font-size: 120%; }
 h1 { font-family: serif;}
 """
 
-selectors_with_3_ids = "body #nav div#phred, p#red"     # specificity of 303
-selectors_with_no_ids = "h1, h2, h3, a:active"          # specificity of 014
+selectors_with_3_ids = "body #nav div#phred, p#red"  # specificity of 303
+selectors_with_no_ids = "h1, h2, h3, a:active"  # specificity of 014
 specificity303 = selectors_with_3_ids
 specificity014 = selectors_with_no_ids
 
@@ -74,6 +77,7 @@ radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 
 -ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)',
 linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
 """
+
 
 @pytest.fixture
 def css_code_1_split():
@@ -120,7 +124,8 @@ def declaration_block_with_one_selector():
 @pytest.fixture
 def layout_css():
     layout_css = clerk.file_to_string(
-        "tests/test_files/projects/large_project/css/layout.css")
+        "tests/test_files/projects/large_project/css/layout.css"
+    )
     yield layout_css
 
 
@@ -137,11 +142,11 @@ def layout_css_stylesheet(layout_css):
 
 
 def test_separate_code_for_3_comments(css_code_1_split):
-    assert len(css_code_1_split['comments']) == 3
+    assert len(css_code_1_split["comments"]) == 3
 
 
 def test_separate_code_for_3_css_items(css_code_1_split):
-    assert len(css_code_1_split['code']) == 3
+    assert len(css_code_1_split["code"]) == 3
 
 
 def test_ruleset1_for_selector(ruleset1):
@@ -214,13 +219,11 @@ def test_style_sheet_object_extract_comments(layout_css_stylesheet):
     assert len(layout_css_stylesheet.comments) == 6
 
 
-def test_style_sheet_object_extract_comments_for_first_comment(
-        layout_css_stylesheet):
+def test_style_sheet_object_extract_comments_for_first_comment(layout_css_stylesheet):
     assert layout_css_stylesheet.comments[0] == "/* layout.css */"
 
 
-def test_stylesheet_extract_comments_for_code_after_extraction(
-        layout_css_stylesheet):
+def test_stylesheet_extract_comments_for_code_after_extraction(layout_css_stylesheet):
     assert len(layout_css_stylesheet.comments) == 6
 
 
@@ -233,147 +236,174 @@ def test_stylesheet_for_extracted_nested_at_rules(layout_css_stylesheet):
 
 
 # Test properties of Stylesheet
-def test_stylesheet_for_selectors_with_one(
-        stylesheet_with_one_declaration_block):
+def test_stylesheet_for_selectors_with_one(stylesheet_with_one_declaration_block):
     assert len(stylesheet_with_one_declaration_block.selectors) == 1
 
 
 def test_layout_css_stylesheet_for_multiple_selectors(layout_css_stylesheet):
     assert len(layout_css_stylesheet.selectors) == 22
-    
+
 
 def test_get_id_score_for_3_ids():
     results = css.get_id_score(selectors_with_3_ids)
     assert results == 3
-    
+
 
 def test_get_id_score_for_no_ids():
     results = css.get_id_score(selectors_with_no_ids)
     assert not results
-    
+
 
 def test_get_type_score_for_3_type_selectors():
     results = css.get_type_score(selectors_with_3_ids)
     assert results == 3
-    
+
 
 def test_get_type_score_for_4_type_selectors():
     results = css.get_type_score(selectors_with_no_ids)
     assert results == 4
+
 
 def test_get_type_score_for_descendant_selectors():
     selector = "header h1"
     results = css.get_type_score(selector)
     assert results == 2
 
+
 def test_get_class_score_for_0_results():
     results = css.get_class_score(selectors_with_3_ids)
     assert results == 0
-    
+
+
 def test_get_class_score_for_3_results():
     selector = "a:hover, a:link, input[type=text]"
     results = css.get_class_score(selector)
     assert results == 3
 
+
 def test_get_specificity_for_303():
     results = css.get_specificity(specificity303)
     assert results == "303"
+
 
 def test_get_specificity_for_014():
     results = css.get_specificity(specificity014)
     assert results == "014"
 
+
 def test_get_specificity_for_033():
     selector = "a:hover, a:link, input[type=text]"
     results = css.get_specificity(selector)
     assert results == "033"
-    
+
+
 def test_get_specificity_for_002():
     selector = "header h1"
     results = css.get_specificity(selector)
     assert results == "002"
-    
+
+
 def test_has_vendor_prefix_for_false():
     selector = "transition"
     results = css.has_vendor_prefix(selector)
     expected = False
     assert results == expected
-    
+
+
 def test_has_vendor_prefix_for_webkit():
     selector = "-webkit-transition"
     results = css.has_vendor_prefix(selector)
     expected = True
     assert results == expected
-    
+
+
 def test_has_vendor_prefix_for_moz():
     selector = "-moz-transition"
     results = css.has_vendor_prefix(selector)
     expected = True
     assert results == expected
-    
+
+
 def test_has_vendor_prefix_for_property_with_dash_not_prefix():
     selector = "background-color"
     results = css.has_vendor_prefix(selector)
     expected = False
     assert results == expected
-    
+
+
 def test_is_gradient_for_false():
     value = "rgba(155, 155, 155, 0)"
     results = css.is_gradient(value)
     expected = False
     assert results == expected
-    
+
+
 def test_is_gradient_for_true():
     value = "-moz-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),-moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), -moz-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)"
     results = css.is_gradient(value)
     assert results == True
 
+
 def test_process_gradient_for_insane_css_vendor_prefix_check():
     results = css.process_gradient(insane_gradient)[0]
     expected = True
     assert results == expected
-    
+
+
 def test_process_gradient_for_insane_css_for_four_returned_colors():
     colors = css.process_gradient(insane_gradient)
     results = len(colors)
     expected = 4
-    assert results == expected 
-    
+    assert results == expected
+
+
 def test_get_colors_from_gradient_for_hex():
-    gradient = 'linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
-    expected = ['#46ABA6', '#092756']
+    gradient = "linear-gradient(-45deg, #46ABA6 0%, #092756 200%)"
+    expected = ["#46ABA6", "#092756"]
     results = css.get_colors_from_gradient(gradient)
     assert expected == results
 
+
 def test_get_colors_from_gradient_for_rgba():
-    gradient = 'radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%'
+    gradient = "radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%"
+
 
 def test_append_color_codes_for_none():
     colors = []
-    gradient = 'linear-gradient(to bottom, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%'
+    gradient = (
+        "linear-gradient(to bottom, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%"
+    )
     css.append_color_codes("hsl", gradient, colors)
-    assert not colors 
+    assert not colors
+
 
 def test_append_color_codes_for_rgba():
     colors = []
-    gradient = 'linear-gradient(to bottom, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%'
+    gradient = (
+        "linear-gradient(to bottom, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%"
+    )
     css.append_color_codes("rgb", gradient, colors)
-    assert 'rgba(169, 235, 206,.25)' in colors
+    assert "rgba(169, 235, 206,.25)" in colors
+
 
 def test_append_color_codes_for_rgb():
     colors = []
-    gradient = 'linear-gradient(to bottom, rgb(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%'
+    gradient = (
+        "linear-gradient(to bottom, rgb(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%"
+    )
     css.append_color_codes("rgb", gradient, colors)
-    assert 'rgb(169, 235, 206,.25)' in colors
+    assert "rgb(169, 235, 206,.25)" in colors
+
 
 def test_append_color_codes_for_hex():
     colors = []
-    gradient = 'linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
+    gradient = "linear-gradient(-45deg, #46ABA6 0%, #092756 200%)"
     css.append_color_codes("hex", gradient, colors)
-    assert '#092756' in colors
+    assert "#092756" in colors
+
 
 def test_append_color_codes_for_keyword_antiquewhite():
     colors = []
-    gradient = 'linear-gradient(-45deg, maroon 0%, #092756 200%)'
+    gradient = "linear-gradient(-45deg, maroon 0%, #092756 200%)"
     css.append_color_codes("keywords", gradient, colors)
-    assert 'maroon' in colors
+    assert "maroon" in colors

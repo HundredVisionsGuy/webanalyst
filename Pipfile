@@ -37,6 +37,7 @@ pep8 = "*"
 pylint = "*"
 tox = "*"
 autopep8 = "*"
+black = "*"
 
 [requires]
 python_version = "3.9"
