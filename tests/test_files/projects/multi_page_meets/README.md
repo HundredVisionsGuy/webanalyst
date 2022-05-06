@@ -13,7 +13,7 @@ This project does meet the requirements for attaining the next level in CSS.
 
 ## Project Requirements
 ### General
-* Number of Files: 
+* Number of Files:
     * [HTML] At least 2 HTML doc/s
     * [CSS] At least 2 CSS sheets
 * Project Navigation:
@@ -22,9 +22,9 @@ This project does meet the requirements for attaining the next level in CSS.
 ### HTML
 * Allowable Errors: 2 - this project does allow for HTML errors from the validator
     * Allowed Errors include the following messages:
-* Required Elements 
+* Required Elements
     * All required HTML 5 Elements: [`DOCTYPE`, `HTML`, `HEAD`, `TITLE`, `BODY`]
-    * Headers & Paragraphs: 
+    * Headers & Paragraphs:
         + `H1`: 1 per page only
         + `H2`: 2 or more
         + `P` : 4 or more
@@ -56,9 +56,9 @@ This project does meet the requirements for attaining the next level in CSS.
         + padding
         + border
     * Bonus Opportunity:
-        + link colors: 
-            * +1 for hyperlink colors 
-        + hover effects: 
+        + link colors:
+            * +1 for hyperlink colors
+        + hover effects:
             * +1 for hover
             * +1 for visited
             * +1 for active (while holding it down)

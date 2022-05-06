@@ -1,7 +1,7 @@
 # Web Analyst
 This project is designed to assess students' ability to code clean, semantic front-end technologies (HTML, CSS, JavaScript) for a variety of open-ended tasks and projects.
 
-When selecting skills and practices, we will be using the [Mozilla Developer Network](https://developer.mozilla.org/) as the final arbiter of styles and best practices. 
+When selecting skills and practices, we will be using the [Mozilla Developer Network](https://developer.mozilla.org/) as the final arbiter of styles and best practices.
 
 ## Important Notes
 * Until we have a folder structure selected and a license, we will not be accepting pull requests
@@ -29,7 +29,7 @@ There will be a test file for each concept and level:
 * one test file for HTML for each level of "proficiency"
 * One test file for each level of tables (one for simple table)
 * a test for lists at two levels
-* a test for links 
+* a test for links
 * a test for images
 * a set of tests for multiple files
   * is there an index file name or not?
@@ -51,8 +51,8 @@ HTML:
 CSS:
   * no inline styles
   * in CSS use expanded syntax
-  * See [Use expanded syntax](https://developer.mozilla.org/en-US/docs/MDN/Contribute/Guidelines/Code_guidelines/CSS#Use_expanded_syntax) example 
-      - include a space between selector and opening curley brace 
+  * See [Use expanded syntax](https://developer.mozilla.org/en-US/docs/MDN/Contribute/Guidelines/Code_guidelines/CSS#Use_expanded_syntax) example
+      - include a space between selector and opening curley brace
       - Always include a semi-colon at the end of the last declaration, even though it isn't strictly necessary.
       - Put the closing curly brace on a new line.
       -In each declaration, put a space after the separating colon, but not before.
@@ -115,7 +115,7 @@ Students will be given an open-ended web project that will contain all the tests
 ## Student Proficiency Ranking (levels)
 ### 101 (Entry Level)
 #### HTML
-At this level, students are just getting started. They can make single web pages, albeit with some errors. 
+At this level, students are just getting started. They can make single web pages, albeit with some errors.
 Elements that students should be proficient at before moving on are as follows:
 * headers
 * paragraphs
@@ -162,11 +162,11 @@ Students should also be applying solid design skills such as use of negative spa
 
 ### 401 (Senior Level)
 #### HTML
-At this level, students should be comfortable creating full-blown websites that employ multiple pages that all link to the same style-sheet/s and use a consistent nav-bar. 
+At this level, students should be comfortable creating full-blown websites that employ multiple pages that all link to the same style-sheet/s and use a consistent nav-bar.
 
 Students should be able to demonstrate the markup belonging to forms as well as form validation.
 
-They should be able to showcase their skills through a portfolio of work or a web project (like a company site or travel brochure or web app). 
+They should be able to showcase their skills through a portfolio of work or a web project (like a company site or travel brochure or web app).
 
 #### CSS
 At this point, students should be continuing to develop their layout and design skills. They should also begin to apply a mobile-first, responsive design technique.

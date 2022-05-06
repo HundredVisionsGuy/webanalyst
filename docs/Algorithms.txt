@@ -1,4 +1,4 @@
-Algorithms for checking the styles applied to each page in a project 
+Algorithms for checking the styles applied to each page in a project
 and in correct order {
     NOTES: {
         * We must only grab the stylesheets as objects once we have the master list of pages and which CSS they contain.
@@ -9,14 +9,14 @@ and in correct order {
         Questions/Thoughts: {
             - should we get the number of stylesheets for each page?
             - Loop through list of all stylesheets (in the project folder)
-                * 
+                *
         }
     }
 
     How to check up on this {
         * compare each html doc to see if it links to all CSS files {
             - means we need a list of all CSS files: self.css_files
-            - compare that against each of the project_css_by_html_doc html docs 
+            - compare that against each of the project_css_by_html_doc html docs
             - number of files ending with .css should match {
                 Loop through each css file and check to see if it's listed
                 If any are not, return False
@@ -26,14 +26,14 @@ and in correct order {
 
     What should the end product look like? What do we want out of this algorithm?
     how about a list of pages and the styles being applied as indicated by (filename or styletag) and in the order in which they appear.
-    Dictionary? 
+    Dictionary?
     project_css_by_html_doc
     {"html_page": ["filename.css", "styletag=CSS_CODE_AS_STRING", "filename.css"],
     "html_page2": ["filename.css", "styletag=CSS_CODE_AS_STRING", "filename.css"]}
 
     SET pages to all html docs in a project folder
     GET markup from each page
-    FOREACH page in pages   
+    FOREACH page in pages
         Append page title to dictionary
         GET tags from the HEAD
             CALL get_css_elements() with tags
@@ -45,19 +45,19 @@ and in correct order {
         FOREACH tag in tags
             IF tag is LINK
                 IF href ends with .CSS
-                    GET the filename 
+                    GET the filename
                     GET the contents
                     INIT Stylesheet object with contents
                     APPEND tag to css_elements
-            IF tag style 
+            IF tag style
                 APPEND tag to css_elements
         RETURN css_elements
 
     DEFINE check_for_same_css_files:
         FOREACH css_file in css_files
             FOREACH html_doc in project_css_by_html_doc
-                IF css_file not in html_doc 
-                    RETURN False 
+                IF css_file not in html_doc
+                    RETURN False
         RETURN True
 }
 

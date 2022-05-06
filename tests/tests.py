@@ -1,8 +1,8 @@
-import pytest
 from html.parser import HTMLParser
 
 import webanalyst.validator as validator
-response = validator.get_markup_validity('./project/sample.html')
+
+response = validator.get_markup_validity("./project/sample.html")
 
 # Check validator
 input("Press enter to check response")
@@ -11,15 +11,14 @@ for i in response:
 
 f = open("./project/sample.html", "r")
 file = f.read()
-file = file.replace('\n', '')
-file = file.replace('  ', '')
+file = file.replace("\n", "")
+file = file.replace("  ", "")
 type(file)
 
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
-        # self.feed(data)
         self.starttags = []
         self.endtags = []
 
@@ -31,7 +30,10 @@ class MyHTMLParser(HTMLParser):
         print("Encountered an end tag :", tag)
         self.endtags.append(tag)
 
-    def handle_data(self, data,):
+    def handle_data(
+        self,
+        data,
+    ):
         print("Encountered some data  :", data)
 
     def return_startags(self):
