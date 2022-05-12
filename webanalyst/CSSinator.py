@@ -563,13 +563,13 @@ def get_global_color_details(rulesets):
                 elif declaration.property == "color":
                     color = declaration.value
                     if is_gradient(color):
-                        colors = process_gradient(color)
+                        colors = get_gradient_colors(color)
                         todo = input("We have colors: " + colors)
                         print(todo)
                 elif declaration.property == "background":
                     background_color = declaration.value
                     if is_gradient(background_color):
-                        bg_colors = process_gradient(background_color)
+                        bg_colors = get_gradient_colors(background_color)
                         print("We have bg colors: " + str(bg_colors))
 
             if background_color or color:
@@ -596,7 +596,28 @@ def is_gradient(value):
 
 
 def process_gradient(code):
-    """returns list of all colors from gradient"""
+    """TODO what to do?"""
+    results = ""
+    return results
+
+
+def get_gradient_colors(code):
+    """ extracts and returns only color codes NOT in vendor prefixes """
+    only_colors = []
+    colors = remove_vendor_prefixes(code)
+
+    # capture only color codes and append to colors
+    if colors:
+        # grab only color codes (Nothing else)
+        only_colors = []
+        for gradient in colors:
+            color_codes = get_colors_from_gradient(gradient)
+            if color_codes:
+                only_colors += color_codes
+    return only_colors
+
+
+def remove_vendor_prefixes(code):
     colors = []
     # remove all vendor prefixes
     data = code.split("),")
@@ -610,17 +631,7 @@ def process_gradient(code):
         datum = datum.strip()
         if not re.match(vendor_regex, datum):
             colors.append(datum)
-
-    # capture only color codes and append to colors
-    if colors:
-        # grab only color codes (Nothing else)
-        only_colors = []
-        for gradient in colors:
-            color_codes = get_colors_from_gradient(gradient)
-            if color_codes:
-                only_colors += color_codes
-
-    return only_colors
+    return colors
 
 
 def get_colors_from_gradient(gradient):
@@ -693,5 +704,5 @@ rgba(42,60,87,.4) 200%),
 -ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)',
 linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
 """
-    results = process_gradient(insane_gradient)
+    results = get_gradient_colors(insane_gradient)
     print(results)

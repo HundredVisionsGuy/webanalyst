@@ -373,10 +373,18 @@ def test_is_gradient_for_true():
     assert results
 
 
-def test_process_gradient_for_insane_css_for_four_returned_colors():
-    colors = css.process_gradient(insane_gradient)
-    results = len(colors)
+def test_get_gradient_colors_for_insane_css_for_four_returned_colors():
+    just_colors = css.get_gradient_colors(insane_gradient)
+    results = len(just_colors)
     expected = 4
+    assert results == expected
+
+
+def test_remove_vendor_prefixes_from_insane_gradient():
+    results = css.remove_vendor_prefixes(insane_gradient)
+    expected = [('radial-gradient(0% 200%, ellipse cover,'
+                '\nrgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%'),
+                "linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'"]
     assert results == expected
 
 
@@ -391,8 +399,8 @@ def test_get_colors_from_gradient_for_rgba():
     gradient = "linear-gradient(-45deg, rgba(200, 100, 100, 0.5) 0% #336699 100%)"
     results = css.get_colors_from_gradient(gradient)
     assert "rgba(200, 100, 100, 0.5)" in results
-    
-    
+
+
 def test_append_color_codes_for_none():
     colors = []
     gradient = "linear-gradient(to bottom, rgba(169, "
