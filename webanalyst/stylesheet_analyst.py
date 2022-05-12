@@ -231,10 +231,7 @@ def applies_global_colors(sheet):
                 continue
             color_properties.append((declaration.property, declaration.value))
     if len(color_properties) >= 2:
-        if (
-            color_properties[0][0] == "color"
-            or color_properties[1][0] == "color"
-        ):
+        if color_properties[0][0] == "color" or color_properties[1][0] == "color":
             if (
                 color_properties[0][0] == "background-color"
                 or color_properties[1][0] == "background-color"

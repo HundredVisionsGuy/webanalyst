@@ -58,9 +58,7 @@ def large_project_general_css():
 
 @pytest.fixture
 def large_project_layout_css():
-    css = clerk.file_to_string(
-        "tests/test_files/projects/large_project/css/layout.css"
-    )
+    css = clerk.file_to_string("tests/test_files/projects/large_project/css/layout.css")
 
     test_sheet = styles.Stylesheet("local", css, "file")
     yield test_sheet
@@ -113,9 +111,7 @@ def test_applies_global_colors_for_just_color_should_fail(
 def test_stylesheet_analyst_for_3_repeat_selectors(
     stylesheet_with_3_repeat_selectors,
 ):
-    results = css_analyst.get_repeat_selectors(
-        stylesheet_with_3_repeat_selectors
-    )
+    results = css_analyst.get_repeat_selectors(stylesheet_with_3_repeat_selectors)
     expected = ["body", 3]
     assert expected in results
 
@@ -177,9 +173,7 @@ def test_has_multiple_selector_for_false(large_project_navigation_css):
 
 
 def test_has_direct_child_selector_for_true(large_project_navigation_css):
-    results = css_analyst.has_direct_child_selector(
-        large_project_navigation_css
-    )
+    results = css_analyst.has_direct_child_selector(large_project_navigation_css)
     assert results
 
 

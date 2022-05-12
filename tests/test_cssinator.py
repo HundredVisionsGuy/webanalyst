@@ -373,12 +373,6 @@ def test_is_gradient_for_true():
     assert results
 
 
-def test_process_gradient_for_insane_css_vendor_prefix_check():
-    results = css.process_gradient(insane_gradient)[0]
-    expected = True
-    assert results == expected
-
-
 def test_process_gradient_for_insane_css_for_four_returned_colors():
     colors = css.process_gradient(insane_gradient)
     results = len(colors)
@@ -394,9 +388,11 @@ def test_get_colors_from_gradient_for_hex():
 
 
 def test_get_colors_from_gradient_for_rgba():
-    pass
-
-
+    gradient = "linear-gradient(-45deg, rgba(200, 100, 100, 0.5) 0% #336699 100%)"
+    results = css.get_colors_from_gradient(gradient)
+    assert "rgba(200, 100, 100, 0.5)" in results
+    
+    
 def test_append_color_codes_for_none():
     colors = []
     gradient = "linear-gradient(to bottom, rgba(169, "
@@ -418,8 +414,7 @@ def test_append_color_codes_for_rgba():
 def test_append_color_codes_for_rgb():
     colors = []
     gradient = (
-        "linear-gradient(to bottom, rgb(169, 235, "
-        "206,.25) 0%,rgba(42,60,87,.4) 200%"
+        "linear-gradient(to bottom, rgb(169, 235, " "206,.25) 0%,rgba(42,60,87,.4) 200%"
     )
     css.append_color_codes("rgb", gradient, colors)
     assert "rgb(169, 235, 206,.25)" in colors

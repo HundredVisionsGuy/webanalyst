@@ -596,10 +596,7 @@ def is_gradient(value):
 
 
 def process_gradient(code):
-    """returns vendor prefix warning and list of all colors from gradient"""
-    vendor_prefix = has_vendor_prefix(code)
-    msg = str(vendor_prefix) + "We have a vendor prefix. What to do? "
-    print(msg)
+    """returns list of all colors from gradient"""
     colors = []
     # remove all vendor prefixes
     data = code.split("),")
@@ -608,9 +605,7 @@ def process_gradient(code):
     last_split = last_item.split("\n")
     if len(last_split) == 2:
         data.append(last_split[1])
-    vendor_regex = (
-        r"\A-moz-|-webkit-|-ms-|-o-"  # only works for start of string
-    )
+    vendor_regex = r"\A-moz-|-webkit-|-ms-|-o-"  # only works for start of string
     for datum in data:
         datum = datum.strip()
         if not re.match(vendor_regex, datum):
@@ -625,7 +620,7 @@ def process_gradient(code):
             if color_codes:
                 only_colors += color_codes
 
-    return colors
+    return only_colors
 
 
 def get_colors_from_gradient(gradient):

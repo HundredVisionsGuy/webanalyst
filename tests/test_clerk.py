@@ -105,9 +105,7 @@ def test_get_all_project_files_from_large_project():
         "tests\\test_files\\projects\\large_project\\css\\navigation.css",
         "tests\\test_files\\projects\\large_project\\js\\scripts.js",
     ]
-    results = clerk.get_all_project_files(
-        "tests/test_files/projects/large_project"
-    )
+    results = clerk.get_all_project_files("tests/test_files/projects/large_project")
     assert expected == results
 
 
@@ -124,9 +122,7 @@ def test_get_all_html_project_files_from_large_project():
 
 
 def test_split_into_sentences():
-    paragraph = (
-        "Hello, you! How are you? i am fine Mr. selenium.\nsee ya later."
-    )
+    paragraph = "Hello, you! How are you? i am fine Mr. selenium.\nsee ya later."
     results = len(clerk.split_into_sentences(paragraph))
     expected = 4
     assert results == expected

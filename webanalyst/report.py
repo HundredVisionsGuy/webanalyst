@@ -7,9 +7,7 @@ from . import CSSReport
 from . import HTMLinator as html
 from . import HTMLReport, clerk
 
-logging.basicConfig(
-    format="%(asctime)s - %(message)s", datefmt="%d-%b-%y %H:%M:%S"
-)
+logging.basicConfig(format="%(asctime)s - %(message)s", datefmt="%d-%b-%y %H:%M:%S")
 report_template_path = "webanalyst/report_template.html"
 report_path = "report/report.html"
 
@@ -31,9 +29,7 @@ class Report:
         return self.__readme_list
 
     @staticmethod
-    def get_report_results_string(
-        tr_class, type_column, target, results, results_key
-    ):
+    def get_report_results_string(tr_class, type_column, target, results, results_key):
         results_key = str(results_key)
         if tr_class:
             results_string = '<tr class="' + tr_class + '">'
@@ -74,15 +70,9 @@ class Report:
         self.get_readme_text()
 
         # instantiate all reports
-        self.general_report = GeneralReport(
-            self.__readme_list, self.__dir_path
-        )
-        self.html_report = HTMLReport.HTMLReport(
-            self.__readme_list, self.__dir_path
-        )
-        self.css_report = CSSReport.CSSReport(
-            self.__readme_list, self.__dir_path
-        )
+        self.general_report = GeneralReport(self.__readme_list, self.__dir_path)
+        self.html_report = HTMLReport.HTMLReport(self.__readme_list, self.__dir_path)
+        self.css_report = CSSReport.CSSReport(self.__readme_list, self.__dir_path)
 
         # run each report
         self.prep_report()
@@ -90,9 +80,7 @@ class Report:
         self.html_report.generate_report()
 
         # send linked stylesheets to css report
-        self.css_report.linked_stylesheets = (
-            self.html_report.linked_stylesheets
-        )
+        self.css_report.linked_stylesheets = self.html_report.linked_stylesheets
 
         # Get CSS validation and send to css report
         try:
@@ -247,18 +235,14 @@ class GeneralReport:
     def meets_num_html_files(self):
         # compare actual number of files to min
         # number of files.
-        self.num_html_files = len(
-            clerk.get_all_files_of_type(self.__dir_path, "html")
-        )
+        self.num_html_files = len(clerk.get_all_files_of_type(self.__dir_path, "html"))
         min_required = self.report_details["min_number_files"]["HTML"]
         self.report_details["num_files_results"]["Meets HTML"] = (
             self.num_html_files >= min_required
         )
 
     def meets_num_css_files(self):
-        self.num_css_files = len(
-            clerk.get_all_files_of_type(self.__dir_path, "css")
-        )
+        self.num_css_files = len(clerk.get_all_files_of_type(self.__dir_path, "css"))
         min_required = self.report_details["min_number_files"]["CSS"]
         self.report_details["num_files_results"]["Meets CSS"] = (
             self.num_css_files >= min_required
@@ -343,9 +327,7 @@ class GeneralReport:
         )
 
         spp_results_tag = BeautifulSoup(spp_results_string, "html.parser")
-        report_content.find(id="general-spp-results").replace_with(
-            spp_results_tag
-        )
+        report_content.find(id="general-spp-results").replace_with(spp_results_tag)
 
         wps_results_string = Report.get_report_results_string(
             "general-wps-results",
@@ -355,9 +337,7 @@ class GeneralReport:
             writing_results["meets_WPS"],
         )
         wps_results_tag = BeautifulSoup(wps_results_string, "html.parser")
-        report_content.find(id="general-wps-results").replace_with(
-            wps_results_tag
-        )
+        report_content.find(id="general-wps-results").replace_with(wps_results_tag)
 
         # Save new HTML as report/general_report.html
         with open(report_path, "w") as f:
@@ -371,9 +351,7 @@ if __name__ == "__main__":
     # 3. Generate a report:             project_name.generate_report()
     # 4. Go to report/report.html for results
 
-    about_me_dnn_readme_path = (
-        "tests/test_files/projects/about_me_does_not_meet/"
-    )
+    about_me_dnn_readme_path = "tests/test_files/projects/about_me_does_not_meet/"
 
     large_project_readme_path = "tests/test_files/projects/large_project/"
 

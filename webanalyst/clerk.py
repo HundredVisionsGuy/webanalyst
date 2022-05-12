@@ -124,9 +124,7 @@ def split_into_sentences(text):
         "\\1<prd>\\2<prd>\\3<prd>",
         text,
     )
-    text = re.sub(
-        alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>", text
-    )
+    text = re.sub(alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>", text)
     text = re.sub(" " + suffixes + "[.] " + starters, " \\1<stop> \\2", text)
     text = re.sub(" " + suffixes + "[.]", " \\1<prd>", text)
     text = re.sub(" " + alphabets + "[.]", " \\1<prd>", text)
