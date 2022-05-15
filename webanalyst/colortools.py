@@ -77,9 +77,13 @@ def rgb_to_hex(*args):
 
 def hex_to_rgb(hex_code):
     """receives hex (str) -> returns rgb as tuple"""
+    
     hex_code = hex_code.lower()
-    if "#" in hex_code[0]:
-        hex_code = hex_code[1:]
+    try:
+        if "#" in hex_code[0]:
+            hex_code = hex_code[1:]
+    except IndexError:
+        return None
     r = hex_code[:2]
     g = hex_code[2:4]
     b = hex_code[4:]

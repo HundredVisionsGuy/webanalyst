@@ -73,8 +73,14 @@ def uses_inline_styles(markup):
     return bool(tags_with_inline_styles)
 
 
+def uses_absolute_paths(markup):
+    """ Checks all href and src for absolute paths """
+    return True
+
+
 if __name__ == "__main__":
     file_with_inline_styles = "tests/test_files/sample_with_inline_styles.html"
+    html_test = get_html(file_with_inline_styles)
     markup = clerk.file_to_string(file_with_inline_styles)
     has_inline_styles = uses_inline_styles(markup)
     print(has_inline_styles)

@@ -564,13 +564,12 @@ def get_global_color_details(rulesets):
                     color = declaration.value
                     if is_gradient(color):
                         colors = get_gradient_colors(color)
-                        todo = input("We have colors: " + colors)
-                        print(todo)
+                        color = colors
                 elif declaration.property == "background":
                     background_color = declaration.value
                     if is_gradient(background_color):
                         bg_colors = get_gradient_colors(background_color)
-                        print("We have bg colors: " + str(bg_colors))
+                        background_color = bg_colors 
 
             if background_color or color:
                 global_rulesets.append(
@@ -670,39 +669,10 @@ def append_color_codes(type, code, color_list):
 
 
 if __name__ == "__main__":
-
-    insane_gradient = """
-    -moz-radial-gradient(0% 200%, ellipse cover,
-    rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
-    -webkit-radial-gradient(0% 200%, ellipse cover,
-    rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
-    -o-radial-gradient(0% 200%, ellipse cover,
-    rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
-    -ms-radial-gradient(0% 200%, ellipse cover,
-    rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
-    radial-gradient(0% 200%, ellipse cover, antiquewhite 10%,
-    rgba(240, 205, 247,0) 40%),
-    -moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%,
-    rgba(42,60,87,.4) 200%),
-    -ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%),
-    linear-gradient(-45deg, maroon 0%, #092756 200%)
-    """
-
-    insane_gradient = """
--moz-radial-gradient(0% 200%, ellipse cover,
-rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
--webkit-radial-gradient(0% 200%, ellipse cover,
-rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
--o-radial-gradient(0% 200%, ellipse cover,
-rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
--ms-radial-gradient(0% 200%, ellipse cover,
-rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
-radial-gradient(0% 200%, ellipse cover,
-rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
--moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%,
-rgba(42,60,87,.4) 200%),
--ms-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)',
-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
-"""
-    results = get_gradient_colors(insane_gradient)
-    print(results)
+    from . import clerk
+    path = "tests/test_files/projects/large_project/css/layout.css"
+    layout_css = clerk.file_to_string(path)
+    
+    css1 = Stylesheet("layout.css", layout_css)
+    color_rulesets = get_color_rulesets([css1,])
+    print(color_rulesets)

@@ -147,6 +147,13 @@ cov.xml
 report/*
 !report/README.md
 
+# all but the README files in the projects folders
+projects/reponsive-navbar/*
+projects/responsive-navbar/images/*
+!projects/reponsive-navbar/README.md
+projects/single-page/*
+!projects/single-page/README.md
+
 # Mac OS stuff
 .DS_Store
 */.DS_Stores

@@ -358,7 +358,7 @@ if __name__ == "__main__":
     single_page_path = "tests/test_files/projects/single_page/"
 
     # project path
-    project_path = "projects/single-page/"
-    project_page = Report(project_path)
+    project_path = "projects/responsive-navbar/"
+    project_page = Report(single_page_path)
     project_page.generate_report()
     print(project_page.general_report)
