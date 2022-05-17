@@ -2,11 +2,10 @@ import os
 import re
 
 import bs4
+import clerk
 import mechanicalsoup
 import requests
 from bs4 import BeautifulSoup
-
-from . import clerk
 
 w3cURL = "https://validator.w3.org/nu/?out=json"
 
@@ -118,7 +117,9 @@ def validate_css(css_code):
         results = browser.get_current_page().select("#results_container")
     except Exception:
         # Convert the file "no_css_connection.html" into a soup tag object
-        no_connection_code = clerk.file_to_string("webanalyst/no_css_connection.html")
+        no_connection_code = clerk.file_to_string(
+            "webanalyst/no_css_connection.html"
+        )
         soup = BeautifulSoup(no_connection_code, "lxml")
         # Convert string to result set
         results = soup.select("#results_container")
@@ -138,7 +139,9 @@ if __name__ == "__main__":
     # test getting number of errorsz
     print(get_num_errors(report))
 
-    css_code = clerk.get_css_from_style_tag("tests/test_files/html_with_css.html")
+    css_code = clerk.get_css_from_style_tag(
+        "tests/test_files/html_with_css.html"
+    )
     css_validator_results = validate_css(css_code)
     is_valid = is_css_valid(css_validator_results)
     print(is_valid)

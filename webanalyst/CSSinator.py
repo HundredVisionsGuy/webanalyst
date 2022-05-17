@@ -4,8 +4,8 @@
 
 import re
 
-from . import color_keywords as keyword
-from . import colortools
+import color_keywords as keyword
+import colortools
 
 
 def get_nested_at_rule(code, rule):
@@ -605,7 +605,9 @@ def process_gradient(code):
     last_split = last_item.split("\n")
     if len(last_split) == 2:
         data.append(last_split[1])
-    vendor_regex = r"\A-moz-|-webkit-|-ms-|-o-"  # only works for start of string
+    vendor_regex = (
+        r"\A-moz-|-webkit-|-ms-|-o-"  # only works for start of string
+    )
     for datum in data:
         datum = datum.strip()
         if not re.match(vendor_regex, datum):

@@ -143,9 +143,18 @@ htmlcov/
 coverage/
 cov.xml
 
-# except the README in the report folder
+# except the README in the report & projects folders
 report/*
 !report/README.md
+
+project/*
+!project/README.md
+
+projects/single-page/*
+!projects/single-page/*README.md
+
+projects/responsive-navbar/*
+!projects/responsive-navbar/*README.md
 
 # Mac OS stuff
 .DS_Store
