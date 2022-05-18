@@ -147,6 +147,16 @@ cov.xml
 report/*
 !report/README.md
 
+
+projects/*
+!project/README.md
+
+projects/responsive-navbar/*
+!projects/responsive-navbar/README.md
+
+projects/single-page/*
+!projects/single-page/README.md
+
 # Mac OS stuff
 .DS_Store
 */.DS_Stores
