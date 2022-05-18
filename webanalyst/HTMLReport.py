@@ -1,14 +1,16 @@
 import logging
 import re
 
+import clerk
+import HTMLinator as html
+import validator as val
 from bs4 import BeautifulSoup
 
-from . import HTMLinator as html
-from . import clerk
-from . import report as rep
-from . import validator as val
+import report as rep
 
-logging.basicConfig(format="%(asctime)s - %(message)s", datefmt="%d-%b-%y %H:%M:%S")
+logging.basicConfig(
+    format="%(asctime)s - %(message)s", datefmt="%d-%b-%y %H:%M:%S"
+)
 report_template_path = "webanalyst/report_template.html"
 report_path = "report/report.html"
 
@@ -68,7 +70,9 @@ class HTMLReport:
     def get_required_elements(self):
         # get a list of all required elements: the keys
         required_elements = []
-        for element in enumerate(self.report_details["required_elements"].keys()):
+        for element in enumerate(
+            self.report_details["required_elements"].keys()
+        ):
             if element[1] == "HTML5_essential_elements":
                 for nested_el in enumerate(
                     self.report_details["required_elements"][
@@ -117,10 +121,14 @@ class HTMLReport:
                 for i in my_elements:
                     if "or" in i:
                         continue
-                    actual_number += html.get_num_elements_in_folder(i, self.__dir_path)
+                    actual_number += html.get_num_elements_in_folder(
+                        i, self.__dir_path
+                    )
                 el = my_elements[0] + "` or `" + my_elements[-1]
             else:
-                actual_number = html.get_num_elements_in_folder(el, self.__dir_path)
+                actual_number = html.get_num_elements_in_folder(
+                    el, self.__dir_path
+                )
 
             # get how many of that element is required
             number_required = self.report_details["required_elements"][el]
@@ -148,7 +156,9 @@ class HTMLReport:
         for el in enumerate(html5_elements):
             element = el[1].lower()
             # how many were found
-            number_found = html.get_num_elements_in_folder(element, self.__dir_path)
+            number_found = html.get_num_elements_in_folder(
+                element, self.__dir_path
+            )
             number_required = self.report_details["required_elements"][
                 "HTML5_essential_elements"
             ][element.upper()]
@@ -172,7 +182,9 @@ class HTMLReport:
         for i in enumerate(html5_elements.items()):
             all_elements_meet = True
             key, min_value = i[1]
-            actual_value = html.get_num_elements_in_folder(key, self.__dir_path)
+            actual_value = html.get_num_elements_in_folder(
+                key, self.__dir_path
+            )
             element_meets = actual_value >= min_value
             if not element_meets:
                 all_elements_meet = False  # it just takes one not meeting
@@ -283,7 +295,9 @@ class HTMLReport:
                         ]
                         print("We have an exception: " + str(e))
                 else:
-                    self.report_details["validator_results"]["HTML Errors"] += 1
+                    self.report_details["validator_results"][
+                        "HTML Errors"
+                    ] += 1
                     try:
                         errors_dict["HTML"][page_name].append(item)
                     except Exception as e:
@@ -317,7 +331,9 @@ class HTMLReport:
                     ]
                     print("We have an exception " + str(e))
 
-        self.augment_errors(errors_dict)  # we might need to change to a function
+        self.augment_errors(
+            errors_dict
+        )  # we might need to change to a function
         self.add_warnings(warnings_dict)
 
     def augment_errors(self, new_dict):
@@ -356,7 +372,9 @@ class HTMLReport:
         validation_results_string = self.get_validation_results_string("HTML")
 
         # create our tbody contents
-        tbody_contents = BeautifulSoup(validation_results_string, "html.parser")
+        tbody_contents = BeautifulSoup(
+            validation_results_string, "html.parser"
+        )
         tbody_id = "html-validation"
         report_content.find(id=tbody_id).replace_with(tbody_contents)
 
@@ -365,7 +383,9 @@ class HTMLReport:
         validation_results_string = self.get_validation_results_string("CSS")
 
         # create our tbody contents
-        tbody_contents = BeautifulSoup(validation_results_string, "html.parser")
+        tbody_contents = BeautifulSoup(
+            validation_results_string, "html.parser"
+        )
         tbody_id = "css-validation"
         report_content.find(id=tbody_id).replace_with(tbody_contents)
 
@@ -396,8 +416,10 @@ class HTMLReport:
             goal = el[1][0]
             actual = el[1][1]
             results = str(el[1][2])
-            html_elements_results_string += rep.Report.get_report_results_string(
-                "", element, goal, actual, results
+            html_elements_results_string += (
+                rep.Report.get_report_results_string(
+                    "", element, goal, actual, results
+                )
             )
         # add remaining elements
         for el in html_goals_results:
@@ -406,13 +428,17 @@ class HTMLReport:
             goal = el[1][0]
             actual = el[1][1]
             results = el[1][2]
-            html_elements_results_string += rep.Report.get_report_results_string(
-                "", element, goal, actual, results
+            html_elements_results_string += (
+                rep.Report.get_report_results_string(
+                    "", element, goal, actual, results
+                )
             )
         ######
         ######
         # create our tbody contents
-        tbody_contents = BeautifulSoup(html_elements_results_string, "html.parser")
+        tbody_contents = BeautifulSoup(
+            html_elements_results_string, "html.parser"
+        )
         report_content.find(id=tbody_id).replace_with(tbody_contents)
 
         # Save new HTML as report/report.html
@@ -434,7 +460,9 @@ class HTMLReport:
             return '<tr><td rowspan="4">Congratulations! No Errors Found</td></tr>'
         else:
             try:
-                validation_report = self.validator_errors[validation_type].copy()
+                validation_report = self.validator_errors[
+                    validation_type
+                ].copy()
             except Exception as e:
                 print("Whoah Nelly")
                 print("We have an exception " + str(e))
@@ -445,8 +473,12 @@ class HTMLReport:
                 if num_errors != 1:
                     error_str += "s"
                 cumulative_errors += num_errors
-                cumulative_errors_string = str(cumulative_errors) + " total errors"
-                meets = str(cumulative_errors <= self.report_details["validator_goals"])
+                cumulative_errors_string = (
+                    str(cumulative_errors) + " total errors"
+                )
+                meets = str(
+                    cumulative_errors <= self.report_details["validator_goals"]
+                )
                 results += rep.Report.get_report_results_string(
                     "", page, error_str, cumulative_errors_string, meets
                 )
@@ -482,7 +514,11 @@ class HTMLReport:
                         first_column = last_column
                         print("We have an exception " + str(e))
                     # render any HTML code viewable on the screen
-                    extract = error["extract"].replace("<", "&lt;").replace(">", "&gt;")
+                    extract = (
+                        error["extract"]
+                        .replace("<", "&lt;")
+                        .replace(">", "&gt;")
+                    )
 
                     # place extract inside of a code tag
                     extract = "<code>" + extract + "</code>"

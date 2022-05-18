@@ -5,10 +5,9 @@
 import os
 import re
 
+import clerk
 from bs4 import BeautifulSoup
 from lxml import html
-
-from . import clerk
 
 
 def get_html(path):
