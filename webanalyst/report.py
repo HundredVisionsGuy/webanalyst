@@ -1,11 +1,11 @@
 import logging
 import re
 
-import clerk
-import CSSReport
-import HTMLinator as html
-import HTMLReport
 from bs4 import BeautifulSoup
+
+from . import CSSReport
+from . import HTMLinator as html
+from . import HTMLReport, clerk
 
 logging.basicConfig(
     format="%(asctime)s - %(message)s", datefmt="%d-%b-%y %H:%M:%S"

@@ -4,8 +4,8 @@
 
 import re
 
-import color_keywords as keyword
-import colortools
+from . import color_keywords as keyword
+from . import colortools
 
 
 def get_nested_at_rule(code, rule):

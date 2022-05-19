@@ -2,15 +2,15 @@ import logging
 import os
 import re
 
-import clerk
-import color_keywords as keywords
-import colortools as colors
-import CSSinator
-import HTMLinator as html
-import validator as val
 from bs4 import BeautifulSoup
 
-import report as rep
+from . import CSSinator
+from . import HTMLinator as html
+from . import clerk
+from . import color_keywords as keywords
+from . import colortools as colors
+from . import report as rep
+from . import validator as val
 
 stylesheet = CSSinator.Stylesheet
 

@@ -1,12 +1,12 @@
 import logging
 import re
 
-import clerk
-import HTMLinator as html
-import validator as val
 from bs4 import BeautifulSoup
 
-import report as rep
+from . import HTMLinator as html
+from . import clerk
+from . import report as rep
+from . import validator as val
 
 logging.basicConfig(
     format="%(asctime)s - %(message)s", datefmt="%d-%b-%y %H:%M:%S"

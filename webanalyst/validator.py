@@ -2,10 +2,11 @@ import os
 import re
 
 import bs4
-import clerk
 import mechanicalsoup
 import requests
 from bs4 import BeautifulSoup
+
+from . import clerk
 
 w3cURL = "https://validator.w3.org/nu/?out=json"
 
