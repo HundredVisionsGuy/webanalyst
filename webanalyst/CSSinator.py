@@ -152,6 +152,9 @@ class Stylesheet:
                     # skip if has vendor prefix
                     if has_vendor_prefix(value):
                         continue
+                    # skip if not valid color value
+                    if not colortools.is_color_value(value):
+                        continue
                     # make sure the value is a color (not other)
                     rule = {selector: {property: value}}
                     color_rulesets.append(rule)
