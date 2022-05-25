@@ -149,6 +149,9 @@ class Stylesheet:
                         "background" in declaration.property):
                     property = declaration.property
                     value = declaration.value
+                    # skip if has vendor prefix
+                    if has_vendor_prefix(value):
+                        continue
                     # make sure the value is a color (not other)
                     rule = {selector: {property: value}}
                     color_rulesets.append(rule)

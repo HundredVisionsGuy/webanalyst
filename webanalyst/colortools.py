@@ -203,6 +203,17 @@ def is_hsl(val):
     return results
 
 
+def is_color_value(val):
+    """ returns True if valid color value """
+    if is_hex(val):
+        return True
+    if is_hsl(val):
+        return True
+    if is_rgb(val):
+        return True
+    return False
+
+
 def get_relative_luminance(val):
     val /= 255
     if val <= 0.03928:

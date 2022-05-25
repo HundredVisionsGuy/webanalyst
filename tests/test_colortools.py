@@ -200,3 +200,28 @@ def test_is_rgb_for_rgba():
     results = color.is_rgb(value)
     expected = True
     assert results == expected
+
+
+def test_is_color_value_for_hex():
+    assert color.is_color_value("#fff")
+
+
+def test_is_color_value_for_hsla():
+    assert color.is_color_value(hsla_string_1)
+
+
+def test_is_color_value_for_rgb():
+    assert color.is_color_value(hsl_string_1_as_rgb_str)
+
+
+def test_is_color_value_for_rgba():
+    assert color.is_color_value(hsla_string_1_as_rgba)
+
+
+def test_is_color_value_for_non_color_fill():
+    # test for some non-color values (associated with background prop)
+    assert not color.is_color_value("fill")
+
+
+def test_is_color_value_for_non_color_url():
+    assert not color.is_color_value('url("images/BannerFlag.png")')
