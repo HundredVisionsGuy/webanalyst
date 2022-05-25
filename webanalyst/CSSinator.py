@@ -32,7 +32,8 @@ def restore_braces(split):
 
 
 class Stylesheet:
-    def __init__(self, href, text, stylesheet_type="file"):
+    def __init__(self, href: str, text: str, stylesheet_type="file") -> None:
+        """ href (filename or local if styletag) text (CSS code) """
         self.type = stylesheet_type
         self.href = href
         self.text = text
@@ -140,9 +141,19 @@ class Stylesheet:
         self.nested_at_rules = nested_at_rule_dict
 
     def get_color_ruleset(self, ruleset):
-        if ruleset.declaration_block:
-            if "color:" in ruleset.declaration_block.text:
-                self.color_rulesets.append(ruleset)
+        color_rulesets = []
+        if ruleset.declaration_block and "color:" in ruleset.declaration_block.text:
+            selector = ruleset.selector
+            for declaration in ruleset.declaration_block.declarations:
+                if ("color" in declaration.property or
+                        "background" in declaration.property):
+                    property = declaration.property
+                    value = declaration.value
+                    # make sure the value is a color (not other)
+                    rule = {selector: {property: value}}
+                    color_rulesets.append(rule)
+        if color_rulesets:
+            self.color_rulesets += color_rulesets
 
     def get_selectors(self):
         for rule in self.rulesets:
@@ -598,13 +609,15 @@ def is_gradient(value):
 def process_gradient(code):
     """returns list of all colors from gradient"""
     colors = []
-    # remove all vendor prefixes
     data = code.split("),")
+
     # split the last datum in data into two
     last_item = data[-1].strip()
     last_split = last_item.split("\n")
     if len(last_split) == 2:
         data.append(last_split[1])
+
+    # remove all vendor prefixes
     vendor_regex = (
         r"\A-moz-|-webkit-|-ms-|-o-"  # only works for start of string
     )
@@ -614,15 +627,23 @@ def process_gradient(code):
             colors.append(datum)
 
     # capture only color codes and append to colors
+    only_colors = []
     if colors:
         # grab only color codes (Nothing else)
-        only_colors = []
         for gradient in colors:
             color_codes = get_colors_from_gradient(gradient)
             if color_codes:
+                color_codes = sort_color_codes(color_codes)
                 only_colors += color_codes
 
     return only_colors
+
+
+def sort_color_codes(codes):
+    """ sorts color codes from light to dark """
+    # get hsl of hex and sort by l
+    sorted = []
+    return sorted
 
 
 def get_colors_from_gradient(gradient):
@@ -661,6 +682,7 @@ def append_color_codes(type, code, color_list):
 
 
 if __name__ == "__main__":
+    from . import clerk
 
     insane_gradient = """
     -moz-radial-gradient(0% 200%, ellipse cover,
@@ -697,3 +719,16 @@ linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
 """
     results = process_gradient(insane_gradient)
     print(results)
+    project_path = "projects/single-page/"
+    css_path = project_path + "style.css"
+    html_path = project_path + "index.html"
+    css_code = clerk.file_to_string(css_path)
+    html_code = clerk.file_to_string(html_path)
+
+    styles = Stylesheet("style.css", css_code)
+    color_rules = styles.color_rulesets
+    for rule in color_rules:
+        selector = rule.selector
+        for declaration in rule.declaration_block.declarations:
+            property = declaration.property
+            value = declaration.value

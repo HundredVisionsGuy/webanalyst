@@ -86,6 +86,16 @@ rgba(42,60,87,.4) 200%),
 linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
 """
 
+path_to_gradients_project = "tests/test_files/"
+path_to_gradients_project += "projects/page_with_gradients_and_alpha"
+
+
+@pytest.fixture
+def stylesheet_with_gradients():
+    css_code = clerk.file_to_string(path_to_gradients_project)
+    stylesheet = css.Stylesheet("style.css", css_code)
+    return stylesheet
+
 
 @pytest.fixture
 def css_code_1_split():
@@ -391,8 +401,8 @@ def test_get_colors_from_gradient_for_rgba():
     gradient = "linear-gradient(-45deg, rgba(200, 100, 100, 0.5) 0% #336699 100%)"
     results = css.get_colors_from_gradient(gradient)
     assert "rgba(200, 100, 100, 0.5)" in results
-    
-    
+
+
 def test_append_color_codes_for_none():
     colors = []
     gradient = "linear-gradient(to bottom, rgba(169, "
@@ -432,3 +442,7 @@ def test_append_color_codes_for_keyword_antiquewhite():
     gradient = "linear-gradient(-45deg, maroon 0%, #092756 200%)"
     css.append_color_codes("keywords", gradient, colors)
     assert "maroon" in colors
+
+
+def test_stylesheet_with_gradients_for_color_rulesets(stylesheet_with_gradients):
+    assert False
