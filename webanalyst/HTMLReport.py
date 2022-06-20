@@ -293,7 +293,7 @@ class HTMLReport:
                         errors_dict["CSS"][page_name] = [
                             item,
                         ]
-                        print("We have an exception: " + e)
+                        print("We have an exception: " + str(e))
                 else:
                     self.report_details["validator_results"][
                         "HTML Errors"
@@ -304,7 +304,7 @@ class HTMLReport:
                         errors_dict["HTML"][page_name] = [
                             item,
                         ]
-                        print("We have an exception " + e)
+                        print("We have an exception " + str(e))
             elif item["type"] == "info":
                 if "CSS" in item["message"]:
                     try:
@@ -313,7 +313,7 @@ class HTMLReport:
                         warnings_dict["CSS"][page_name] = [
                             item,
                         ]
-                        print("We have an exception " + e)
+                        print("We have an exception " + str(e))
                 else:
                     try:
                         warnings_dict["HTML"][page_name].append(item)
@@ -321,7 +321,7 @@ class HTMLReport:
                         warnings_dict["HTML"][page_name] = [
                             item,
                         ]
-                        print("We have an exception " + e)
+                        print("We have an exception " + str(e))
             elif item["type"] == "alert":
                 try:
                     warnings_dict["HTML"][page_name].append(item)
@@ -329,7 +329,7 @@ class HTMLReport:
                     warnings_dict["HTML"][page_name] = [
                         item,
                     ]
-                    print("We have an exception " + e)
+                    print("We have an exception " + str(e))
 
         self.augment_errors(
             errors_dict
@@ -465,7 +465,7 @@ class HTMLReport:
                 ].copy()
             except Exception as e:
                 print("Whoah Nelly")
-                print("We have an exception " + e)
+                print("We have an exception " + str(e))
             cumulative_errors = 0
             for page, errors in validation_report.items():
                 num_errors = len(errors)
@@ -506,13 +506,13 @@ class HTMLReport:
                         first_line = error["firstLine"]
                     except Exception as e:
                         first_line = last_line
-                        print("We have an exception " + e)
+                        print("We have an exception " + str(e))
                     last_column = error["lastColumn"]
                     try:
                         first_column = error["firstColumn"]
                     except Exception as e:
                         first_column = last_column
-                        print("We have an exception " + e)
+                        print("We have an exception " + str(e))
                     # render any HTML code viewable on the screen
                     extract = (
                         error["extract"]

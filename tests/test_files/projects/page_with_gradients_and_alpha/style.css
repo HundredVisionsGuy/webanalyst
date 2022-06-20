@@ -1,0 +1,81 @@
+html {
+  min-height: 200%;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #fff;
+  text-align: center;
+  background: #082604;
+  background: -moz-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%),
+    -moz-linear-gradient(top, rgba(169, 235, 206,.25) 0%, rgba(42,60,87,.4) 200%), 
+    -moz-linear-gradient(-45deg, #46ABA6 0%, #092756 200%);
+  background: -webkit-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%), 
+    -webkit-linear-gradient(top, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%), 
+    -webkit-linear-gradient(-45deg, #46ABA6 0%,#092756 200%);
+   background: -webkit-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%), 
+    linear-gradient(to bottom, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%), 
+    linear-gradient(135deg, #46ABA6 0%,#092756 200%);
+    background: -o-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%), 
+    -o-linear-gradient(top, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%),
+    -o-linear-gradient(-45deg, #46ABA6 0%,#092756 200%);
+  background: -ms-radial-gradient(0% 200%, ellipse cover, rgba(143, 193, 242, 0.22) 10%,rgba(240, 205, 247,0) 40%), 
+    -ms-linear-gradient(top, rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%), 
+    -ms-linear-gradient(-45deg, #46ABA6 0%,#092756 200%);
+}
+
+.main-box {
+  position: absolute;
+
+  top: 4%;
+  left: 4%;
+  width: 715px;
+  padding: 25px;
+  box-sizing: border-box;
+  box-shadow: 0 20px 20px rgba(0,0,0,.6);
+  text-shadow: 0 0 14px black;
+  border-radius: 15px;
+}
+
+.main-box h3 {
+  color: #ffffff;
+  text-shadow: 0 0 4px black;
+  text-align: center;
+}
+
+.about-box {
+  position: absolute;
+  top: 50%;
+  left: 4%;
+  width: 715px;
+  padding: 25px;
+  background: rgba(0,0,0,.5);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(0,0,0,.6);
+  border-radius: 10px;
+  text-align: left;
+}
+
+.about-box a {
+  color: #ffee80
+}
+
+
+.content-box {
+  position: absolute;
+  top: 130%;
+  left: 4%;
+  width: 715px;
+  padding: 25px;
+  background: rgba(0,0,0,.5);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(0,0,0,.6);
+  border-radius: 10px;
+  text-align: left;
+}
+
+.content-box a {
+  color: #ffee80
+}
+
+.content-flex {
+  display: flex;
+  overflow: auto;
+}

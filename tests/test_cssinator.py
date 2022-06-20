@@ -86,6 +86,16 @@ rgba(42,60,87,.4) 200%),
 linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
 """
 
+path_to_gradients_project = "tests/test_files/"
+path_to_gradients_project += "projects/page_with_gradients_and_alpha"
+
+
+@pytest.fixture
+def stylesheet_with_gradients():
+    css_code = clerk.file_to_string(path_to_gradients_project)
+    stylesheet = css.Stylesheet("style.css", css_code)
+    return stylesheet
+
 
 @pytest.fixture
 def css_code_1_split():
@@ -360,7 +370,7 @@ def test_has_vendor_prefix_for_property_with_dash_not_prefix():
 def test_is_gradient_for_false():
     value = "rgba(155, 155, 155, 0)"
     results = css.is_gradient(value)
-    assert results
+    assert not results
 
 
 def test_is_gradient_for_true():
@@ -371,12 +381,6 @@ def test_is_gradient_for_true():
     value += "-moz-linear-gradient(-45deg, #46ABA6 0%, #092756 200%)"
     results = css.is_gradient(value)
     assert results
-
-
-def test_process_gradient_for_insane_css_vendor_prefix_check():
-    results = css.process_gradient(insane_gradient)[0]
-    expected = True
-    assert results == expected
 
 
 def test_process_gradient_for_insane_css_for_four_returned_colors():
@@ -394,7 +398,9 @@ def test_get_colors_from_gradient_for_hex():
 
 
 def test_get_colors_from_gradient_for_rgba():
-    pass
+    gradient = "linear-gradient(-45deg, rgba(200, 100, 100, 0.5) 0% #336699 100%)"
+    results = css.get_colors_from_gradient(gradient)
+    assert "rgba(200, 100, 100, 0.5)" in results
 
 
 def test_append_color_codes_for_none():
@@ -407,16 +413,19 @@ def test_append_color_codes_for_none():
 
 def test_append_color_codes_for_rgba():
     colors = []
-    gradient = "linear-gradient(to bottom, "
-    "rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%"
+    gradient = (
+        "linear-gradient(to bottom, "
+        "rgba(169, 235, 206,.25) 0%,rgba(42,60,87,.4) 200%"
+    )
     css.append_color_codes("rgb", gradient, colors)
     assert "rgba(169, 235, 206,.25)" in colors
 
 
 def test_append_color_codes_for_rgb():
     colors = []
-    gradient = "linear-gradient(to bottom, rgb(169, 235, "
-    "206,.25) 0%,rgba(42,60,87,.4) 200%"
+    gradient = (
+        "linear-gradient(to bottom, rgb(169, 235, " "206,.25) 0%,rgba(42,60,87,.4) 200%"
+    )
     css.append_color_codes("rgb", gradient, colors)
     assert "rgb(169, 235, 206,.25)" in colors
 
@@ -433,3 +442,7 @@ def test_append_color_codes_for_keyword_antiquewhite():
     gradient = "linear-gradient(-45deg, maroon 0%, #092756 200%)"
     css.append_color_codes("keywords", gradient, colors)
     assert "maroon" in colors
+
+
+def test_stylesheet_with_gradients_for_color_rulesets(stylesheet_with_gradients):
+    assert False

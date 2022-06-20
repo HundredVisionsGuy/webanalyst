@@ -1,4 +1,15 @@
-code = """header h1 {background-color: rgb(114, 101, 87);}#menu-toggle.closed {transform: rotate(0deg);}}@media only screen and (min-width: 660px) {nav ul {flex-direction: row;}}@media only screen and (min-width: 911px) {header {display: flex;flex-direction: row;justify-content: space-between;border-bottom: .1rem solid rgb(114, 101, 87);margin-bottom: 2rem;}#menu-toggle {height: 0;opacity: 0;}nav.closed {top: 3.5rem;}nav li > a {font-size: 1.3rem;}}"""
+code = (
+    "header h1 {background-color: rgb(114, 101, 87);}"
+    "#menu-toggle.closed {transform: rotate(0deg);}}"
+    "@media only screen and (min-width: 660px) {nav ul {"
+    "flex-direction: row;}}@media only screen and "
+    "(min-width: 911px) {header {display: flex;"
+    "flex-direction: row;justify-content: space-between;"
+    "border-bottom: .1rem solid rgb(114, 101, 87);"
+    "margin-bottom: 2rem;}#menu-toggle {height: 0;"
+    "opacity: 0;}nav.closed {top: 3.5rem;}nav li > a {"
+    "font-size: 1.3rem;}}"
+)
 
 
 def restore_braces(split):

@@ -1610,3 +1610,7 @@ class CSSReport:
                     "", page, error_str, cumulative_errors_string, meets
                 )
             return results
+
+
+if __name__ == '__main__':
+    pass

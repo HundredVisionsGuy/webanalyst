@@ -147,6 +147,8 @@ def hex_to_decimal(c):
     """convert hex code (c) to a decimal value (base 10)"""
     # make sure to convert to lower case
     # so FF becomes ff
+    if c[0].lower() not in hex_map.keys():
+        raise ValueError(f"The value `{c}` is not a valid hex code.")
     c = c.lower()
     ones = hex_map[c[1]]
     sixteens = hex_map[c[0]] * 16
@@ -201,6 +203,17 @@ def is_hsl(val):
     return results
 
 
+def is_color_value(val):
+    """ returns True if valid color value """
+    if is_hex(val):
+        return True
+    if is_hsl(val):
+        return True
+    if is_rgb(val):
+        return True
+    return False
+
+
 def get_relative_luminance(val):
     val /= 255
     if val <= 0.03928:
@@ -218,8 +231,12 @@ def luminance(rgb):
 
 
 def contrast_ratio(hex1, hex2):
-    rgb1 = hex_to_rgb(hex1)
-    rgb2 = hex_to_rgb(hex2)
+    try:
+        rgb1 = hex_to_rgb(hex1)
+        rgb2 = hex_to_rgb(hex2)
+    except ValueError as e:
+        print(f"Oops {str(e)}")
+        return 0
     l1 = luminance(rgb1)
     l2 = luminance(rgb2)
     # Make sure l1 is the lighter of the two or swap them

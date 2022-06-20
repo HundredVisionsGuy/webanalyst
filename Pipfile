@@ -43,6 +43,7 @@ isort = "*"
 flake8 = "*"
 autoflake = "*"
 autoflake8 = "*"
+anytree = "*"
 
 [requires]
 python_version = "3.9"

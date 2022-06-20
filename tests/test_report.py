@@ -19,6 +19,7 @@ multipage_meets_path = "tests/test_files/projects/multi_page_meets/"
 def about_me_report():
     my_report = report.Report(about_me_path)
     my_report.generate_report()
+    print(my_report)
     yield my_report
 
 
@@ -26,7 +27,7 @@ def about_me_report():
 def about_me_dnm_report():
     my_report = report.Report(about_me_dnm_path)
     my_report.generate_report()
-    yield my_report
+    return my_report
 
 
 @pytest.fixture
@@ -111,8 +112,10 @@ def multi_page_meets_css_report(multipage_meets_report):
 
 @pytest.fixture
 def paragraph_tag():
-    p = "<p>I was born a young child in Phoenix, Arizona. I was the last of "
-    "five children, but I had a good childhood.</p>"
+    p = (
+        "<p>I was born a young child in Phoenix, Arizona. I was the last of "
+        "five children, but I had a good childhood.</p>"
+    )
     p_tag = BeautifulSoup(p, "html.parser")
     return p_tag
 
@@ -176,9 +179,11 @@ def test_about_me_general_report_for_title(about_me_general_report):
 def test_about_me_report_for_get_description(about_me_general_report):
     about_me_general_report.set_description()
     results = about_me_general_report.get_description()
-    expected = "Students are asked to create a single web page "
-    "designed to give information about the student using Headings "
-    "(h1 & h2), paragraphs, links, and bold and italics."
+    expected = (
+        "Students are asked to create a single web page "
+        "designed to give information about the student using Headings "
+        "(h1 & h2), paragraphs, links, and bold and italics."
+    )
     assert results == expected
 
 
@@ -205,15 +210,13 @@ def test_about_me_general_report_for_get_sentences(about_me_general_report):
 def test_about_me_general_report_for_set_min_number_files(
     about_me_general_report,
 ):
-    html_num_results = about_me_general_report.report_details[
-        "min_number_files"
-    ]["HTML"]
+    html_num_results = about_me_general_report.report_details["min_number_files"][
+        "HTML"
+    ]
     expected_html = 1
     assert html_num_results == expected_html
 
-    css_num_results = about_me_general_report.report_details[
-        "min_number_files"
-    ]["CSS"]
+    css_num_results = about_me_general_report.report_details["min_number_files"]["CSS"]
     css_num_expected = 0
     assert css_num_results == css_num_expected
 
@@ -221,9 +224,9 @@ def test_about_me_general_report_for_set_min_number_files(
 def test_about_me_general_report_for_num_files_results_html(
     about_me_general_report,
 ):
-    meets_html_results = about_me_general_report.report_details[
-        "num_files_results"
-    ]["Meets HTML"]
+    meets_html_results = about_me_general_report.report_details["num_files_results"][
+        "Meets HTML"
+    ]
     # It meets
     assert meets_html_results
 
@@ -231,9 +234,9 @@ def test_about_me_general_report_for_num_files_results_html(
 def test_about_me_general_report_for_num_files_results_css(
     about_me_general_report,
 ):
-    meets_css_results = about_me_general_report.report_details[
-        "num_files_results"
-    ]["Meets CSS"]
+    meets_css_results = about_me_general_report.report_details["num_files_results"][
+        "Meets CSS"
+    ]
     # It meets
     assert meets_css_results
 
@@ -246,34 +249,28 @@ def test_general_report_for_analyze_results(
     # 3 paragraphs and 5 sentences
     expected_SPP = 1.6666666666666667
     assert (
-        about_me_general_report.report_details["writing_goal_results"][
-            "actual_SPP"
-        ]
+        about_me_general_report.report_details["writing_goal_results"]["actual_SPP"]
         == expected_SPP
     )
 
     # Test meets_SPP
     expected = True
     assert (
-        about_me_general_report.report_details["writing_goal_results"][
-            "meets_SPP"
-        ]
+        about_me_general_report.report_details["writing_goal_results"]["meets_SPP"]
         == expected
     )
 
     # 61 words & 5 sentences
     expected_WPS = 12.2
     assert (
-        about_me_general_report.report_details["writing_goal_results"][
-            "actual_WPS"
-        ]
+        about_me_general_report.report_details["writing_goal_results"]["actual_WPS"]
         == expected_WPS
     )
 
     expected_meets_WPS = True
-    meets_WPS_results = about_me_general_report.report_details[
-        "writing_goal_results"
-    ]["meets_WPS"]
+    meets_WPS_results = about_me_general_report.report_details["writing_goal_results"][
+        "meets_WPS"
+    ]
     assert expected_meets_WPS == meets_WPS_results
 
 
@@ -301,9 +298,11 @@ def test_general_report_for_get_report_results_string_for_spp(
         actual["actual_SPP"],
         actual["meets_SPP"],
     )
-    expected = '<tr class="general-spp-results"><td>Avg. Sentences'
-    " / Paragraph</td><td>[1, 5]</td><td>1.6666666666666667</td>"
-    "<td>Meets</td></tr>"
+    expected = (
+        '<tr class="general-spp-results"><td>Avg. Sentences'
+        " / Paragraph</td><td>[1, 5]</td><td>1.6666666666666667</td>"
+        "<td>Meets</td></tr>"
+    )
     assert results == expected
 
 
@@ -319,9 +318,11 @@ def test_general_report_for_get_report_results_string_for_wps(
         actual["actual_WPS"],
         actual["meets_WPS"],
     )
-    expected = '<tr class="general-wps-results"><td>Avg. Words '
-    "/ Sentence</td><td>[10, 20]</td><td>12.2</td><td>Meets</td>"
-    "</tr>"
+    expected = (
+        '<tr class="general-wps-results"><td>Avg. Words '
+        "/ Sentence</td><td>[10, 20]</td><td>12.2</td><td>Meets</td>"
+        "</tr>"
+    )
     assert results == expected
 
 
@@ -336,8 +337,10 @@ def test_static_method_get_report_results_string_for_html(
     results = report.Report.get_report_results_string(
         html_id, type_column, target["HTML"], num_files, actual["Meets HTML"]
     )
-    expected = '<tr class="general-html-files-results"><td>HTML</td>'
-    "<td>1</td><td>1</td><td>Meets</td></tr>"
+    expected = (
+        '<tr class="general-html-files-results"><td>HTML</td>'
+        "<td>1</td><td>1</td><td>Meets</td></tr>"
+    )
     assert results == expected
 
 
@@ -352,8 +355,10 @@ def test_general_report_for_get_report_results_string_for_css(
     results = report.Report.get_report_results_string(
         html_id, type_column, target["CSS"], num_files, actual["Meets CSS"]
     )
-    expected = '<tr class="general-css-files-results"><td>CSS</td>'
-    "<td>0</td><td>0</td><td>Meets</td></tr>"
+    expected = (
+        '<tr class="general-css-files-results"><td>CSS</td>'
+        "<td>0</td><td>0</td><td>Meets</td></tr>"
+    )
     assert results == expected
 
 
@@ -422,18 +427,14 @@ def test_about_me_html_report_for_get_html_requirements_list(
     about_me_html_report,
 ):
     result_list = about_me_html_report.get_html_requirements_list()
-    results = (
-        "### HTML" in result_list[0] and "`EM`: 2 or more" in result_list[-1]
-    )
+    results = "### HTML" in result_list[0] and "`EM`: 2 or more" in result_list[-1]
     expected = True
     assert results == expected
 
 
 def test_html_report_for_ammend_required_elements(about_me_html_report):
     about_me_html_report.ammend_required_elements()
-    assert ("P", 3) in about_me_html_report.report_details[
-        "required_elements"
-    ].items()
+    assert ("P", 3) in about_me_html_report.report_details["required_elements"].items()
 
 
 def test_html_report_for_meeting_html5_essential_elements(
@@ -599,9 +600,7 @@ def test_about_me_css_report_validate_css_for_0_errors(about_me_css_report):
 def test_about_me_dnm_css_report_for_validate_css_results_for_2_errors(
     about_me_dnm_css_report,
 ):
-    css_errors = about_me_dnm_css_report.report_details[
-        "css_validator_results"
-    ]
+    css_errors = about_me_dnm_css_report.report_details["css_validator_results"]
     print(css_errors)
     results = len(css_errors)
     expected = 2
@@ -611,9 +610,7 @@ def test_about_me_dnm_css_report_for_validate_css_results_for_2_errors(
 def test_about_me_css_report_for_get_project_css_by_file(about_me_css_report):
     # should have been generated
     # about_me_css_report
-    num_css_tags = len(
-        about_me_css_report.project_css_by_html_file["index.html"]
-    )
+    num_css_tags = len(about_me_css_report.project_css_by_html_file["index.html"])
     assert num_css_tags == 1
 
 
@@ -773,9 +770,7 @@ def test_get_standard_requirements_large_project(large_project_css_report):
         "Repeat selectors": {"min": 0, "max": 0},
         "Repeat declaration blocks": {"min": 0, "max": 0},
     }
-    results = large_project_css_report.report_details[
-        "standard_requirements_goals"
-    ]
+    results = large_project_css_report.report_details["standard_requirements_goals"]
     assert results == expected
 
 
@@ -814,9 +809,7 @@ def test_get_css_errors_for_0_errors(about_me_css_report):
 # report.html relatd tests
 def test_about_me_report_html_doc_for_general_results(about_me_general_report):
     report_contents = clerk.file_to_string(report_html_doc_path)
-    report_tr = (
-        '<tr class="general-wps-results"><td>Avg. Words / Sentence</td>'
-    )
+    report_tr = '<tr class="general-wps-results"><td>Avg. Words / Sentence</td>'
     "<td>[10, 20]</td><td>12.2</td><td>Meets</td></tr>"
     assert report_tr in report_contents
 
@@ -825,9 +818,7 @@ def test_about_me_html_report_for_general_results_in_report_html_doc_contents(
     about_me_html_report,
 ):
     report_contents = clerk.file_to_string(report_html_doc_path)
-    report_tr = (
-        '<tr class="general-wps-results"><td>Avg. Words / Sentence</td>'
-    )
+    report_tr = '<tr class="general-wps-results"><td>Avg. Words / Sentence</td>'
     "<td>[10, 20]</td><td>12.2</td><td>Meets</td></tr>"
     assert report_tr in report_contents
 
