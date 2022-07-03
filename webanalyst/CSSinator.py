@@ -7,28 +7,34 @@ import re
 from . import color_keywords as keyword
 from . import colortools
 
+# Regex Patterns
+regex_patterns = {
+    "vendor_prefix": r"\A-moz-|-webkit-|-ms-|-o-",
+    "header_selector": r"h[1-6]",
+    "id_selector": r"#\w+",
+    "class_selector": r"\.\w+",
+    "pseudoclass_selector": r":\w+",
+    "attribute_selector": r"\[\w+=\w+]",
+    "type_selector": r"([^#:\+.\[=a-zA-Z][a-zA-Z$][a-zA-Z1-6]*|^\w*)",
+    "descendant_selector": r"\w+\s\w+",
+    "child_combinator": r"\w+\s*>\s*\w+",
+    "adjacent_sibling_combinator": r"\w+\s*\+\s*\w+",
+    "general_sibling_combinator": r"\w+\s*~\s*\w+",
+    "grouped_selector": r"\w+\s*,\s*\w+"
+}
 
-def get_nested_at_rule(code, rule):
-    at_rule = []
-    at_split = code.split(rule)
-    if len(at_split) > 1:
-        if at_split[0] == "":
-            # rule was at the beginning
-            at_rule.append(rule + " " + at_split[1])
-        else:
-            at_rule.append(rule + " " + at_split[0])
-    return at_rule
-
-
-def restore_braces(split):
-    result = []
-    if len(split) <= 1:
-        return split
-    for item in split:
-        if len(item) > 0:
-            item = item + "}}"
-            result.append(item)
-    return result
+nested_at_rules = (
+    "@supports",
+    "@document",
+    "@page",
+    "@font-face",
+    "@keyframes",
+    "@media",
+    "@viewport",
+    "@counter-style",
+    "@font-feature-values",
+    "@property",
+)
 
 
 class Stylesheet:
@@ -307,50 +313,27 @@ class Declaration:
         return self.property + ": " + self.value
 
 
-css_with_errors = """<body> {
-    font-size: 1.2em;
-    color: brown;
-    background-color: aliceblue;
-}
-"""
-css_code = """
-/* styles.css
-    Apply general styles to the entire
-    document
-*/
+def get_nested_at_rule(code, rule):
+    at_rule = []
+    at_split = code.split(rule)
+    if len(at_split) > 1:
+        if at_split[0] == "":
+            # rule was at the beginning
+            at_rule.append(rule + " " + at_split[1])
+        else:
+            at_rule.append(rule + " " + at_split[0])
+    return at_rule
 
-/* TODO
- *  Use the adobe color mixer to select
-    a color combination for the body
-    Make sure it passes the Color Contrast tool with at least a AA rating
-*/
 
-body {
-    background-color: #B3855D;
-    color: #142326;
-    font-family: 'Ubuntu', sans-serif;
-    font-size: initial;
-}
-article#gallery {
-    display: flex;
-    flex-wrap: wrap;
-    width: 96vw;
-    margin: 0 auto;
-}
-figure {
-    width: 200px;
-    background-color: #7D8C45;
-    padding: .7em;
-    border: .3em solid #142326;
-    margin: .5rem;
-}
-/* set image to  match width of the
-    figure */
-figure img {
-    width: 100%;
-    max-width: 100%;
-}
-"""
+def restore_braces(split):
+    result = []
+    if len(split) <= 1:
+        return split
+    for item in split:
+        if len(item) > 0:
+            item = item + "}}"
+            result.append(item)
+    return result
 
 
 def split_by_partition(text, part):
@@ -367,21 +350,7 @@ def split_by_partition(text, part):
         ] + split_by_partition(text_tuple[2], part)
 
 
-nested_at_rules = (
-    "@supports",
-    "@document",
-    "@page",
-    "@font-face",
-    "@keyframes",
-    "@media",
-    "@viewport",
-    "@counter-style",
-    "@font-feature-values",
-    "@property",
-)
-
-
-def minify_code(text):
+def minify_code(text: str) -> str:
     """remove all new lines, tabs, and double spaces"""
     text = text.replace("\n", "")
     text = text.replace("  ", "")
@@ -389,7 +358,7 @@ def minify_code(text):
     return text
 
 
-def missing_end_semicolon(css_code):
+def missing_end_semicolon(css_code: str) -> bool:
     # remove all whitespace and line breaks
     cleaned = css_code.replace(" ", "")
     cleaned = css_code.replace("\n", "")
@@ -397,8 +366,32 @@ def missing_end_semicolon(css_code):
     return ";}" in cleaned
 
 
-def has_repeat_selector(css_code):
+def has_repeat_selector(styles: Stylesheet) -> bool:
+    """ checks stylesheet to determine whether any selectors are repeated 
+        or not. """
+    # get & sort a list of all selectors
+    selectors = styles.selectors
+
+    # loop through and get a count of each
+    for selector in selectors:
+        count = selectors.count(selector)
+        # are there more than 1 of the same kind?
+        if count > 1:
+            return True
+    # otherwise
     return False
+
+
+def get_nested_at_rule_selectors(sheet: Stylesheet) -> list:
+    """ gets all selectors from nested @rules """
+    selectors = []
+    for at_rule in sheet.nested_at_rules.keys():
+        type = at_rule.split()[0]
+        if type not in ["@media", "@page", "@supports"]:
+            continue
+        for item in sheet.nested_at_rules[at_rule]:
+            selectors.append(item.selector)
+    return selectors
 
 
 def split_css(css_code):
@@ -492,22 +485,28 @@ def get_specificity(selector):
 
 def get_id_score(selector):
     """receives a selector and returns # of id selectors"""
-    re_pattern = r"#\w+"
-    id_selectors = re.findall(re_pattern, selector)
+    pattern = regex_patterns["id_selector"]
+    id_selectors = re.findall(pattern, selector)
     return len(id_selectors)
 
 
 def get_class_score(selector):
     """receives a selector and returns # of class & psuedo-class selectors"""
-    re_pattern = r"\.\w+|:\w+|\[\w+=\w+]"
-    selectors = re.findall(re_pattern, selector)
+    class_re = regex_patterns["class_selector"]
+    selectors = re.findall(class_re, selector)
+    pseudo_re = regex_patterns["pseudoclass_selector"]
+    pseudo_selectors = re.findall(pseudo_re, selector)
+    selectors += pseudo_selectors
+    attribute_re = regex_patterns["attribute_selector"]
+    attribute_selectors = re.findall(attribute_re, selector)
+    selectors += attribute_selectors
     return len(selectors)
 
 
 def get_type_score(selector):
     """receives a selector and returns # of type selectors"""
-    re_pattern = r"([^#:\+.\[=a-zA-Z][a-zA-Z$][a-zA-Z1-6]*|^\w*)"
-    selectors = re.findall(re_pattern, selector)
+    pattern = regex_patterns["type_selector"]
+    selectors = re.findall(pattern, selector)
     return len(selectors)
 
 
@@ -554,11 +553,11 @@ def get_header_selectors(selector):
     # example: header h1 {} does but h1 a {} does not
     header_selectors = []
     selectors = [sel.strip() for sel in selector.split(",")]
-    header_re = "h[1-6]"
     if selectors[0]:
         for selector in selectors:
             items = selector.split()
-            h_match = re.search(header_re, items[-1])
+            pattern = regex_patterns["header_selector"]
+            h_match = re.search(pattern, items[-1])
             if h_match:
                 header_selectors.append(selector)
     return header_selectors
@@ -612,8 +611,8 @@ def is_gradient(value):
     return "gradient" in value
 
 
-def process_gradient(code):
-    """returns list of all colors from gradient"""
+def process_gradient(code: str) -> list:
+    """returns list of all colors from gradient sorted light to dark"""
     colors = []
     data = code.split("),")
 
@@ -624,12 +623,10 @@ def process_gradient(code):
         data.append(last_split[1])
 
     # remove all vendor prefixes
-    vendor_regex = (
-        r"\A-moz-|-webkit-|-ms-|-o-"  # only works for start of string
-    )
+    pattern = regex_patterns["vendor_prefix"]
     for datum in data:
         datum = datum.strip()
-        if not re.match(vendor_regex, datum):
+        if not re.match(pattern, datum):
             colors.append(datum)
 
     # capture only color codes and append to colors
@@ -639,17 +636,53 @@ def process_gradient(code):
         for gradient in colors:
             color_codes = get_colors_from_gradient(gradient)
             if color_codes:
-                color_codes = sort_color_codes(color_codes)
                 only_colors += color_codes
-
+    only_colors = sort_color_codes(only_colors)
     return only_colors
 
 
 def sort_color_codes(codes):
-    """ sorts color codes from light to dark """
-    # get hsl of hex and sort by l
+    """ sorts color codes from light to dark (luminance)"""
+    # convert code to rgb then calculate luminance
+    colors = []
+    for c in codes:
+        # get the color type and convert to hsl
+        temp_c = c
+        color_type = colortools.get_color_type(c)
+        has_alpha = colortools.has_alpha_channel(c)
+        is_hex = colortools.is_hex(temp_c)
+        if has_alpha and not is_hex:
+            temp_c = remove_alpha(c)
+        if "hsl" not in color_type:
+            if is_hex:
+                rgb = colortools.hex_to_rgb(temp_c)
+            else:
+                rgb = temp_c
+        else:
+            rgb = colortools.hsl_to_rgb(c)
+        if "<class 'str'>" == str(type(rgb)):
+            r, g, b = colortools.extract_rgb_from_string(rgb)
+            light = colortools.luminance((int(r), int(g), int(b)))
+        else:
+            light = colortools.luminance(rgb)
+        colors.append([light, c])
+    colors.sort()
+    colors.reverse()
     sorted = []
+    for i in colors:
+        sorted.append(i[1])
     return sorted
+
+
+def remove_alpha(color_code):
+    """ removes the alpha channel from rgba or hsla """
+    color_code = color_code.split(',')
+    a = color_code[0].index('a')
+    color_code[0] = color_code[0][:a] + color_code[0][a+1:]
+    color_code.pop(-1)
+    color_code = ",".join(color_code)
+    color_code += ")"
+    return color_code
 
 
 def get_colors_from_gradient(gradient):
@@ -685,6 +718,38 @@ def append_color_codes(type, code, color_list):
         # strip each color code (if hex regex)
         colors = [i.strip(" ") for i in colors]
         color_list += colors
+
+
+def is_required_selector(selector_type: str, selector: str) -> bool:
+    """ checks selector to see if it's required type or not """
+    pattern = regex_patterns[selector_type]
+    return re.search(pattern, selector)
+
+
+def get_number_required_selectors(selector_type: str, sheet: Stylesheet) -> int:
+    """ returns # of a specific selector type in a stylesheet """
+    count = 0
+    pattern = regex_patterns[selector_type]
+    for selector in sheet.selectors:
+        matches = re.findall(pattern, selector)
+        count += len(matches)
+    # Loop through all nested @rules and count selectors
+    for at_rule, rules in sheet.nested_at_rules.items():
+        for rule in rules:
+            matches = re.findall(pattern, rule.selector)
+            count += len(matches)
+    return count
+
+
+def has_required_property(property: str, sheet: Stylesheet) -> bool:
+    """ checks stylesheet for a particular property
+        to see if it's there or not """
+    has_property = False
+    for rule in sheet.rulesets:
+        for declaration in rule.declaration_block.declarations:
+            if declaration.property == property:
+                return True
+    return has_property
 
 
 if __name__ == "__main__":

@@ -107,6 +107,9 @@ def has_alpha_channel(code):
             return False
     if "hsla(" in code:
         return True
+    if "rgba(" in code:
+        return True 
+    return False
 
 
 def hsl_to_rgb(hsl):
@@ -184,7 +187,7 @@ def is_hex(val):
 
     # check for proper hex digits
     for i in val:
-        if i != "#" and i not in list(hex_map.keys()):
+        if i != "#" and i.lower() not in list(hex_map.keys()):
             result = False
     return result
 
@@ -249,6 +252,22 @@ def contrast_ratio(hex1, hex2):
     # take it to 3rd decimal place, then truncate (3rd has been rounded)
     ratio = format(ratio, ".3f")[:-1]
     return float(ratio)
+
+
+def get_color_type(code):
+    if "#" in code[0]:
+        if len(code) > 7:
+            return "hex_alpha"
+        else:
+            return "hex"
+    if "hsla" in code[:4]:
+        return "hsla"
+    if "hsl" in code[:3]:
+        return "hsl"
+    if "rgba" in code[:4]:
+        return "rgba"
+    if "rgb" in code[:3]:
+        return "rgb"
 
 
 if __name__ == "__main__":

@@ -87,7 +87,7 @@ linear-gradient(-45deg, #46ABA6 0%, #092756 200%)'
 """
 
 path_to_gradients_project = "tests/test_files/"
-path_to_gradients_project += "projects/page_with_gradients_and_alpha"
+path_to_gradients_project += "projects/page_with_gradients_and_alpha/style.css"
 
 
 @pytest.fixture
@@ -157,6 +157,24 @@ def layout_css_at_rules(layout_css):
 def layout_css_stylesheet(layout_css):
     css_sheet = css.Stylesheet("layout.css", layout_css)
     return css_sheet
+
+
+@pytest.fixture
+def styles_with_multiple_selectors():
+    styles = clerk.file_to_string(
+        "tests/test_files/multiple_selectors.css"
+    )
+    sheet = css.Stylesheet("multiple_selectors.css", styles)
+    yield sheet
+
+
+@pytest.fixture
+def navigation_styles():
+    path = "tests/test_files/projects/large_project/css/"
+    path += "navigation.css"
+    styles = clerk.file_to_string(path)
+    sheet = css.Stylesheet("navigation.css", styles)
+    yield sheet
 
 
 def test_separate_code_for_3_comments(css_code_1_split):
@@ -277,7 +295,15 @@ def test_stylesheet_for_selectors_with_one(
 
 
 def test_layout_css_stylesheet_for_multiple_selectors(layout_css_stylesheet):
-    assert len(layout_css_stylesheet.selectors) == 22
+    assert len(layout_css_stylesheet.selectors) == 21
+
+
+def test_has_required_property_for_display(layout_css_stylesheet):
+    assert css.has_required_property("display", layout_css_stylesheet)
+
+
+def test_has_required_property_for_border_radius(layout_css_stylesheet):
+    assert css.has_required_property("border-radius", layout_css_stylesheet)
 
 
 def test_get_id_score_for_3_ids():
@@ -390,6 +416,20 @@ def test_process_gradient_for_insane_css_for_four_returned_colors():
     assert results == expected
 
 
+def test_sort_color_codes_for_two_rgbas():
+    colors = ['rgba(143, 193, 242, 0.22)', 'rgba(240, 205, 247,0)']
+    expected = ['rgba(240, 205, 247,0)', 'rgba(143, 193, 242, 0.22)']
+    results = css.sort_color_codes(colors)
+    assert results == expected
+
+
+def test_sort_color_codes_for_three_hexes():
+    colors = ['#336699', '#ff0000', '#4C3A51']
+    expected = ['#ff0000', '#336699', '#4C3A51']
+    results = css.sort_color_codes(colors)
+    assert results == expected
+
+
 def test_get_colors_from_gradient_for_hex():
     gradient = "linear-gradient(-45deg, #46ABA6 0%, #092756 200%)"
     expected = ["#46ABA6", "#092756"]
@@ -444,5 +484,64 @@ def test_append_color_codes_for_keyword_antiquewhite():
     assert "maroon" in colors
 
 
-def test_stylesheet_with_gradients_for_color_rulesets(stylesheet_with_gradients):
-    assert False
+def test_is_required_selector_for_not_required():
+    results = css.is_required_selector("id_selector", "nav ul {")
+    assert not results
+
+
+def test_is_required_selector_for_id_selector():
+    selector = "main#main nav a.active"
+    assert css.is_required_selector("id_selector", selector)
+
+
+def test_is_required_selector_for_class_selector():
+    selector = "main#main nav a.active"
+    assert css.is_required_selector("class_selector", selector)
+
+
+def test_is_required_selector_for_type_selector():
+    selector = "main#main nav a.active"
+    assert css.is_required_selector("type_selector", selector)
+
+
+def test_is_required_selector_for_grouped_selectors():
+    selector = "h1, h2, h3 {"
+    assert css.is_required_selector("grouped_selector", selector)
+
+
+def test_get_num_required_selectors_for_3_ids():
+    css_code = "body #nav div#phred, p#red"
+    css_code += "{ color: green;}"
+    style_sheet = css.Stylesheet("styletag", css_code)
+    results = css.get_number_required_selectors("id_selector", style_sheet)
+    expected = 3
+    assert results == expected
+
+
+def test_get_num_required_selectors_for_layout_sheet(layout_css_stylesheet):
+    results = css.get_number_required_selectors("class_selector", layout_css_stylesheet)
+    expected = 29
+    assert results == expected
+
+
+def test_get_nested_at_rule_selectors(layout_css_stylesheet):
+    results = css.get_nested_at_rule_selectors(layout_css_stylesheet)
+    count = len(results)
+    expected = 5
+    assert count == expected
+
+
+def test_has_repeat_selectors_for_false(navigation_styles):
+    assert not css.has_repeat_selector(navigation_styles)
+
+
+def test_has_repeat_selectors_for_true_layout(layout_css_stylesheet):
+    assert css.has_repeat_selector(layout_css_stylesheet)
+
+
+def test_has_repeat_selectors_for_true(styles_with_multiple_selectors):
+    assert css.has_repeat_selector(styles_with_multiple_selectors)
+
+
+# TODO: test stylesheet_with_gradients for color rulesets
+# not sure what we want out of it.

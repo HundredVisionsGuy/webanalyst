@@ -225,3 +225,21 @@ def test_is_color_value_for_non_color_fill():
 
 def test_is_color_value_for_non_color_url():
     assert not color.is_color_value('url("images/BannerFlag.png")')
+
+
+def test_get_color_type_for_hex():
+    assert color.get_color_type("#336699") == "hex"
+
+
+def test_get_color_type_for_hex_alpha():
+    assert color.get_color_type("#33669988") == "hex_alpha"
+
+
+def test_get_color_type_for_rbga():
+    assert color.get_color_type('rgba(143, 193, 242, 0.22)') == 'rgba'
+
+
+def test_get_color_type_for_other_colors():
+    assert color.get_color_type('rgb(143, 193, 242)') == 'rgb'
+    assert color.get_color_type('hsl(0, 100%, 50%)') == 'hsl'
+    assert color.get_color_type('hsla(100, 100%, 50%, 1)') == 'hsla'

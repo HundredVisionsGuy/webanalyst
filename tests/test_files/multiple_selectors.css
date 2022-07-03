@@ -1,0 +1,70 @@
+ul {
+    list-style:none; /* removes the bullet points*/
+    display:inline-flex; /* allows the links to be next to each other*/
+}
+
+ul {
+    background-color:#58aa88;
+}
+
+body {
+    background-color:#92aa58;
+    text-align:center; /* centers all of the elements in the body */
+    color:#aa6458;
+}
+
+/** Styles for the "buttons" **/
+a {
+    border: 7px groove #baaf5d; /* sets the border to make it look like a button */
+    text-decoration:none; /* removes the underline from the link */
+    color:#aa6458;
+    background-color:#58aa88;
+}
+
+li {
+    margin:10px; /* adds space between links */
+    background-color:#58aa88;
+    font-size: 24px;
+    color:#aa6458;
+}
+
+.featured{
+    color:#aa6458;;
+    font-size:64px;
+    background-color:#58aa88;;
+}
+body {
+    background: mistyrose;
+    color: darkviolet;
+}
+p {
+    font-family:serif;
+    margin: 10px;
+    font-size: 14px;
+}
+h1 {
+    font-weight:lighter;
+}
+
+h2 {
+    font-weight: lighter;
+}
+h4 {
+    font-family: sans-serif
+}
+h5 {
+    font-family:serif;
+    text-align: right;
+}
+h6 {
+    font-style: italic;
+}
+
+hr {
+    width: 100%;
+}
+img {
+    width: 300px;
+    border-radius: 20px;
+    margin: 10px;
+}

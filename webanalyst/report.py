@@ -123,8 +123,12 @@ class GeneralReport:
         self.words_per_sentence = 0.0
         self.sentences_per_paragraph = 0.0
         self.report_details = {
-            "min_number_files": {"HTML": None, "CSS": None},
-            "num_files_results": {"Meets HTML": False, "Meets CSS": False},
+            "min_number_files": {
+                "HTML": None, 
+                "CSS": None},
+            "num_files_results": {
+                "Meets HTML": False, 
+                "Meets CSS": False},
             "writing_goals": {
                 "average_SPP": [1, 5],
                 "average_WPS": [10, 20],
