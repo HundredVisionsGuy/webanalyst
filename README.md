@@ -1,4 +1,6 @@
 # Web Analyst
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHundredVisionsGuy%2Fwebanalyst.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FHundredVisionsGuy%2Fwebanalyst?ref=badge_shield)
+
 This project is designed to assess students' ability to code clean, semantic front-end technologies (HTML, CSS, JavaScript) for a variety of open-ended tasks and projects.
 
 When selecting skills and practices, we will be using the [Mozilla Developer Network](https://developer.mozilla.org/) as the final arbiter of styles and best practices.
@@ -172,3 +174,7 @@ They should be able to showcase their skills through a portfolio of work or a we
 At this point, students should be continuing to develop their layout and design skills. They should also begin to apply a mobile-first, responsive design technique.
 
 They should be able to design a home page that makes use of a variety of columns (single, 2-column, 3 column) using visual elements like cards, pull-quotes, and subtle animations.
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FHundredVisionsGuy%2Fwebanalyst.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FHundredVisionsGuy%2Fwebanalyst?ref=badge_large)
