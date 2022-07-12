@@ -367,7 +367,7 @@ def missing_end_semicolon(css_code: str) -> bool:
 
 
 def has_repeat_selector(styles: Stylesheet) -> bool:
-    """ checks stylesheet to determine whether any selectors are repeated 
+    """ checks stylesheet to determine whether any selectors are repeated
         or not. """
     # get & sort a list of all selectors
     selectors = styles.selectors

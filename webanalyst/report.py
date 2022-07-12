@@ -124,10 +124,10 @@ class GeneralReport:
         self.sentences_per_paragraph = 0.0
         self.report_details = {
             "min_number_files": {
-                "HTML": None, 
+                "HTML": None,
                 "CSS": None},
             "num_files_results": {
-                "Meets HTML": False, 
+                "Meets HTML": False,
                 "Meets CSS": False},
             "writing_goals": {
                 "average_SPP": [1, 5],

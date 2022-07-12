@@ -69,12 +69,6 @@ def test_get_file_type_for_css():
     assert filetype == "css"
 
 
-def test_get_css_from_style():
-    css_code = clerk.get_css_from_style_tag(html_with_css)
-    expected = "p {color:red;}"
-    assert css_code == expected
-
-
 def test_file_to_string_with_sample():
     sample_test = clerk.file_to_string(sample_txt_path)
     expected = "Hey!\n"

@@ -1,30 +1,59 @@
-# clerk.py
+"""A collection of functions for dealing with files and file content.
+
+This was a library I created for previous projects that deal with files
+and file paths in order to get code from files, lists of files in
+project folders, file extensions, and allows us to capture just files
+of a particular type. I also developed my projects on Windows OS, so
+these functions were designed to work with the file paths on Windows,
+Mac, and Linux (Windows is the one with backslashes - wacky, I know.).
+
+  Typical usage example:
+
+  extension = get_file_type("path/to/file.js")
+
+  code_string = file_to_string("path/to/file.html")
+
+  project_path = "path/to/project"
+  all_project_files = get_all_project_files(project_path)
+  just_css_files = get_all_files_of_type(project_path, "css")
+"""
+# SPDX-License-Identifier: BSD-3-Clause
+
 import collections
 import re
 from pathlib import Path
+import nltk
+from bs4 import BeautifulSoup
 
-import AdvancedHTMLParser as h_parser
-
+nltk.download('punkt')
 working_dir = Path.cwd()
-# sentence splitting patterns
-alphabets = r"([A-Za-z])"
-prefixes = r"(Mr|St|Mrs|Ms|Dr)[.]"
-suffixes = r"(Inc|Ltd|Jr|Sr|Co)"
-starters = r"(Mr|Mrs|Ms|Dr|He\s|She\s|It\s|They\s|"
-starters += r"Their\s|Our\s|We\s|But\s|However\s|"
-starters += r"That\s|This\s|Wherever)"
-acronyms = r"([A-Z][.][A-Z][.](?:[A-Z][.])?)"
-websites = r"[.](com|net|org|io|gov)"
+
 # tag removal pattern
 TAG_RE = re.compile(r"<[^>]+>")
 
 
-def file_exists(filename):
-    filename = Path(filename)
+def file_exists(file_path: str) -> bool:
+    """ Returns True or False: whether file in path exists.
+
+    Args:
+        file_path (str): The file location
+
+    Returns:
+        bool: True or False: True if file exists False if not
+    """
+    filename = Path(file_path)
     return filename.exists()
 
 
-def delete_file(filepath):
+def delete_file(filepath: str):
+    """ deletes file in path but only if it exists
+
+    Args:
+        file_path (str): The file location
+
+    Returns:
+        None
+    """
     data_file = Path(filepath)
     try:
         data_file.unlink()
@@ -32,13 +61,34 @@ def delete_file(filepath):
         print(f"Error: {data_file} : {e.strerror}")
 
 
-def get_path_list(path):
+def get_path_list(path: str) -> list:
+    """ Returns a list of each path part using slash as separator.
+
+    Args:
+        file_path (str): The file location using the Posix format
+            (forward/slashes)
+
+    Returns:
+        path_list (list): A path of each folder in a path, with the
+            file at the end.
+            Example: path/to/file.ext will be
+            ["path", "to", "file.ext"]
+    """
     path_list = path.split("/")
     return path_list
 
 
-def get_full_path_string(path):
-    """path must be a relative path starting with working directory"""
+def get_full_path_string(path: str):
+    """returns absolute path to file in relative path.
+
+    Args:
+        file_path (str): The file location using the Posix format
+            (forward/slashes)
+
+    Returns:
+        full_path (Path Object): will be a WindowsPath (if Windows) or
+            PosixPath (if Mac or Linux)
+    """
     full_path = working_dir
     p_list = get_path_list(path)
     for i in p_list:
@@ -46,116 +96,164 @@ def get_full_path_string(path):
     return full_path
 
 
-def file_to_string(path):
+def file_to_string(path: str) -> str:
+    """ Returns contents of file as a string.
+
+    Args:
+        path (str): The path to a file using Posix format (forward
+            slashes e.g. path/to/file.ext)
+
+    Returns:
+        file_text (str): The contents of the file in utf-8 string
+            format.
+    """
     my_file = get_full_path_string(path)
-    file = my_file.read_text(encoding="utf-8")
-    return file
+    file_text = my_file.read_text(encoding="utf-8")
+    return file_text
 
 
-def get_file_type(path):
+def get_file_type(path: str) -> str:
+    """ returns the extension of the file in the path.
+
+    Args:
+        path (str): The path to a file using Posix format (forward
+            slashes e.g. path/to/file.ext)
+
+    Returns:
+        extension (str): The extension of the file type (without)
+        the dot (eg. html, js, css, pdx, png)
+    """
     my_file = get_full_path_string(path)
     suffix = my_file.suffix
-    return suffix[1:]
+    extension = suffix[1:]
+    return extension
 
 
-def get_file_name(path):
-    return Path(path).name
+def get_file_name(path: str) -> str:
+    """ returns the name of the file in the path.
+
+    Args:
+        path (str): The path to a file using Posix format (forward
+            slashes e.g. path/to/file.ext)
+
+    Returns:
+        filename (str): The name of the file (with extension)
+    """
+    filename = Path(path).name
+    return filename
 
 
-def get_css_from_style_tag(path):
-    full_code = file_to_string(path)
-    parser = h_parser.AdvancedHTMLParser()
-    parser.parseStr(full_code)
-    css_advancedTag = parser.getElementsByTagName("style")
-    return css_advancedTag[0].innerText
+def get_linked_css(contents_str: str) -> list:
+    """returns a list of linked CSS files.
 
+    Args:
+        contents_str (str): HTML code from a file in string format.
 
-def get_linked_css(contents_str):
-    """returns a list of linked CSS files"""
+    Returns:
+        filenames (list): A list of all filenames extracted from CSS
+            link tags.
+            Note: no external stylesheets will be included (only
+            local files).
+    """
     filenames = []
-    parser = h_parser.AdvancedHTMLParser()
-    parser.parseStr(contents_str)
-    linked_files = parser.getElementsByTagName("link")
+    soup = BeautifulSoup(contents_str, "html.parser")
+    linked_files = soup.find_all("link")
+
     if len(linked_files) > 1:
         for file in linked_files:
-            linked_file = file.getAttribute("href")
-            if "https://" in linked_file:
+            linked_file = file.attrs.get('href')
+            if "https://" in linked_file or "http://" in linked_file:
                 continue
             filenames.append(linked_file)
     elif len(linked_files) == 1:
-        filename = linked_files[0].getAttribute("href")
+        filename = linked_files[0].attrs.get('href')
+        if "https://" in filename or "http://" in filename:
+            return None
         filenames.append(filename)
     else:
         return None
     return filenames
 
 
-def get_css_from_stylesheet(path):
-    return file_to_string(path)
+def get_all_project_files(dir_path: str) -> list:
+    """ returns a list of all files from the directory in the path.
 
+    Args:
+        dir_path (str): The path to a directory using Posix format
+            (forward slashes e.g. path/to/file.ext)
 
-def get_all_project_files(dir):
+    Returns:
+        files (list): A list of all html, css, and javascript files
+    """
     files = []
-    files += get_all_files_of_type(dir, "html")
-    files += get_all_files_of_type(dir, "css")
-    files += get_all_files_of_type(dir, "js")
+    files += get_all_files_of_type(dir_path, "html")
+    files += get_all_files_of_type(dir_path, "css")
+    files += get_all_files_of_type(dir_path, "js")
     return files
 
 
-def get_all_files_of_type(dir, filetype):
+def get_all_files_of_type(dir_path: str, filetype: str) -> list:
+    """ returns all files of a particular type from a directory.
+
+    Args:
+        dir_path (str): The path to a directory using Posix format
+            (forward slashes e.g. path/to/file.ext)
+        file_type (str): An extension in the form of a string (without
+            the dot (html, css, js, etc.))
+
+    Returns:
+        files (list): A list of all html, css, and javascript files
+    """
     pattern = "*." + filetype + "*"
     output = []
-    files = collections.Counter(str(f) for f in Path(dir).rglob(pattern))
+    files = collections.Counter(str(f) for f in Path(dir_path).rglob(pattern))
     output += files.keys()
     return output
 
 
-def split_into_sentences(text):
-    text = " " + text + "  "
-    text = text.replace("\n", " ")
-    text = re.sub(prefixes, "\\1<prd>", text)
-    text = re.sub(websites, "<prd>\\1", text)
-    if "Ph.D" in text:
-        text = text.replace("Ph.D.", "Ph<prd>D<prd>")
-    text = re.sub(r"\s" + alphabets + "[.] ", " \\1<prd> ", text)
-    text = re.sub(acronyms + " " + starters, "\\1<stop> \\2", text)
-    text = re.sub(
-        alphabets + "[.]" + alphabets + "[.]" + alphabets + "[.]",
-        "\\1<prd>\\2<prd>\\3<prd>",
-        text,
-    )
-    text = re.sub(alphabets + "[.]" + alphabets + "[.]", "\\1<prd>\\2<prd>", text)
-    text = re.sub(" " + suffixes + "[.] " + starters, " \\1<stop> \\2", text)
-    text = re.sub(" " + suffixes + "[.]", " \\1<prd>", text)
-    text = re.sub(" " + alphabets + "[.]", " \\1<prd>", text)
-    if "”" in text:
-        text = text.replace(".”", "”.")
-    if '"' in text:
-        text = text.replace('."', '".')
-    if "!" in text:
-        text = text.replace('!"', '"!')
-    if "?" in text:
-        text = text.replace('?"', '"?')
-    text = text.replace(".", ".<stop>")
-    text = text.replace("?", "?<stop>")
-    text = text.replace("!", "!<stop>")
-    text = text.replace("<prd>", ".")
-    sentences = text.split("<stop>")
-    sentences = sentences[:-1]
-    sentences = [s.strip() for s in sentences]
+def split_into_sentences(contents: str) -> list:
+    """ Returns a list of each sentence from the text.
+
+    Args:
+        contents (str): A string of text (typically from a tag) that
+            most likely has punctuation.
+
+    Returns:
+        sentences (list): A list of each sentence from the text
+            each in string format
+    """
+    sentences = nltk.tokenize.sent_tokenize(contents)
     return sentences
 
 
-def remove_tags(element):
-    """Removes all HTML tags from block tag (str)"""
-    return TAG_RE.sub("", element)
+def remove_tags(element: str) -> str:
+    """Removes all HTML tags from another tag's contents
+
+    Args:
+        element (str): the contents of a tag as a string form which might or
+        might not have extra tags (in particular inline tags, such as <em>
+        or <a>, etc.)
+
+    Returns:
+        tagless_content (str): the contents of the tag minus any inner tags.
+    """
+    tagless_content = TAG_RE.sub("", element)
+    return tagless_content
 
 
-def clear_extra_text(str):
-    """Removes line returns and extra spaces"""
-    str = str.replace("\n", "")
-    str = re.sub(r"\s+", " ", str)
-    return str.strip()
+def clear_extra_text(my_text: str) -> str:
+    """Removes line returns and extra spaces from my_text.
+
+    Args:
+        my_text (str): text which may include line returns or extra space.
+
+    Returns:
+        stripped_text (str): text without any line returns or additional spaces.
+    """
+    my_text = my_text.replace("\n", "")
+    my_text = re.sub(r"\s+", " ", my_text)
+    stripped_text = my_text.strip()
+    return stripped_text
 
 
 if __name__ == "__main__":
@@ -171,9 +269,6 @@ if __name__ == "__main__":
     # get all the code from a file as a string
     code_string = file_to_string(html_with_css)
     print(code_string)
-
-    # extract CSS code from the style tag
-    css_code = get_css_from_style_tag(html_with_css)
 
     # test get_all_project_files()
     test_project_files = "project"

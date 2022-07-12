@@ -1310,7 +1310,7 @@ class CSSReport:
             if not is_linked:
                 continue
             try:
-                css_code = clerk.get_css_from_stylesheet(file)
+                css_code = clerk.file_to_string(file)
 
                 css = stylesheet(filename, css_code)
                 self.stylesheet_objects.append(css)
