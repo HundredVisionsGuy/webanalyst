@@ -1,0 +1,1100 @@
+SPDXVersion: SPDX-2.2
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: anytree-2.8.0
+DocumentNamespace: http://spdx.org/spdxpackages/anytree-2.8.0-386d680b-5f77-4545-91fe-dff3e90e5e50
+Creator: Tool: spdx-sbom-generator-v0.0.10
+Created: 2022-07-12T23:23:24Z
+
+##### Package representing the anytree
+
+PackageName: anytree
+SPDXID: SPDXRef-Package-anytree-2.8.0
+PackageVersion: 2.8.0
+PackageSupplier: Person: c0fec0de (c0fec0de@gmail.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/d8/45/de59861abc8cb66e9e95c02b214be4d52900aa92ce34241a957dcf1d569d/anytree-2.8.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 3f0f93f355a91bc3e6245319bf4c1d50e3416cc7a35cc1133c1ff38306bbccab
+PackageHomePage: https://github.com/c0fec0de/anytree
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-anytree-2.8.0 DEPENDS_ON SPDXRef-Package-six-1.15.0 
+
+##### Package representing the atomicwrites
+
+PackageName: atomicwrites
+SPDXID: SPDXRef-Package-atomicwrites-1.4.1
+PackageVersion: 1.4.1
+PackageSupplier: Person: Markus Unterwaditzer (markus@unterwaditzer.net)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/87/c6/53da25344e3e3a9c01095a89f16dbcda021c609ddb42dd6d7c0528236fb2/atomicwrites-1.4.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 81b2c9071a49367a7f770170e5eec8cb66567cfbbc8c73d20ce5ca4a8d71cf11
+PackageHomePage: https://github.com/untitaker/python-atomicwrites
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the attrs
+
+PackageName: attrs
+SPDXID: SPDXRef-Package-attrs-19.3.0
+PackageVersion: 19.3.0
+PackageSupplier: Person: Hynek Schlawack (hs@ox.cx)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/98/c3/2c227e66b5e896e15ccdae2e00bbc69aa46e9a8ce8869cc5fa96310bf612/attrs-19.3.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: f7b7ce16570fe9965acd6d30101a28f62fb4a7f9e926b3bbc9b61f8b04247e72
+PackageHomePage: https://www.attrs.org/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the autoflake
+
+PackageName: autoflake
+SPDXID: SPDXRef-Package-autoflake-1.4
+PackageVersion: 1.4
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: https://files.pythonhosted.org/packages/11/2e/0a7618eb5e69483d62b0f86c8d1eb7fdca2c2781f6f0cd5f3a3286398475/autoflake-1.4.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 61a353012cff6ab94ca062823d1fb2f692c4acda51c76ff83a8d77915fba51ea
+PackageHomePage: https://github.com/myint/autoflake
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-autoflake-1.4 DEPENDS_ON SPDXRef-Package-pyflakes-2.4.0 
+
+##### Package representing the autoflake8
+
+PackageName: autoflake8
+SPDXID: SPDXRef-Package-autoflake8-0.3.2
+PackageVersion: 0.3.2
+PackageSupplier: Person: Francisco Souza (fsouza@users.noreply.github.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/bc/dc/51cc5df31e4c1ee5f182706c510753d5d2b30a89cc77b076ecd381e205af/autoflake8-0.3.2.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 4465a10186e29830eb5df5ada7eed29fdc0918b7d8eafbb06a681236639ca695
+PackageHomePage: https://github.com/fsouza/autoflake8
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-autoflake8-0.3.2 DEPENDS_ON SPDXRef-Package-pyflakes-2.4.0 
+
+##### Package representing the autopep8
+
+PackageName: autopep8
+SPDXID: SPDXRef-Package-autopep8-1.6.0
+PackageVersion: 1.6.0
+PackageSupplier: Person: Hideo Hattori (hhatto.jp@gmail.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/ec/67/564f7d15712a84d4035aa5ad0b97eeafdeccdb7e806d6a822595bf0ffa5f/autopep8-1.6.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 44f0932855039d2c15c4510d6df665e4730f2b8582704fa48f9c55bd3e17d979
+PackageHomePage: https://github.com/hhatto/autopep8
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-autopep8-1.6.0 DEPENDS_ON SPDXRef-Package-toml-0.10.2 
+Relationship: SPDXRef-Package-autopep8-1.6.0 DEPENDS_ON SPDXRef-Package-pycodestyle-2.8.0 
+
+##### Package representing the beautifulsoup4
+
+PackageName: beautifulsoup4
+SPDXID: SPDXRef-Package-beautifulsoup4-4.11.1
+PackageVersion: 4.11.1
+PackageSupplier: Person: Leonard Richardson (leonardr@segfault.org)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/e8/b0/cd2b968000577ec5ce6c741a54d846dfa402372369b8b6861720aa9ecea7/beautifulsoup4-4.11.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: ad9aa55b65ef2808eb405f46cf74df7fcb7044d5cbc26487f96eb2ef2e436693
+PackageHomePage: https://www.crummy.com/software/BeautifulSoup/bs4/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-beautifulsoup4-4.11.1 DEPENDS_ON SPDXRef-Package-soupsieve-2.3.2.post1 
+
+##### Package representing the black
+
+PackageName: black
+SPDXID: SPDXRef-Package-black-22.6.0
+PackageVersion: 22.6.0
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: https://files.pythonhosted.org/packages/61/11/551b0d067a7e6836fc0997ab36ee46ec65259fea8f30104f4870092f3301/black-22.6.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 6c6d39e28aed379aec40da1c65434c77d75e65bb59a1e1c283de545fb4e7c6c9
+PackageHomePage: https://github.com/psf/black
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-black-22.6.0 DEPENDS_ON SPDXRef-Package-mypy-extensions-0.4.3 
+Relationship: SPDXRef-Package-black-22.6.0 DEPENDS_ON SPDXRef-Package-click-8.1.3 
+Relationship: SPDXRef-Package-black-22.6.0 DEPENDS_ON SPDXRef-Package-tomli-2.0.1 
+Relationship: SPDXRef-Package-black-22.6.0 DEPENDS_ON SPDXRef-Package-platformdirs-2.5.2 
+Relationship: SPDXRef-Package-black-22.6.0 DEPENDS_ON SPDXRef-Package-pathspec-0.9.0 
+
+##### Package representing the bs4
+
+PackageName: bs4
+SPDXID: SPDXRef-Package-bs4-0.0.1
+PackageVersion: 0.0.1
+PackageSupplier: Person: Leonard Richardson (leonardr@segfault.org)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/10/ed/7e8b97591f6f456174139ec089c769f89a94a1a4025fe967691de971f314/bs4-0.0.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 36ecea1fd7cc5c0c6e4a1ff075df26d50da647b75376626cc186e2212886dd3a
+PackageHomePage: https://pypi.python.org/pypi/beautifulsoup4
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-bs4-0.0.1 DEPENDS_ON SPDXRef-Package-beautifulsoup4-4.11.1 
+
+##### Package representing the certifi
+
+PackageName: certifi
+SPDXID: SPDXRef-Package-certifi-2020.4.5.2
+PackageVersion: 2020.4.5.2
+PackageSupplier: Person: Kenneth Reitz (me@kennethreitz.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/b4/19/53433f37a31543364c8676f30b291d128cdf4cd5b31b755b7890f8e89ac8/certifi-2020.4.5.2.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 5ad7e9a056d25ffa5082862e36f119f7f7cec6457fa07ee2f8c339814b80c9b1
+PackageHomePage: https://certifiio.readthedocs.io/en/latest/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the cfgv
+
+PackageName: cfgv
+SPDXID: SPDXRef-Package-cfgv-3.3.1
+PackageVersion: 3.3.1
+PackageSupplier: Person: Anthony Sottile (asottile@umich.edu)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/c4/bf/d0d622b660d414a47dc7f0d303791a627663f554345b21250e39e7acb48b/cfgv-3.3.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: f5a830efb9ce7a445376bb66ec94c638a9787422f96264c98edc6bdeed8ab736
+PackageHomePage: https://github.com/asottile/cfgv
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the charset-normalizer
+
+PackageName: charset-normalizer
+SPDXID: SPDXRef-Package-charset-normalizer-2.0.12
+PackageVersion: 2.0.12
+PackageSupplier: Person: Ahmed TAHRI @Ousret (ahmed.tahri@cloudnursery.dev)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/56/31/7bcaf657fafb3c6db8c787a865434290b726653c912085fbd371e9b92e1c/charset-normalizer-2.0.12.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 2857e29ff0d34db842cd7ca3230549d1a697f96ee6d3fb071cfa6c7393832597
+PackageHomePage: https://github.com/ousret/charset_normalizer
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the click
+
+PackageName: click
+SPDXID: SPDXRef-Package-click-8.1.3
+PackageVersion: 8.1.3
+PackageSupplier: Person: Armin Ronacher (armin.ronacher@active-4.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/59/87/84326af34517fca8c58418d148f2403df25303e02736832403587318e9e8/click-8.1.3.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e
+PackageHomePage: https://palletsprojects.com/p/click/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-click-8.1.3 DEPENDS_ON SPDXRef-Package-colorama-0.4.5 
+
+##### Package representing the colorama
+
+PackageName: colorama
+SPDXID: SPDXRef-Package-colorama-0.4.5
+PackageVersion: 0.4.5
+PackageSupplier: Person: Jonathan Hartley (tartley@tartley.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/2b/65/24d033a9325ce42ccbfa3ca2d0866c7e89cc68e5b9d92ecaba9feef631df/colorama-0.4.5.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: e6c6b4334fc50988a639d9b98aa429a0b57da6e17b9a44f0451f930b6967b7a4
+PackageHomePage: https://github.com/tartley/colorama
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the coverage
+
+PackageName: coverage
+SPDXID: SPDXRef-Package-coverage-6.4.2
+PackageVersion: 6.4.2
+PackageSupplier: Person: Ned Batchelder and 160 others (ned@nedbatchelder.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/ea/34/5a4f7a48da3be173273cd9b866c998eb59e234da2ee4a30c1068e85c0e99/coverage-6.4.2.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 6c3ccfe89c36f3e5b9837b9ee507472310164f352c9fe332120b764c9d60adbe
+PackageHomePage: https://github.com/nedbat/coveragepy
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the distlib
+
+PackageName: distlib
+SPDXID: SPDXRef-Package-distlib-0.3.4
+PackageVersion: 0.3.4
+PackageSupplier: Person: Vinay Sajip (vinay_sajip@red-dove.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/85/01/88529c93e41607f1a78c1e4b346b24c74ee43d2f41cfe33ecd2e20e0c7e3/distlib-0.3.4.zip
+FilesAnalyzed: false
+PackageChecksum: SHA256: e4b58818180336dc9c529bfb9a0b58728ffc09ad92027a3f30b7cd91e3458579
+PackageHomePage: https://bitbucket.org/pypa/distlib
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the filelock
+
+PackageName: filelock
+SPDXID: SPDXRef-Package-filelock-3.7.1
+PackageVersion: 3.7.1
+PackageSupplier: Person: Benedikt Schmitt (benedikt@benediktschmitt.de)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/f3/c7/5c1aef87f1197d2134a096c0264890969213c9cbfb8a4102087e8d758b5c/filelock-3.7.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 3a0fd85166ad9dbab54c9aec96737b744106dc5f15c0b09a6744a445299fcf04
+PackageHomePage: https://github.com/tox-dev/py-filelock
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the flake8
+
+PackageName: flake8
+SPDXID: SPDXRef-Package-flake8-4.0.1
+PackageVersion: 4.0.1
+PackageSupplier: Person: Tarek Ziade (tarek@ziade.org)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/e6/84/d8db922289195c435779b4ca3a3f583f263f87e67954f7b2e83c8da21f48/flake8-4.0.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 806e034dda44114815e23c16ef92f95c91e4c71100ff52813adf7132a6ad870d
+PackageHomePage: https://github.com/pycqa/flake8
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-flake8-4.0.1 DEPENDS_ON SPDXRef-Package-pyflakes-2.4.0 
+Relationship: SPDXRef-Package-flake8-4.0.1 DEPENDS_ON SPDXRef-Package-pycodestyle-2.8.0 
+Relationship: SPDXRef-Package-flake8-4.0.1 DEPENDS_ON SPDXRef-Package-mccabe-0.6.1 
+
+##### Package representing the html-parser
+
+PackageName: html-parser
+SPDXID: SPDXRef-Package-html-parser-0.2
+PackageVersion: 0.2
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: https://files.pythonhosted.org/packages/fa/ae/4b752c60868d26d6d14e89882ade7204fd73543e1bde64b6e9b01c1d9856/html-parser-0.2.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 8c61bde2c4e558daf790cd95daf7aa06d2a07699caaa6ec3f34b76966e2332f8
+PackageHomePage: https://UNKNOWN
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-html-parser-0.2 DEPENDS_ON SPDXRef-Package-ply-3.11 
+
+##### Package representing the identify
+
+PackageName: identify
+SPDXID: SPDXRef-Package-identify-2.5.1
+PackageVersion: 2.5.1
+PackageSupplier: Person: Chris Kuehl (ckuehl@ocf.berkeley.edu)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/e5/8e/408d590e26fbc75a2e974aa1103d95a3ffef014209967f66f491306c4824/identify-2.5.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 3d11b16f3fe19f52039fb7e39c9c884b21cb1b586988114fbe42671f03de3e82
+PackageHomePage: https://github.com/pre-commit/identify
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the idna
+
+PackageName: idna
+SPDXID: SPDXRef-Package-idna-2.9
+PackageVersion: 2.9
+PackageSupplier: Person: Kim Davies (kim@cynosure.com.au)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/cb/19/57503b5de719ee45e83472f339f617b0c01ad75cba44aba1e4c97c2b0abd/idna-2.9.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 7588d1c14ae4c77d74036e8c22ff447b26d0fde8f007354fd48a7814db15b7cb
+PackageHomePage: https://github.com/kjd/idna
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the importlib-metadata
+
+PackageName: importlib-metadata
+SPDXID: SPDXRef-Package-importlib-metadata-1.6.1
+PackageVersion: 1.6.1
+PackageSupplier: Person: Barry Warsaw (barry@python.org)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/aa/9a/8483b77e2decd95963d7e34bc9bc91a26e71fd89b57d8cf978ca24747c7f/importlib_metadata-1.6.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 0505dd08068cfec00f53a74a0ad927676d7757da81b7436a6eefe4c7cf75c545
+PackageHomePage: https://importlib-metadata.readthedocs.io/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-importlib-metadata-1.6.1 DEPENDS_ON SPDXRef-Package-zipp-3.1.0 
+
+##### Package representing the isort
+
+PackageName: isort
+SPDXID: SPDXRef-Package-isort-5.10.1
+PackageVersion: 5.10.1
+PackageSupplier: Person: Timothy Crosley (timothy.crosley@gmail.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/ab/e9/964cb0b2eedd80c92f5172f1f8ae0443781a9d461c1372a3ce5762489593/isort-5.10.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: e8443a5e7a020e9d7f97f1d7d9cd17c88bcb3bc7e218bf9cf5095fe550be2951
+PackageHomePage: https://pycqa.github.io/isort/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the joblib
+
+PackageName: joblib
+SPDXID: SPDXRef-Package-joblib-1.1.0
+PackageVersion: 1.1.0
+PackageSupplier: Person: Gael Varoquaux (gael.varoquaux@normalesup.org)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/92/b9/9e3616e7e00c8165fb25175c53444533bdde05f3e974d45d9fcbbe451ee6/joblib-1.1.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 4158fcecd13733f8be669be0683b96ebdbbd38d23559f54dca7205aea1bf1e35
+PackageHomePage: https://joblib.readthedocs.io
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the lxml
+
+PackageName: lxml
+SPDXID: SPDXRef-Package-lxml-4.9.1
+PackageVersion: 4.9.1
+PackageSupplier: Organization: lxml dev team (lxml-dev@lxml.de)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/70/bb/7a2c7b4f8f434aa1ee801704bf08f1e53d7b5feba3d5313ab17003477808/lxml-4.9.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: fe749b052bb7233fe5d072fcb549221a8cb1a16725c47c37e42b0b9cb3ff2c3f
+PackageHomePage: https://lxml.de/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the mccabe
+
+PackageName: mccabe
+SPDXID: SPDXRef-Package-mccabe-0.6.1
+PackageVersion: 0.6.1
+PackageSupplier: Person: Ian Cordasco (graffatcolmingov@gmail.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/06/18/fa675aa501e11d6d6ca0ae73a101b2f3571a565e0f7d38e062eec18a91ee/mccabe-0.6.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f
+PackageHomePage: https://github.com/pycqa/mccabe
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the MechanicalSoup
+
+PackageName: MechanicalSoup
+SPDXID: SPDXRef-Package-MechanicalSoup-1.1.0
+PackageVersion: 1.1.0
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: https://files.pythonhosted.org/packages/9f/39/ff8223982443db261ec8cf1ed9ba133fac3e50f7717b0e291ba781916441/MechanicalSoup-1.1.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 2be8ad9b7571990fce16d0f99a741779921510eb133d3a4dfdeccb2ff2cd00e5
+PackageHomePage: https://mechanicalsoup.readthedocs.io/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-MechanicalSoup-1.1.0 DEPENDS_ON SPDXRef-Package-beautifulsoup4-4.11.1 
+Relationship: SPDXRef-Package-MechanicalSoup-1.1.0 DEPENDS_ON SPDXRef-Package-requests-2.26.0 
+Relationship: SPDXRef-Package-MechanicalSoup-1.1.0 DEPENDS_ON SPDXRef-Package-lxml-4.9.1 
+
+##### Package representing the more-itertools
+
+PackageName: more-itertools
+SPDXID: SPDXRef-Package-more-itertools-8.4.0
+PackageVersion: 8.4.0
+PackageSupplier: Person: Erik Rose (erikrose@grinchcentral.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/67/4a/16cb3acf64709eb0164e49ba463a42dc45366995848c4f0cf770f57b8120/more-itertools-8.4.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 68c70cc7167bdf5c7c9d8f6954a7837089c6a36bf565383919bb595efb8a17e5
+PackageHomePage: https://github.com/more-itertools/more-itertools
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the mypy-extensions
+
+PackageName: mypy-extensions
+SPDXID: SPDXRef-Package-mypy-extensions-0.4.3
+PackageVersion: 0.4.3
+PackageSupplier: Organization: The mypy developers (jukka.lehtosalo@iki.fi)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/63/60/0582ce2eaced55f65a4406fc97beba256de4b7a95a0034c6576458c6519f/mypy_extensions-0.4.3.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8
+PackageHomePage: https://github.com/python/mypy_extensions
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the nltk
+
+PackageName: nltk
+SPDXID: SPDXRef-Package-nltk-3.7
+PackageVersion: 3.7
+PackageSupplier: Organization: NLTK Team (nltk.team@gmail.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/b4/e0/840a250e5f85c480389c44d4058c7888b0c9f5f5333b353c77782a8a8e23/nltk-3.7.zip
+FilesAnalyzed: false
+PackageChecksum: SHA256: d6507d6460cec76d70afea4242a226a7542f85c669177b9c7f562b7cf1b05502
+PackageHomePage: https://www.nltk.org/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-nltk-3.7 DEPENDS_ON SPDXRef-Package-joblib-1.1.0 
+Relationship: SPDXRef-Package-nltk-3.7 DEPENDS_ON SPDXRef-Package-tqdm-4.64.0 
+Relationship: SPDXRef-Package-nltk-3.7 DEPENDS_ON SPDXRef-Package-regex-2022.7.9 
+Relationship: SPDXRef-Package-nltk-3.7 DEPENDS_ON SPDXRef-Package-click-8.1.3 
+
+##### Package representing the nodeenv
+
+PackageName: nodeenv
+SPDXID: SPDXRef-Package-nodeenv-1.7.0
+PackageVersion: 1.7.0
+PackageSupplier: Person: Eugene Kalinin (e.v.kalinin@gmail.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/f3/9d/a28ecbd1721cd6c0ea65da6bfb2771d31c5d7e32d916a8f643b062530af3/nodeenv-1.7.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: e0e7f7dfb85fc5394c6fe1e8fa98131a2473e04311a45afb6508f7cf1836fa2b
+PackageHomePage: https://github.com/ekalinin/nodeenv
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-nodeenv-1.7.0 DEPENDS_ON SPDXRef-Package-setuptools-62.1.0 
+
+##### Package representing the packaging
+
+PackageName: packaging
+SPDXID: SPDXRef-Package-packaging-21.3
+PackageVersion: 21.3
+PackageSupplier: Person: Donald Stufft and individual contributors (donald@stufft.io)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/df/9e/d1a7217f69310c1db8fdf8ab396229f55a699ce34a203691794c5d1cad0c/packaging-21.3.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb
+PackageHomePage: https://github.com/pypa/packaging
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-packaging-21.3 DEPENDS_ON SPDXRef-Package-pyparsing-2.4.7 
+
+##### Package representing the pathspec
+
+PackageName: pathspec
+SPDXID: SPDXRef-Package-pathspec-0.9.0
+PackageVersion: 0.9.0
+PackageSupplier: Person: Caleb P. Burns (cpburnz@gmail.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/f6/33/436c5cb94e9f8902e59d1d544eb298b83c84b9ec37b5b769c5a0ad6edb19/pathspec-0.9.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: e564499435a2673d586f6b2130bb5b95f04a3ba06f81b8f895b651a3c76aabb1
+PackageHomePage: https://github.com/cpburnz/python-path-specification
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the pep8
+
+PackageName: pep8
+SPDXID: SPDXRef-Package-pep8-1.7.1
+PackageVersion: 1.7.1
+PackageSupplier: Person: Ian Lee (IanLee1521@gmail.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/01/a0/64ba19519db49e4094d82599412a9660dee8c26a7addbbb1bf17927ceefe/pep8-1.7.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: fe249b52e20498e59e0b5c5256aa52ee99fc295b26ec9eaa85776ffdb9fe6374
+PackageHomePage: https://pep8.readthedocs.org/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the pip
+
+PackageName: pip
+SPDXID: SPDXRef-Package-pip-21.2.1
+PackageVersion: 21.2.1
+PackageSupplier: Organization: The pip developers (distutils-sig@python.org)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/f7/ce/e359cf283c0c0f2e0af7df8f16c8d79047aa1887a00a5b39b27d8afc49e2/pip-21.2.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 303a82aaa24cdc01f7ebbd1afc7d1b871a4aa0a88bb5bedef1fa86a3ee44ca0a
+PackageHomePage: https://pip.pypa.io/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the pip-licenses
+
+PackageName: pip-licenses
+SPDXID: SPDXRef-Package-pip-licenses-3.5.4
+PackageVersion: 3.5.4
+PackageSupplier: Person: raimon (raimon49@hotmail.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/57/b4/3808ae3a5d4f4be10f5da2697a6be46a545f14237009729ca06cded067c3/pip-licenses-3.5.4.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: a8b4dabe2b83901f9ac876afc47b57cff9a5ebe19a6d90c0b2579fa8cf2db176
+PackageHomePage: https://github.com/raimon49/pip-licenses
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-pip-licenses-3.5.4 DEPENDS_ON SPDXRef-Package-PTable-0.9.2 
+
+##### Package representing the platformdirs
+
+PackageName: platformdirs
+SPDXID: SPDXRef-Package-platformdirs-2.5.2
+PackageVersion: 2.5.2
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: https://files.pythonhosted.org/packages/ff/7b/3613df51e6afbf2306fc2465671c03390229b55e3ef3ab9dd3f846a53be6/platformdirs-2.5.2.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 58c8abb07dcb441e6ee4b11d8df0ac856038f944ab98b7be6b27b2a3c7feef19
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the pluggy
+
+PackageName: pluggy
+SPDXID: SPDXRef-Package-pluggy-0.13.1
+PackageVersion: 0.13.1
+PackageSupplier: Person: Holger Krekel (holger@merlinux.eu)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/f8/04/7a8542bed4b16a65c2714bf76cf5a0b026157da7f75e87cc88774aa10b14/pluggy-0.13.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0
+PackageHomePage: https://github.com/pytest-dev/pluggy
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the ply
+
+PackageName: ply
+SPDXID: SPDXRef-Package-ply-3.11
+PackageVersion: 3.11
+PackageSupplier: Person: David Beazley (dave@dabeaz.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/e5/69/882ee5c9d017149285cab114ebeab373308ef0f874fcdac9beb90e0ac4da/ply-3.11.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3
+PackageHomePage: https://www.dabeaz.com/ply/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the pre-commit
+
+PackageName: pre-commit
+SPDXID: SPDXRef-Package-pre-commit-2.20.0
+PackageVersion: 2.20.0
+PackageSupplier: Person: Anthony Sottile (asottile@umich.edu)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/1e/ba/8cf8b88d0e07588818de46877effc9971305541d9421bc6377b06639d135/pre_commit-2.20.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: a978dac7bc9ec0bcee55c18a277d553b0f419d259dadb4b9418ff2d00eb43959
+PackageHomePage: https://github.com/pre-commit/pre-commit
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-pre-commit-2.20.0 DEPENDS_ON SPDXRef-Package-virtualenv-20.15.1 
+Relationship: SPDXRef-Package-pre-commit-2.20.0 DEPENDS_ON SPDXRef-Package-identify-2.5.1 
+Relationship: SPDXRef-Package-pre-commit-2.20.0 DEPENDS_ON SPDXRef-Package-cfgv-3.3.1 
+Relationship: SPDXRef-Package-pre-commit-2.20.0 DEPENDS_ON SPDXRef-Package-nodeenv-1.7.0 
+Relationship: SPDXRef-Package-pre-commit-2.20.0 DEPENDS_ON SPDXRef-Package-PyYAML-6.0 
+Relationship: SPDXRef-Package-pre-commit-2.20.0 DEPENDS_ON SPDXRef-Package-toml-0.10.2 
+
+##### Package representing the PTable
+
+PackageName: PTable
+SPDXID: SPDXRef-Package-PTable-0.9.2
+PackageVersion: 0.9.2
+PackageSupplier: Person: Luke Maurits (luke@maurits.id.au)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/ab/b3/b54301811173ca94119eb474634f120a49cd370f257d1aae5a4abaf12729/PTable-0.9.2.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: aa7fc151cb40f2dabcd2275ba6f7fd0ff8577a86be3365cd3fb297cbe09cc292
+PackageHomePage: https://github.com/kxxoling/PTable
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the py
+
+PackageName: py
+SPDXID: SPDXRef-Package-py-1.11.0
+PackageVersion: 1.11.0
+PackageSupplier: Person: holger krekel, Ronny Pfannschmidt, Benjamin Peterson and others (pytest-dev@python.org)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/98/ff/fec109ceb715d2a6b4c4a85a61af3b40c723a961e8828319fbcb15b868dc/py-1.11.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 51c75c4126074b472f746a24399ad32f6053d1b34b68d2fa41e558e6f4a98719
+PackageHomePage: https://py.readthedocs.io/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the pycodestyle
+
+PackageName: pycodestyle
+SPDXID: SPDXRef-Package-pycodestyle-2.8.0
+PackageVersion: 2.8.0
+PackageSupplier: Person: Johann C. Rocholl (johann@rocholl.net)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/08/dc/b29daf0a202b03f57c19e7295b60d1d5e1281c45a6f5f573e41830819918/pycodestyle-2.8.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: eddd5847ef438ea1c7870ca7eb78a9d47ce0cdb4851a5523949f2601d0cbbe7f
+PackageHomePage: https://pycodestyle.pycqa.org/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the pyflakes
+
+PackageName: pyflakes
+SPDXID: SPDXRef-Package-pyflakes-2.4.0
+PackageVersion: 2.4.0
+PackageSupplier: Person: A lot of people (code-quality@python.org)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/15/60/c577e54518086e98470e9088278247f4af1d39cb43bcbd731e2c307acd6a/pyflakes-2.4.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 05a85c2872edf37a4ed30b0cce2f6093e1d0581f8c19d7393122da7e25b2b24c
+PackageHomePage: https://github.com/PyCQA/pyflakes
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the pyparsing
+
+PackageName: pyparsing
+SPDXID: SPDXRef-Package-pyparsing-2.4.7
+PackageVersion: 2.4.7
+PackageSupplier: Person: Paul McGuire (ptmcg@users.sourceforge.net)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/c1/47/dfc9c342c9842bbe0036c7f763d2d6686bcf5eb1808ba3e170afdb282210/pyparsing-2.4.7.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1
+PackageHomePage: https://github.com/pyparsing/pyparsing/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the pytest
+
+PackageName: pytest
+SPDXID: SPDXRef-Package-pytest-5.4.3
+PackageVersion: 5.4.3
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: https://files.pythonhosted.org/packages/8f/c4/e4a645f8a3d6c6993cb3934ee593e705947dfafad4ca5148b9a0fde7359c/pytest-5.4.3.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 7979331bfcba207414f5e1263b5a0f8f521d0f457318836a7355531ed1a4c7d8
+PackageHomePage: https://docs.pytest.org/en/latest/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-pytest-5.4.3 DEPENDS_ON SPDXRef-Package-pluggy-0.13.1 
+Relationship: SPDXRef-Package-pytest-5.4.3 DEPENDS_ON SPDXRef-Package-attrs-19.3.0 
+Relationship: SPDXRef-Package-pytest-5.4.3 DEPENDS_ON SPDXRef-Package-atomicwrites-1.4.1 
+Relationship: SPDXRef-Package-pytest-5.4.3 DEPENDS_ON SPDXRef-Package-more-itertools-8.4.0 
+Relationship: SPDXRef-Package-pytest-5.4.3 DEPENDS_ON SPDXRef-Package-colorama-0.4.5 
+Relationship: SPDXRef-Package-pytest-5.4.3 DEPENDS_ON SPDXRef-Package-py-1.11.0 
+Relationship: SPDXRef-Package-pytest-5.4.3 DEPENDS_ON SPDXRef-Package-wcwidth-0.2.4 
+Relationship: SPDXRef-Package-pytest-5.4.3 DEPENDS_ON SPDXRef-Package-packaging-21.3 
+
+##### Package representing the pytest-cov
+
+PackageName: pytest-cov
+SPDXID: SPDXRef-Package-pytest-cov-3.0.0
+PackageVersion: 3.0.0
+PackageSupplier: Person: Marc Schlaich (marc.schlaich@gmail.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/61/41/e046526849972555928a6d31c2068410e47a31fb5ab0a77f868596811329/pytest-cov-3.0.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: e7f0f5b1617d2210a2cabc266dfe2f4c75a8d32fb89eafb7ad9d06f6d076d470
+PackageHomePage: https://github.com/pytest-dev/pytest-cov
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-pytest-cov-3.0.0 DEPENDS_ON SPDXRef-Package-coverage-6.4.2 
+Relationship: SPDXRef-Package-pytest-cov-3.0.0 DEPENDS_ON SPDXRef-Package-pytest-5.4.3 
+
+##### Package representing the PyYAML
+
+PackageName: PyYAML
+SPDXID: SPDXRef-Package-PyYAML-6.0
+PackageVersion: 6.0
+PackageSupplier: Person: Kirill Simonov (xi@resolvent.net)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/36/2b/61d51a2c4f25ef062ae3f74576b01638bebad5e045f747ff12643df63844/PyYAML-6.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 68fb519c14306fec9720a2a5b45bc9f0c8d1b9c72adf45c37baedfcd949c35a2
+PackageHomePage: https://pyyaml.org/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the regex
+
+PackageName: regex
+SPDXID: SPDXRef-Package-regex-2022.7.9
+PackageVersion: 2022.7.9
+PackageSupplier: Person: Matthew Barnett (regex@mrabarnett.plus.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/52/b1/48941b5df2d73a14e067e68d9055544effc515c8242741fd7c1dd2d72101/regex-2022.7.9.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 601c99ac775b6c89699a48976f3dbb000b47d3ca59362c8abc9582e6d0780d91
+PackageHomePage: https://github.com/mrabarnett/mrab-regex
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the requests
+
+PackageName: requests
+SPDXID: SPDXRef-Package-requests-2.26.0
+PackageVersion: 2.26.0
+PackageSupplier: Person: Kenneth Reitz (me@kennethreitz.org)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/e7/01/3569e0b535fb2e4a6c384bdbed00c55b9d78b5084e0fb7f4d0bf523d7670/requests-2.26.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7
+PackageHomePage: https://requests.readthedocs.io
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-requests-2.26.0 DEPENDS_ON SPDXRef-Package-charset-normalizer-2.0.12 
+Relationship: SPDXRef-Package-requests-2.26.0 DEPENDS_ON SPDXRef-Package-urllib3-1.26.10 
+Relationship: SPDXRef-Package-requests-2.26.0 DEPENDS_ON SPDXRef-Package-certifi-2020.4.5.2 
+Relationship: SPDXRef-Package-requests-2.26.0 DEPENDS_ON SPDXRef-Package-idna-2.9 
+
+##### Package representing the setuptools
+
+PackageName: setuptools
+SPDXID: SPDXRef-Package-setuptools-62.1.0
+PackageVersion: 62.1.0
+PackageSupplier: Organization: Python Packaging Authority (distutils-sig@python.org)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/ea/a3/3d3cbbb7150f90c4cf554048e1dceb7c6ab330e4b9138a40e130a4cc79e1/setuptools-62.1.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 47c7b0c0f8fc10eec4cf1e71c6fdadf8decaa74ffa087e68cd1c20db7ad6a592
+PackageHomePage: https://github.com/pypa/setuptools
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the six
+
+PackageName: six
+SPDXID: SPDXRef-Package-six-1.15.0
+PackageVersion: 1.15.0
+PackageSupplier: Person: Benjamin Peterson (benjamin@python.org)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/6b/34/415834bfdafca3c5f451532e8a8d9ba89a21c9743a0c59fbd0205c7f9426/six-1.15.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259
+PackageHomePage: https://github.com/benjaminp/six
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the soupsieve
+
+PackageName: soupsieve
+SPDXID: SPDXRef-Package-soupsieve-2.3.2.post1
+PackageVersion: 2.3.2.post1
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: https://files.pythonhosted.org/packages/f3/03/bac179d539362319b4779a00764e95f7542f4920084163db6b0fd4742d38/soupsieve-2.3.2.post1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: fc53893b3da2c33de295667a0e19f078c14bf86544af307354de5fcf12a3f30d
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the toml
+
+PackageName: toml
+SPDXID: SPDXRef-Package-toml-0.10.2
+PackageVersion: 0.10.2
+PackageSupplier: Person: William Pearson (uiri@xqz.ca)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/be/ba/1f744cdc819428fc6b5084ec34d9b30660f6f9daaf70eead706e3203ec3c/toml-0.10.2.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f
+PackageHomePage: https://github.com/uiri/toml
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the tomli
+
+PackageName: tomli
+SPDXID: SPDXRef-Package-tomli-2.0.1
+PackageVersion: 2.0.1
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: https://files.pythonhosted.org/packages/c0/3f/d7af728f075fb08564c5949a9c95e44352e23dee646869fa104a3b2060a3/tomli-2.0.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the tox
+
+PackageName: tox
+SPDXID: SPDXRef-Package-tox-3.25.1
+PackageVersion: 3.25.1
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: https://files.pythonhosted.org/packages/52/cb/16711c38f6503e8cd8c691a7b5500364fb0d7ee32a79fc3f8929968cd519/tox-3.25.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: c138327815f53bc6da4fe56baec5f25f00622ae69ef3fe4e1e385720e22486f9
+PackageHomePage: https://tox.readthedocs.io
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-tox-3.25.1 DEPENDS_ON SPDXRef-Package-toml-0.10.2 
+Relationship: SPDXRef-Package-tox-3.25.1 DEPENDS_ON SPDXRef-Package-py-1.11.0 
+Relationship: SPDXRef-Package-tox-3.25.1 DEPENDS_ON SPDXRef-Package-virtualenv-20.15.1 
+Relationship: SPDXRef-Package-tox-3.25.1 DEPENDS_ON SPDXRef-Package-colorama-0.4.5 
+Relationship: SPDXRef-Package-tox-3.25.1 DEPENDS_ON SPDXRef-Package-filelock-3.7.1 
+Relationship: SPDXRef-Package-tox-3.25.1 DEPENDS_ON SPDXRef-Package-six-1.15.0 
+Relationship: SPDXRef-Package-tox-3.25.1 DEPENDS_ON SPDXRef-Package-packaging-21.3 
+Relationship: SPDXRef-Package-tox-3.25.1 DEPENDS_ON SPDXRef-Package-pluggy-0.13.1 
+
+##### Package representing the tqdm
+
+PackageName: tqdm
+SPDXID: SPDXRef-Package-tqdm-4.64.0
+PackageVersion: 4.64.0
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: https://files.pythonhosted.org/packages/98/2a/838de32e09bd511cf69fe4ae13ffc748ac143449bfc24bb3fd172d53a84f/tqdm-4.64.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 40be55d30e200777a307a7585aee69e4eabb46b4ec6a4b4a5f2d9f11e7d5408d
+PackageHomePage: https://tqdm.github.io
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-tqdm-4.64.0 DEPENDS_ON SPDXRef-Package-colorama-0.4.5 
+
+##### Package representing the typing_extensions
+
+PackageName: typing_extensions
+SPDXID: SPDXRef-Package-typing-extensions-4.3.0
+PackageVersion: 4.3.0
+PackageSupplier: NOASSERTION
+PackageDownloadLocation: https://files.pythonhosted.org/packages/9e/1d/d128169ff58c501059330f1ad96ed62b79114a2eb30b8238af63a2e27f70/typing_extensions-4.3.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: e6d2677a32f47fc7eb2795db1dd15c1f34eff616bcaf2cfb5e997f854fa1c4a6
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the urllib3
+
+PackageName: urllib3
+SPDXID: SPDXRef-Package-urllib3-1.26.10
+PackageVersion: 1.26.10
+PackageSupplier: Person: Andrey Petrov (andrey.petrov@shazow.net)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/25/36/f056e5f1389004cf886bb7a8514077f24224238a7534497c014a6b9ac770/urllib3-1.26.10.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 879ba4d1e89654d9769ce13121e0f94310ea32e8d2f8cf587b77c08bbcdb30d6
+PackageHomePage: https://urllib3.readthedocs.io/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the virtualenv
+
+PackageName: virtualenv
+SPDXID: SPDXRef-Package-virtualenv-20.15.1
+PackageVersion: 20.15.1
+PackageSupplier: Person: Bernat Gabor (gaborjbernat@gmail.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/a4/2f/05b77cb73501c01963de2cef343839f0803b64aab4d5476771ae303b97a6/virtualenv-20.15.1.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 288171134a2ff3bfb1a2f54f119e77cd1b81c29fc1265a2356f3e8d14c7d58c4
+PackageHomePage: https://virtualenv.pypa.io/
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+Relationship: SPDXRef-Package-virtualenv-20.15.1 DEPENDS_ON SPDXRef-Package-six-1.15.0 
+Relationship: SPDXRef-Package-virtualenv-20.15.1 DEPENDS_ON SPDXRef-Package-platformdirs-2.5.2 
+Relationship: SPDXRef-Package-virtualenv-20.15.1 DEPENDS_ON SPDXRef-Package-distlib-0.3.4 
+Relationship: SPDXRef-Package-virtualenv-20.15.1 DEPENDS_ON SPDXRef-Package-filelock-3.7.1 
+
+##### Package representing the wcwidth
+
+PackageName: wcwidth
+SPDXID: SPDXRef-Package-wcwidth-0.2.4
+PackageVersion: 0.2.4
+PackageSupplier: Person: Jeff Quast (contact@jeffquast.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/2e/30/268d9d3ed18439b6983a8e630cd52d81fd7460a152d6e801d1b8394e51a1/wcwidth-0.2.4.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 8c6b5b6ee1360b842645f336d9e5d68c55817c26d3050f46b235ef2bc650e48f
+PackageHomePage: https://github.com/jquast/wcwidth
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the wheel
+
+PackageName: wheel
+SPDXID: SPDXRef-Package-wheel-0.36.2
+PackageVersion: 0.36.2
+PackageSupplier: Person: Daniel Holth (dholth@fastmail.fm)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/ed/46/e298a50dde405e1c202e316fa6a3015ff9288423661d7ea5e8f22f589071/wheel-0.36.2.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: e11eefd162658ea59a60a0f6c7d493a7190ea4b9a85e335b33489d9f17e0245e
+PackageHomePage: https://github.com/pypa/wheel
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+
+##### Package representing the zipp
+
+PackageName: zipp
+SPDXID: SPDXRef-Package-zipp-3.1.0
+PackageVersion: 3.1.0
+PackageSupplier: Person: Jason R. Coombs (jaraco@jaraco.com)
+PackageDownloadLocation: https://files.pythonhosted.org/packages/ce/8c/2c5f7dc1b418f659d36c04dec9446612fc7b45c8095cc7369dd772513055/zipp-3.1.0.tar.gz
+FilesAnalyzed: false
+PackageChecksum: SHA256: c599e4d75c98f6798c509911d08a22e6c021d074469042177c8c86fb92eefd96
+PackageHomePage: https://github.com/jaraco/zipp
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageLicenseComments: NOASSERTION
+PackageComment: NOASSERTION
+

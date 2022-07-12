@@ -1,0 +1,13 @@
+This software includes unmodified libraries 
+
+Apache Software licenses
+Apache 2.0 Library:
+anytree - 2.8.0 - Apache 2.0
+
+
+
+MPL Libraries
+* certifi - 2020.4.5.2 - Mozilla Public License 2.0 (MPL 2.0)
+* pathspec - 0.9.0 - Mozilla Public License 2.0 (MPL 2.0)
+
+According to MPL 2.0 FAQ - Q11: How 'viral' is the MPL? If I use MPL-licensed code in my proprietary application, will I have to give all the source code away? (https://www.mozilla.org/en-US/MPL/2.0/FAQ/#virality) "new files containing no MPL-licensed code are not Modifications, and therefore do not need to be distributed under the terms of the MPL, even if you create a Larger Work (as defined in Section 1.7) by using, compiling, or distributing the non-MPL files together with MPL-licensed files. This allows, for example, programs using MPL-licensed code to be statically linked to and distributed as part of a larger proprietary piece of software, which would not generally be possible under the terms of stronger copyleft licenses."
