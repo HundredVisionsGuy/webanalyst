@@ -39,7 +39,6 @@ flake8 = "*"
 autoflake = "*"
 autoflake8 = "*"
 anytree = "*"
-cyclonedx-bom = "*"
 pip-licenses = "*"
 nltk = "*"
 
