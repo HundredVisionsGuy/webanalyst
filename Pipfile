@@ -41,6 +41,7 @@ autoflake8 = "*"
 anytree = "*"
 cyclonedx-bom = "*"
 pip-licenses = "*"
+nltk = "*"
 
 [requires]
 python_version = "3.9"
